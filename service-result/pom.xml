@@ -13,7 +13,7 @@
     <groupId>ch.viasom.groundwork</groupId>
     <artifactId>service-result</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <parent>jar</parent>
+    <packaging>jar</packaging>
 
     <name>GroundWork - ServiceResult</name>
     <description>The ServiceResult module provides a standard result for your REST application. It is part of the GroundWork Project by Viascom.</description>
@@ -57,5 +57,20 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+
+
+    <dependencies>
+        <!-- Lombock -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
