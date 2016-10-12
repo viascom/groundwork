@@ -4,13 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ch.viascom.groundwork</groupId>
-    <artifactId>pom</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <parent>
+        <groupId>ch.viascom.groundwork</groupId>
+        <artifactId>pom</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-    <name>GroundWork - POM</name>
-    <description>The POM module provides a parent pom which is also use in the GroundWork Project. It is part of the GroundWork Project by Viascom.</description>
+    <groupId>ch.viasom.groundwork</groupId>
+    <artifactId>service-result</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <parent>jar</parent>
+
+    <name>GroundWork - ServiceResult</name>
+    <description>The ServiceResult module provides a standard result for your REST application. It is part of the GroundWork Project by Viascom.</description>
     <url>https://github.com/viascom/groundwork/</url>
 
     <licenses>
