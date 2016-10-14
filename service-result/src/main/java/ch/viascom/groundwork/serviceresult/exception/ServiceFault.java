@@ -40,6 +40,16 @@ public class ServiceFault implements Serializable {
         message = serviceFaultMessage;
     }
 
+    public ServiceFault setException(String serviceFaultException) {
+        exception = serviceFaultException;
+        return this;
+    }
+
+    public ServiceFault setRequestUrl(String url) {
+        requestUrl = url;
+        return this;
+    }
+
     /**
      * Adds a name-value pair to the request parameter list.
      *
