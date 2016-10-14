@@ -1,8 +1,14 @@
 package ch.viascom.groundwork.serviceresult.util;
 
+import lombok.Data;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+/**
+ * Name and value pair implementation to store input properties.
+ */
+@Data
 public class NameValuePair {
     private String name;
     private String value;
@@ -27,14 +33,6 @@ public class NameValuePair {
         
         this.name = name;
         this.value = value;
-    }
- 
-    public String getName() {
-        return name;
-    }
- 
-    public String getValue() {
-        return value;
     }
  
     /**
