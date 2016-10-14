@@ -15,7 +15,9 @@ public class ObjectHasherTest {
         result.setContent("Test");
 
         String hash = ObjectHasher.hash(result.getContent());
-
         assertThat(hash).isEqualTo("ec83b74cf71e43de87afa3b13997fb2a2391aa");
+
+        hash = ObjectHasher.hash(null);
+        assertThat(hash).isEqualTo("");
     }
 }
