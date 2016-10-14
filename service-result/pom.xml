@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>ch.viasom.groundwork</groupId>
+    <groupId>ch.viascom.groundwork</groupId>
     <artifactId>service-result</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -66,10 +66,20 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-        <!-- -->
+        <!-- Apache commons lang3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- Junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert-core</artifactId>
         </dependency>
     </dependencies>
 
