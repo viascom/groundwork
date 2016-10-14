@@ -22,7 +22,7 @@ public class ObjectHasher {
 		if (obj == null) {
 			return "";
 		}
-		StringBuffer hexString = new StringBuffer();
+		StringBuilder hexString = new StringBuilder();
 		try {
 
 			MessageDigest m = MessageDigest.getInstance("SHA1");
@@ -30,9 +30,9 @@ public class ObjectHasher {
 
 			byte[] mdbytes = m.digest();
 
-			for (int i = 0; i < mdbytes.length; i++) {
-				hexString.append(Integer.toHexString(0xFF & mdbytes[i]));
-			}
+            for (byte mdbyte : mdbytes) {
+                hexString.append(Integer.toHexString(0xFF & mdbyte));
+            }
 
 		} catch (NoSuchAlgorithmException e) {
 			return "";
