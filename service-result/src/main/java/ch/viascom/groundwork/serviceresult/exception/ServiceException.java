@@ -1,5 +1,7 @@
 package ch.viascom.groundwork.serviceresult.exception;
 
+import lombok.Setter;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -8,6 +10,7 @@ import java.io.PrintStream;
  */
 public class ServiceException extends Exception {
 
+    @Setter
 	protected ServiceFault _fault;
 	
 	/**
