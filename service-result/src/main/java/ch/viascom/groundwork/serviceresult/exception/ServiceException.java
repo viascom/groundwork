@@ -1,17 +1,17 @@
 package ch.viascom.groundwork.serviceresult.exception;
 
+import lombok.Setter;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+/**
+ * Throwable Wrapper of the ServiceFault.
+ */
 public class ServiceException extends Exception {
-	private static final long serialVersionUID = -339330063981442247L;
 
+    @Setter
 	protected ServiceFault _fault;
-	
-
-	public void setFault(ServiceFault fault) {
-		_fault = fault;
-	}
 	
 	/**
 	 * Gets the underlying service fault.
@@ -56,12 +56,12 @@ public class ServiceException extends Exception {
 		return this;
 	}
 
-
 	
 	/**
 	 * Constructor.
 	 */
 	public ServiceException() {
+
 	}
 	
 	/**

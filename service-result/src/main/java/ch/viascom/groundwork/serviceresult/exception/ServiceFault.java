@@ -7,10 +7,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a wrapped exception including some extra data.
+ */
 @Data
 public class ServiceFault implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     protected String code;
     protected String message;
     protected String requestUrl;
@@ -26,7 +28,6 @@ public class ServiceFault implements Serializable {
     public ServiceFault() {
 
     }
-
 
     /**
      * Constructor.
@@ -56,7 +57,7 @@ public class ServiceFault implements Serializable {
      */
     public ServiceFault addRequestParam(String key, String value) {
         if (requestParams == null)
-            requestParams = new ArrayList<NameValuePair>();
+            requestParams = new ArrayList<>();
 
         requestParams.add(new NameValuePair(key, value));
 
