@@ -5,19 +5,18 @@ import ch.viascom.groundwork.restclient.response.generic.ResponseHeader;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.http.HttpEntity;
 
 /**
- * @author patrick.boesch@viascom.ch 20.04.16.
+ * @author patrick.boesch@viascom.ch
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenericResponse implements Response {
     private ResponseHeader responseHeader;
-    private HttpEntity entity;
+    private Object entity;
 
-    public GenericResponse(HttpEntity entity) {
+    public GenericResponse(Object entity) {
         this.entity = entity;
     }
 }
