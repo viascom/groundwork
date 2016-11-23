@@ -17,6 +17,12 @@ public class SimplePostRequest extends PostRequest<GenericResponse> {
         setPath("");
     }
 
+    public SimplePostRequest(String url, String mediaType) throws RESTClientException {
+        super(url, HttpClientBuilder.create().build());
+        setMediaType(mediaType);
+        setPath("");
+    }
+
     public SimplePostRequest(String url, HttpEntity httpEntity) throws RESTClientException {
         super(url, HttpClientBuilder.create().build());
         setPath("");

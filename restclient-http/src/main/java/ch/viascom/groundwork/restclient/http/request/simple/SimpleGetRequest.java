@@ -16,6 +16,12 @@ public class SimpleGetRequest extends GetRequest<GenericResponse> {
         setPath("");
     }
 
+    public SimpleGetRequest(String url, String mediaType) throws RESTClientException {
+        super(url, HttpClientBuilder.create().build());
+        setMediaType(mediaType);
+        setPath("");
+    }
+
     public SimpleGetRequest(HttpClient httpClient, String url) throws RESTClientException {
         super(url, httpClient);
         setUrl(url);
