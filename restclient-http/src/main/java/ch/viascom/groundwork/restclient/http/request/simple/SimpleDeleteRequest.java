@@ -16,6 +16,12 @@ public class SimpleDeleteRequest extends DeleteRequest<GenericResponse> {
         setPath("");
     }
 
+    public SimpleDeleteRequest(String url, String mediaType) throws RESTClientException {
+        super(url, HttpClientBuilder.create().build());
+        setMediaType(mediaType);
+        setPath("");
+    }
+
     public SimpleDeleteRequest(HttpClient httpClient, String url) throws RESTClientException {
         super(url, httpClient);
         setUrl(url);

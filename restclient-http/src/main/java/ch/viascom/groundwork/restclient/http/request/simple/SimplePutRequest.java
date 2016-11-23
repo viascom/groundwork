@@ -17,6 +17,12 @@ public class SimplePutRequest extends PutRequest<GenericResponse> {
         setPath("");
     }
 
+    public SimplePutRequest(String url, String mediaType) throws RESTClientException {
+        super(url, HttpClientBuilder.create().build());
+        setMediaType(mediaType);
+        setPath("");
+    }
+
     public SimplePutRequest(String url, HttpEntity httpEntity) throws RESTClientException {
         super(url, HttpClientBuilder.create().build());
         setPath("");

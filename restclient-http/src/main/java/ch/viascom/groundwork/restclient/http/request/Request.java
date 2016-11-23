@@ -55,11 +55,11 @@ public abstract class Request<T extends Response> implements RequestInterface<T>
 
     public abstract Object request() throws IOException, URISyntaxException;
 
-    public void setRequestHeaders(HashMap<String, String> headerMap) {
+    public void setHeaderMap(HashMap<String, String> headerMap) {
         this.headerMap = headerMap;
     }
 
-    public void addRequestHeader(String name, String value) {
+    public void addHeaders(String name, String value) {
         this.headerMap.put(name, value);
     }
 

@@ -7,7 +7,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
 /**
@@ -22,10 +21,17 @@ public class ClientTest {
         String path = "/posts/1";
 
         SimpleGetRequest request = new SimpleGetRequest(url);
-        request.setMediaType(MediaType.APPLICATION_JSON_TYPE.getType());
+        request.setMediaType("application/json");
         request.setPath(path);
-        GenericResponse test = request.execute();
-        System.out.println(test.getResponseHeader());
-        System.out.println(EntityUtils.toString((HttpEntity) test.getEntity()));
+        GenericResponse response = request.execute();
+        System.out.println(response.getResponseHeader());
+        System.out.println(EntityUtils.toString((HttpEntity) response.getEntity()));
+    }
+
+    @Test
+    public void clientTestShort() throws RESTClientException, IOException {
+        GenericResponse response = new SimpleGetRequest("https://jsonplaceholder.typicode.com/posts/1","application/json").execute();
+        System.out.println(response.getResponseHeader());
+        System.out.println(EntityUtils.toString((HttpEntity) response.getEntity()));
     }
 }
