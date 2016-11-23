@@ -3,6 +3,8 @@ package ch.viascom.groundwork.restclient.response.generic;
 import lombok.Data;
 
 /**
+ *
+ *
  * @author patrick.boesch@viascom.ch
  */
 @Data
