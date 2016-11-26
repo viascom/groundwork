@@ -224,8 +224,8 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
-                            <finalName>test</finalName>
-                            <appendAssemblyId>false</appendAssemblyId>
+                            <finalName>${executable.jar.finalName}</finalName>
+                            <appendAssemblyId>${executable.jar.appendAssemblyId}</appendAssemblyId>
                         </configuration>
                         <executions>
                             <execution>
