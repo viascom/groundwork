@@ -87,6 +87,8 @@
 
         <!-- Default executable jar main class -->
         <executable.jar.main.class></executable.jar.main.class>
+        <executable.jar.finalName>executable-output</executable.jar.finalName>
+        <executable.jar.appendAssemblyId>true</executable.jar.appendAssemblyId>
     </properties>
 
     <!-- ==================================================================================== -->
@@ -222,6 +224,8 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
+                            <finalName>${executable.jar.finalName}</finalName>
+                            <appendAssemblyId>${executable.jar.appendAssemblyId}</appendAssemblyId>
                         </configuration>
                         <executions>
                             <execution>
