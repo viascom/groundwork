@@ -109,6 +109,10 @@ public abstract class Request<T extends Response> implements RequestInterface<T>
         }
     }
 
+    public void addQueryParam(String name, String value){
+        queryParamMap.put(name,value);
+    }
+
     public HttpEntity getRequestBody() {
         return this.requestBody;
     }
