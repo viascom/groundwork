@@ -107,6 +107,14 @@ public interface RequestInterface<T extends Response> {
     void setRequestParams(ArrayList<String> params, Object o) throws RESTClientException;
 
     /**
+     * Add a new query property
+     *
+     * @param name property name
+     * @param value propert value
+     */
+    void addQueryParam(String name, String value);
+
+    /**
      * Get the header map of the request
      *
      * key: property name
