@@ -18,6 +18,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +44,7 @@ public abstract class Request<T extends Response> implements RequestInterface<T>
     protected String path;
     protected URI requestUrl;
     protected String mediaType;
-    protected HttpEntity requestBody;
+    protected HttpEntity requestBody = new BasicHttpEntity();
     protected HttpClient httpClient;
     protected HashMap<String, String> queryParamMap = new HashMap<>();
     protected HashMap<String, String> headerMap = new HashMap<>();
