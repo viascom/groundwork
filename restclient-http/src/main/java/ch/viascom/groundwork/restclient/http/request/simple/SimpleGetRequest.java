@@ -2,35 +2,40 @@ package ch.viascom.groundwork.restclient.http.request.simple;
 
 import ch.viascom.groundwork.restclient.exception.RESTClientException;
 import ch.viascom.groundwork.restclient.http.request.GetRequest;
-import ch.viascom.groundwork.restclient.response.GenericResponse;
+import ch.viascom.groundwork.restclient.response.generic.Response;
+import lombok.Setter;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 /**
  * @author patrick.boesch@viascom.ch
  */
-public class SimpleGetRequest extends GetRequest<GenericResponse> {
+public class SimpleGetRequest<T extends Response> extends GetRequest<T> {
 
-    public SimpleGetRequest(String url) throws RESTClientException {
-        super(url, HttpClientBuilder.create().build());
-        setPath("");
+    @Setter
+    private Class<T> parameterClass;
+
+    public SimpleGetRequest(String url, Class<T> parameterClass) throws RESTClientException {
+        this(url, "application/json", HttpClientBuilder.create().build(), parameterClass);
     }
 
-    public SimpleGetRequest(String url, String mediaType) throws RESTClientException {
-        super(url, HttpClientBuilder.create().build());
-        setMediaType(mediaType);
-        setPath("");
+    public SimpleGetRequest(String url, String mediaType, Class<T> parameterClass) throws RESTClientException {
+        this(url, mediaType, HttpClientBuilder.create().build(), parameterClass);
     }
 
-    public SimpleGetRequest(HttpClient httpClient, String url) throws RESTClientException {
+    public SimpleGetRequest(String url, String mediaType, HttpClient httpClient, Class<T> parameterClass) throws RESTClientException {
+        this(url, "", mediaType, httpClient, parameterClass);
+    }
+
+    public SimpleGetRequest(String url, String path, String mediaType, HttpClient httpClient, Class<T> parameterClass) throws RESTClientException {
         super(url, httpClient);
-        setUrl(url);
-        setPath("");
-    }
-
-    public SimpleGetRequest(HttpClient httpClient, String url, String path) throws RESTClientException {
-        super(url, httpClient);
-        setUrl(url);
         setPath(path);
+        setMediaType(mediaType);
+        setParameterClass(parameterClass);
+    }
+
+    @Override
+    public Class<T> getParameterClass() {
+        return parameterClass;
     }
 }

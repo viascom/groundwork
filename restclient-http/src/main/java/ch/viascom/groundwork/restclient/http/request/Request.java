@@ -14,12 +14,13 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
+import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
@@ -41,11 +42,11 @@ public abstract class Request<T extends Response> implements RequestInterface<T>
 
     private static final Logger log = LogManager.getLogger(Request.class);
 
-    protected String url;
-    protected String path;
+    protected String url = "";
+    protected String path = "";
     protected URI requestUrl;
-    protected String mediaType;
-    protected HttpEntity requestBody = new BasicHttpEntity();
+    protected String mediaType = "application/json";
+    protected HttpEntity requestBody = new StringEntity("", Consts.UTF_8);
     protected HttpClient httpClient;
     protected HashMap<String, String> queryParamMap = new HashMap<>();
     protected HashMap<String, String> headerMap = new HashMap<>();
@@ -110,8 +111,8 @@ public abstract class Request<T extends Response> implements RequestInterface<T>
         }
     }
 
-    public void addQueryParam(String name, String value){
-        queryParamMap.put(name,value);
+    public void addQueryParam(String name, String value) {
+        queryParamMap.put(name, value);
     }
 
     public HttpEntity getRequestBody() {

@@ -2,35 +2,40 @@ package ch.viascom.groundwork.restclient.http.request.simple;
 
 import ch.viascom.groundwork.restclient.exception.RESTClientException;
 import ch.viascom.groundwork.restclient.http.request.DeleteRequest;
-import ch.viascom.groundwork.restclient.response.GenericResponse;
+import ch.viascom.groundwork.restclient.response.generic.Response;
+import lombok.Setter;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 /**
  * @author patrick.boesch@viascom.ch
  */
-public class SimpleDeleteRequest extends DeleteRequest<GenericResponse> {
+public class SimpleDeleteRequest<T extends Response> extends DeleteRequest<T> {
 
-    public SimpleDeleteRequest(String url) throws RESTClientException {
-        super(url, HttpClientBuilder.create().build());
-        setPath("");
+    @Setter
+    private Class<T> parameterClass;
+
+    public SimpleDeleteRequest(String url, Class<T> parameterClass) throws RESTClientException {
+        this(url, "application/json", HttpClientBuilder.create().build(), parameterClass);
     }
 
-    public SimpleDeleteRequest(String url, String mediaType) throws RESTClientException {
-        super(url, HttpClientBuilder.create().build());
-        setMediaType(mediaType);
-        setPath("");
+    public SimpleDeleteRequest(String url, String mediaType, Class<T> parameterClass) throws RESTClientException {
+        this(url, mediaType, HttpClientBuilder.create().build(), parameterClass);
     }
 
-    public SimpleDeleteRequest(HttpClient httpClient, String url) throws RESTClientException {
+    public SimpleDeleteRequest(String url, String mediaType, HttpClient httpClient, Class<T> parameterClass) throws RESTClientException {
+        this(url, "", mediaType, httpClient, parameterClass);
+    }
+
+    public SimpleDeleteRequest(String url, String path, String mediaType, HttpClient httpClient, Class<T> parameterClass) throws RESTClientException {
         super(url, httpClient);
-        setUrl(url);
-        setPath("");
-    }
-
-    public SimpleDeleteRequest(HttpClient httpClient, String url, String path) throws RESTClientException {
-        super(url, httpClient);
-        setUrl(url);
         setPath(path);
+        setMediaType(mediaType);
+        setParameterClass(parameterClass);
+    }
+
+    @Override
+    public Class<T> getParameterClass() {
+        return parameterClass;
     }
 }
