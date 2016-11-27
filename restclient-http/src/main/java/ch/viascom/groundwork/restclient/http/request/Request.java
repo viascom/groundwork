@@ -170,7 +170,7 @@ public abstract class Request<T extends Response> implements RequestInterface<T>
                 output.setResponseHeader(responseHeader);
                 return (T) output;
             } else {
-                log.error("-> Invalid response status: " + status);
+                log.debug("-> Invalid response status: " + status);
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setRequestBody(getRequestBody().toString());
                 errorResponse.setResponseBody(responseBody);
