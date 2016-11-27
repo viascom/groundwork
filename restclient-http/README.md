@@ -28,9 +28,9 @@ compile 'ch.viascom.groundwork:restclient-http:1.0-SNAPSHOT'
 
 #### Get-Request with SimpleGetRequest
 ```java
-GenericResponse response = new SimpleGetRequest("https://jsonplaceholder.typicode.com/posts/1","application/json").execute();
+JSONResponse response = new SimpleGetRequest<>("https://jsonplaceholder.typicode.com/posts/1", JSONResponse.class).execute();
 System.out.println(response.getResponseHeader());
-System.out.println(EntityUtils.toString((HttpEntity) response.getEntity()));
+System.out.println(response.toJson());
 ```
 
 #### Get-Request with SimpleGetRequest (the long way)
@@ -38,14 +38,13 @@ System.out.println(EntityUtils.toString((HttpEntity) response.getEntity()));
 String url = "https://jsonplaceholder.typicode.com";
 String path = "/posts/1";
 
-SimpleGetRequest request = new SimpleGetRequest();
-request.setMediaType("application/json");
-request.setUrl(url);
+SimpleGetRequest request = new SimpleGetRequest(url, JSONResponse.class);
 request.setPath(path);
-GenericResponse response = request.execute();
+JSONResponse response = request.execute();
 System.out.println(response.getResponseHeader());
-System.out.println(EntityUtils.toString((HttpEntity) response.getEntity()));
+System.out.println(response.Json());
 ```
+
 
 
 
