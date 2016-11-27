@@ -5,6 +5,7 @@ import ch.viascom.groundwork.restclient.exception.AuthorizationRESTClientExcepti
 import ch.viascom.groundwork.restclient.exception.RESTClientException;
 import ch.viascom.groundwork.restclient.request.RequestInterface;
 import ch.viascom.groundwork.restclient.response.GenericResponse;
+import ch.viascom.groundwork.restclient.response.JSONResponse;
 import ch.viascom.groundwork.restclient.response.generic.ErrorResponse;
 import ch.viascom.groundwork.restclient.response.generic.Response;
 import ch.viascom.groundwork.restclient.response.generic.ResponseHeader;
@@ -155,6 +156,8 @@ public abstract class Request<T extends Response> implements RequestInterface<T>
                 if (entity != null) {
                     if (getParameterClass() == GenericResponse.class) {
                         output = new GenericResponse(entity);
+                    } else if (getParameterClass() == JSONResponse.class) {
+                        output = new JSONResponse(EntityUtils.toString(entity));
                     } else {
                         responseBody = EntityUtils.toString(entity);
                         Gson gson = getGson();
