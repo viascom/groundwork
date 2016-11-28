@@ -18,6 +18,13 @@ This profile generates in addition to the build also a file with the extension *
 #### Coverage (coverage)
 This profile generates a code coverage file based on your unit tests.
 
+#### Executable-Jar
+This profile creates a executable jar with the name of the build + -jar-with-dependencies
+You have to define the following properties.
+- <executable.jar.main.class>Your Main-Class</executable.jar.main.class>
+- <executable.jar.finalName>executable-output</executable.jar.finalName>
+- <executable.jar.appendAssemblyId>true</executable.jar.appendAssemblyId>
+
 #### Wildfly (wildfly)
 This profile automaticaly (if *install* goal is used) deploys your build to a wildfly applicationserver.
 If you have a multi module project you have to define `<applicationserver.wildfly.deploy.skip>true</applicationserver.wildfly.deploy.skip>`
