@@ -1,5 +1,7 @@
+![GroundWork-Icon][1]
+
 GroundWork Project
-============
+==================
 Collection of useful libraries for Java.
 
 
@@ -9,3 +11,6 @@ Collection of useful libraries for Java.
 
 # License
 GroundWork is GPLv3 licensed. See the [LICENSE](https://github.com/Viascom/groundwork/blob/master/LICENSE) file for details.
+
+
+[1]: ViascomGroundWorkIcon.png
