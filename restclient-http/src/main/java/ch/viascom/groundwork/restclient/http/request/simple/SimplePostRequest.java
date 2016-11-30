@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 
@@ -19,11 +20,11 @@ public class SimplePostRequest<T extends Response> extends PostRequest<T> {
     private Class<T> parameterClass;
 
     public SimplePostRequest(String url, Class<T> parameterClass) throws RESTClientException {
-        this(url, "application/json", new StringEntity("", Consts.UTF_8), HttpClientBuilder.create().build(), parameterClass);
+        this(url, ContentType.APPLICATION_JSON.toString(), new StringEntity("", Consts.UTF_8), HttpClientBuilder.create().build(), parameterClass);
     }
 
     public SimplePostRequest(String url, HttpEntity requestBody, Class<T> parameterClass) throws RESTClientException {
-        this(url, "application/json", requestBody, HttpClientBuilder.create().build(), parameterClass);
+        this(url, ContentType.APPLICATION_JSON.toString(), requestBody, HttpClientBuilder.create().build(), parameterClass);
     }
 
     public SimplePostRequest(String url, String mediaType, HttpEntity requestBody, Class<T> parameterClass) throws RESTClientException {

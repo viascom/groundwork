@@ -5,6 +5,7 @@ import ch.viascom.groundwork.restclient.http.request.DeleteRequest;
 import ch.viascom.groundwork.restclient.response.generic.Response;
 import lombok.Setter;
 import org.apache.http.client.HttpClient;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 /**
@@ -16,7 +17,7 @@ public class SimpleDeleteRequest<T extends Response> extends DeleteRequest<T> {
     private Class<T> parameterClass;
 
     public SimpleDeleteRequest(String url, Class<T> parameterClass) throws RESTClientException {
-        this(url, "application/json", HttpClientBuilder.create().build(), parameterClass);
+        this(url, ContentType.APPLICATION_JSON.toString(), HttpClientBuilder.create().build(), parameterClass);
     }
 
     public SimpleDeleteRequest(String url, String mediaType, Class<T> parameterClass) throws RESTClientException {
