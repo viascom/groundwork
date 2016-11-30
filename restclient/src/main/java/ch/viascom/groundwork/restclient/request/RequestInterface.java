@@ -1,6 +1,8 @@
 package ch.viascom.groundwork.restclient.request;
 
 import ch.viascom.groundwork.restclient.exception.RESTClientException;
+import ch.viascom.groundwork.restclient.filter.FilterTypes;
+import ch.viascom.groundwork.restclient.filter.RESTFilter;
 import ch.viascom.groundwork.restclient.response.generic.Response;
 
 import java.util.ArrayList;
@@ -147,6 +149,80 @@ public interface RequestInterface<T extends Response> {
      * @param value propert value
      */
     void addHeaders(String name, String value);
+
+    /**
+     * Register a RESTFilters for the Request/Response
+     *
+     * @param restFilter RESTFilter for the request
+     */
+    void register(RESTFilter restFilter);
+
+    /**
+     * Unregister a RESTFilters for the Request/Response
+     *
+     * @param restFilter Class of a restFilter for the request
+     */
+    void unregister(Class restFilter);
+
+    /**
+     * Get the RESTFilters for the Request/Response
+     *
+     * @return Array of RESTFilters of the request
+     */
+    HashMap<String, Object> getRESTFilters();
+
+    /**
+     * Get the RESTFilters of a specific type for the Request/Response
+     *
+     * @return Array of RESTFilters of the request
+     */
+    ArrayList<RESTFilter> getRESTFilters(FilterTypes filterType);
+
+    /**
+     * Set additional allowed status codes
+     *
+     * <i>this will extend the default of statuscode >= 200 && < 300</i>
+     *
+     * @param additionalAllowedStatusCodes Array of additional allowed status codes
+     */
+    void setAdditionalAllowedStatusCodes(ArrayList<Integer> additionalAllowedStatusCodes);
+
+    /**
+     * Get all additional allowed status codes
+     *
+     * @return additional allowed status codes
+     */
+    ArrayList<Integer> getAdditionalAllowedStatusCodes();
+
+    /**
+     * Add an additional allowed status code
+     *
+     * @param code status code to allow
+     */
+    void addAdditionalAllowedStatusCode(int code);
+
+    /**
+     * Set additional denied status codes
+     *
+     * <i>this will override the default of statuscode >= 200 && < 300</i>
+     *
+     * @param additionalDeniedStatusCodes Array of additional denied status codes
+     */
+    void setAdditionalDeniedStatusCodes(ArrayList<Integer> additionalDeniedStatusCodes);
+
+    /**
+     * Get all additional denied status codes
+     *
+     * @return additional denied status codes
+     */
+    ArrayList<Integer> getAdditionalDeniedStatusCodes();
+
+    /**
+     * Add an denied status code
+     *
+     * @param code status code to denie
+     */
+    void addAdditionalDeniedStatusCode(int code);
 
     /**
      * Generate request url with all informations for the request

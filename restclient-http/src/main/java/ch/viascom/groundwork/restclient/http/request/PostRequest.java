@@ -1,16 +1,13 @@
 package ch.viascom.groundwork.restclient.http.request;
 
+import ch.viascom.groundwork.restclient.filter.FilterTypes;
 import ch.viascom.groundwork.restclient.request.PostRequestInterface;
 import ch.viascom.groundwork.restclient.response.generic.Response;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 /**
  * @author patrick.boesch@viascom.ch
@@ -24,16 +21,24 @@ public abstract class PostRequest<T extends Response> extends Request<T> impleme
     }
 
     @Override
-    public HttpResponse request() throws IOException, URISyntaxException {
+    public HttpResponse request() throws Exception {
+        executeFilter(null, null, null, this, null, null, FilterTypes.REQUESTFILTER);
         String encodedPath = getEncodedPath();
         log.debug("POST - path: {}", encodedPath);
 
-        prepareQuery();
-        HttpPost httpPost = new HttpPost(requestUrl);
-        httpPost.setEntity(getRequestBody());
-        httpPost.setHeaders(getRequestHeader());
-        HttpResponse response = httpClient.execute(httpPost, HttpClientContext.create());
+        HttpPost httpPost = new HttpPost();
+        try {
+            prepareQuery();
+            httpPost.setURI(requestUrl);
+            httpPost.setEntity(getRequestBody());
+            httpPost.setHeaders(getRequestHeader());
+            executeFilter(null, httpPost, null, this, null, null, FilterTypes.REQUESTWRITEFILTER);
+            HttpResponse response = httpClient.execute(httpPost, httpClientContext);
 
-        return response;
+            return response;
+        } catch (Exception e) {
+            executeFilter(null, httpPost, null, this, null, e, FilterTypes.REQUESTEXCEPTIONFILTER);
+        }
+        return null;
     }
 }

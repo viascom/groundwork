@@ -12,12 +12,26 @@ public class RESTClientException extends Exception {
     @Setter
     private ErrorResponse errorResponse;
 
+    public RESTClientException(Throwable cause) {
+        super(cause);
+    }
+
     public RESTClientException(ErrorResponse errorResponse) {
+        this.errorResponse = errorResponse;
+    }
+
+    public RESTClientException(ErrorResponse errorResponse, Throwable cause) {
+        super(cause);
         this.errorResponse = errorResponse;
     }
 
     public RESTClientException(ErrorResponse errorResponse, String message) {
         super(message);
+        this.errorResponse = errorResponse;
+    }
+
+    public RESTClientException(ErrorResponse errorResponse, String message, Throwable cause) {
+        super(message, cause);
         this.errorResponse = errorResponse;
     }
 }
