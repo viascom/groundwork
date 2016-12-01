@@ -85,15 +85,14 @@
         <!-- Default minify settings -->
         <minify.skip>false</minify.skip>
 
-        <!-- Executable Main class -->
+        <!-- Default executable settings -->
         <executable.main.class></executable.main.class>
         <executable.finalName>executable-output</executable.finalName>
 
-        <!-- Default executable jar main class -->
-        <executable.jar.finalName>executable-output</executable.jar.finalName>
+        <!-- Default executable jar settings -->
         <executable.jar.appendAssemblyId>true</executable.jar.appendAssemblyId>
 
-        <!-- Windows executable -->
+        <!-- Default Windows executable settings -->
         <executable.windows.applicationIcon.path>src/main/resources/icon/application.ico</executable.windows.applicationIcon.path>
         <executable.windows.fileVersion>${version}</executable.windows.fileVersion>
         <executable.windows.copyright></executable.windows.copyright>
@@ -227,11 +226,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.6.0</version>
-                    <configuration>
-                        <source>${jdkLevel}</source>
-                        <target>${jdkLevel}</target>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -547,7 +541,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.6.0</version>
                     <executions>
                         <execution>
                             <id>compile</id>
