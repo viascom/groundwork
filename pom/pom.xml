@@ -85,10 +85,24 @@
         <!-- Default minify settings -->
         <minify.skip>false</minify.skip>
 
+        <!-- Executable Main class -->
+        <executable.main.class></executable.main.class>
+        <executable.finalName>executable-output</executable.finalName>
+
         <!-- Default executable jar main class -->
-        <executable.jar.main.class></executable.jar.main.class>
         <executable.jar.finalName>executable-output</executable.jar.finalName>
         <executable.jar.appendAssemblyId>true</executable.jar.appendAssemblyId>
+
+        <!-- Windows executable -->
+        <executable.windows.applicationIcon.path>src/main/resources/icon/application.ico</executable.windows.applicationIcon.path>
+        <executable.windows.fileVersion>${version}</executable.windows.fileVersion>
+        <executable.windows.copyright></executable.windows.copyright>
+        <executable.windows.productVersion></executable.windows.productVersion>
+        <executable.windows.txtProductVersion></executable.windows.txtProductVersion>
+        <executable.windows.companyName></executable.windows.companyName>
+        <executable.windows.internalName></executable.windows.internalName>
+        <executable.windows.originalFilename>${executable.finalName}.exe</executable.windows.originalFilename>
+
     </properties>
 
     <!-- ==================================================================================== -->
@@ -207,6 +221,84 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>windows-executable</id>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.6.0</version>
+                    <configuration>
+                        <source>${jdkLevel}</source>
+                        <target>${jdkLevel}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.4.3</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <shadedArtifactAttached>true</shadedArtifactAttached>
+                        <shadedClassifierName>shaded</shadedClassifierName>
+                        <transformers>
+                            <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <mainClass>${executable.main.class}</mainClass>
+                            </transformer>
+                        </transformers>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                    <artifactId>launch4j-maven-plugin</artifactId>
+                    <version>1.7.13</version>
+                    <executions>
+                        <execution>
+                            <id>l4j-clui</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>launch4j</goal>
+                            </goals>
+                            <configuration>
+                                <headerType>gui</headerType>
+                                <jar>${project.build.directory}/${artifactId}-${version}-shaded.jar</jar>
+                                <outfile>${project.build.directory}/${executable.finalName}.exe</outfile>
+                                <downloadUrl>http://java.com/download</downloadUrl>
+                                <classPath>
+                                    <mainClass>${executable.main.class}</mainClass>
+                                    <preCp>anything</preCp>
+                                </classPath>
+                                <icon>${executable.windows.applicationIcon.path}</icon>
+                                <jre>
+                                    <minVersion>${jdkLevel}</minVersion>
+                                    <jdkPreference>preferJre</jdkPreference>
+                                </jre>
+                                <versionInfo>
+                                    <fileVersion>${executable.windows.fileVersion}</fileVersion>
+                                    <txtFileVersion>${project.version}</txtFileVersion>
+                                    <fileDescription>${project.name}</fileDescription>
+                                    <copyright>${executable.windows.copyright}</copyright>
+                                    <productVersion>${executable.windows.productVersion}</productVersion>
+                                    <txtProductVersion>${executable.windows.txtProductVersion}</txtProductVersion>
+                                    <productName>${project.name}</productName>
+                                    <companyName>${executable.windows.companyName}</companyName>
+                                    <internalName>${executable.windows.internalName}</internalName>
+                                    <originalFilename>${executable.windows.originalFilename}</originalFilename>
+                                </versionInfo>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </profile>
         <!-- end Web application server helpers -->
         <!-- start jar helper -->
         <profile>
@@ -218,13 +310,13 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>${executable.jar.main.class}</mainClass>
+                                    <mainClass>${executable.main.class}</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
-                            <finalName>${executable.jar.finalName}</finalName>
+                            <finalName>${executable.finalName}</finalName>
                             <appendAssemblyId>${executable.jar.appendAssemblyId}</appendAssemblyId>
                         </configuration>
                         <executions>
