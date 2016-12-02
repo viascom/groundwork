@@ -1,9 +1,5 @@
 # target folders
-pom/target/
-service-result/target/
-restclient/target
-restclient-jaxrs/target
-restclient-http/target
+*/target/
 
 # Mac
 .DS_Store
@@ -62,3 +58,6 @@ hs_err_pid*
 
 # JIRA plugin
 atlassian-ide-plugin.xml
+
+# Project specific
+*/.idea
