@@ -80,7 +80,7 @@ public interface RequestInterface<T extends Response> {
      * value: property value
      *
      * Example:
-     * {"definitionId": "12974", "active": "true"} => ?definitionId=12974&active=true
+     * {"definitionId": "12974", "active": "true"} = ?definitionId=12974&amp;active=true
      *
      * @return query map of the request
      */
@@ -93,7 +93,7 @@ public interface RequestInterface<T extends Response> {
      * value: property value
      *
      * Example:
-     * {"definitionId": "12974", "active": "true"} => ?definitionId=12974&active=true
+     * {"definitionId": "12974", "active": "true"} = ?definitionId=12974&amp;active=true
      *
      * @param queryParamMap hash map containing the query properties
      */
@@ -181,7 +181,7 @@ public interface RequestInterface<T extends Response> {
     /**
      * Set additional allowed status codes
      *
-     * <i>this will extend the default of statuscode >= 200 && < 300</i>
+     * <i>this will extend the default of statuscode &gt;= 200 &amp;&amp; &lt; 300</i>
      *
      * @param additionalAllowedStatusCodes Array of additional allowed status codes
      */
@@ -204,7 +204,7 @@ public interface RequestInterface<T extends Response> {
     /**
      * Set additional denied status codes
      *
-     * <i>this will override the default of statuscode >= 200 && < 300</i>
+     * <i>this will override the default of statuscode &gt;= 200 &amp;&amp; &lt; 300</i>
      *
      * @param additionalDeniedStatusCodes Array of additional denied status codes
      */
