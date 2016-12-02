@@ -1,8 +1,8 @@
-package ch.viascom.groundwork.restclient.http;
+package ch.viascom.groundwork.restclient.android;
 
-import ch.viascom.groundwork.restclient.http.filter.PerformancePathRequestFilter;
-import ch.viascom.groundwork.restclient.http.request.simple.SimpleGetRequest;
-import ch.viascom.groundwork.restclient.http.util.Stopwatch;
+import ch.viascom.groundwork.restclient.android.filter.PerformancePathRequestFilter;
+import ch.viascom.groundwork.restclient.android.request.simple.SimpleGetRequest;
+import ch.viascom.groundwork.restclient.android.util.Stopwatch;
 import ch.viascom.groundwork.restclient.response.NoContentResponse;
 import org.junit.Ignore;
 import org.junit.Test;
