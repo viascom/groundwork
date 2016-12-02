@@ -25,8 +25,8 @@ public abstract class GetRequest<T extends Response> extends Request<T> implemen
         String encodedPath = getEncodedPath();
         log.debug("GET - path: {}", encodedPath);
 
-        prepareQuery();
         HttpGet httpGet = new HttpGet();
+
         try {
             prepareQuery();
             httpGet.setURI(requestUrl);
@@ -35,10 +35,11 @@ public abstract class GetRequest<T extends Response> extends Request<T> implemen
             HttpResponse response = httpClient.execute(httpGet, httpClientContext);
 
             return response;
+
         } catch (Exception e) {
             executeFilter(null, httpGet, null, this, null, e, FilterTypes.REQUESTEXCEPTIONFILTER);
         }
-        return null;
 
+        return null;
     }
 }
