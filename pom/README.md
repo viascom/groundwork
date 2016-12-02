@@ -21,9 +21,9 @@ This profile generates a code coverage file based on your unit tests.
 #### Executable-Jar
 This profile creates a executable jar with the name of the build + -jar-with-dependencies
 You have to define the following properties.
-- <executable.jar.main.class>Your Main-Class</executable.jar.main.class>
-- <executable.jar.finalName>executable-output</executable.jar.finalName>
-- <executable.jar.appendAssemblyId>true</executable.jar.appendAssemblyId>
+- `<executable.jar.main.class>Your Main-Class</executable.jar.main.class>`
+- `<executable.jar.finalName>executable-output</executable.jar.finalName>`
+- `<executable.jar.appendAssemblyId>true</executable.jar.appendAssemblyId>`
 
 #### Wildfly (wildfly)
 This profile automaticaly (if *install* goal is used) deploys your build to a wildfly applicationserver.
@@ -31,14 +31,14 @@ If you have a multi module project you have to define `<applicationserver.wildfl
 in every module you won't deploy.
 
 If you activate this profile make sure your define the following properties according to your setup.
-- <applicationserver.wildfly.hostname>localhost</applicationserver.wildfly.hostname>
-- <applicationserver.wildfly.username>admin</applicationserver.wildfly.username>
-- <applicationserver.wildfly.password>password</applicationserver.wildfly.password>
+- `<applicationserver.wildfly.hostname>localhost</applicationserver.wildfly.hostname>`
+- `<applicationserver.wildfly.username>admin</applicationserver.wildfly.username>`
+- `<applicationserver.wildfly.password>password</applicationserver.wildfly.password>`
 
 #### JBoss (jboss)
 This profile automaticaly (if *install* goal is used) deploys your build to a jboss applicationserver.
 If you activate this profile make sure your define the following properties according to your setup.
-- <applicationserver.jboss.hostname>localhost</applicationserver.jboss.hostname>
-- <applicationserver.jboss.port>9990</applicationserver.jboss.port>
-- <applicationserver.jboss.username>admin</applicationserver.jboss.username>
-- <applicationserver.jboss.password>password</applicationserver.jboss.password>
+- `<applicationserver.jboss.hostname>localhost</applicationserver.jboss.hostname>`
+- `<applicationserver.jboss.port>9990</applicationserver.jboss.port>`
+- `<applicationserver.jboss.username>admin</applicationserver.jboss.username>`
+- `<applicationserver.jboss.password>password</applicationserver.jboss.password>`
