@@ -1,42 +1,39 @@
-package ch.viascom.groundwork.restclient.http.request;
+package ch.viascom.groundwork.restclient.android.request;
 
 import ch.viascom.groundwork.restclient.filter.FilterTypes;
 import ch.viascom.groundwork.restclient.request.GetRequestInterface;
 import ch.viascom.groundwork.restclient.response.generic.Response;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import okhttp3.OkHttpClient;
 
 /**
- * @author patrick.boesch@viascom.ch
+ * @author patrick.boesch@viascom.ch, nikola.stankovic@viascom.ch
  */
 public abstract class GetRequest<T extends Response> extends Request<T> implements GetRequestInterface<T> {
-    private static final Logger log = LogManager.getLogger(PostRequest.class);
 
-    protected GetRequest(String url, HttpClient httpClient) {
+    protected GetRequest(String url, OkHttpClient httpClient) {
         super(url, httpClient);
     }
 
     @Override
-    public HttpResponse request() throws Exception {
+    public okhttp3.Response request() throws Exception {
+
         executeFilter(null, null, null, this, null, null, FilterTypes.REQUESTFILTER);
         String encodedPath = getEncodedPath();
-        log.debug("GET - path: {}", encodedPath);
 
-        HttpGet httpGet = new HttpGet();
+        okhttp3.Request.Builder httpGetBuilder = new okhttp3.Request.Builder();
 
         try {
             prepareQuery();
-            httpGet.setURI(requestUrl);
-            httpGet.setHeaders(getRequestHeader());
+            httpGetBuilder.url(requestUrl.toURL());
+            httpGetBuilder.headers(getRequestHeader());
+            okhttp3.Request httpGet = httpGetBuilder.build();
             executeFilter(null, httpGet, null, this, null, null, FilterTypes.REQUESTWRITEFILTER);
-            HttpResponse response = httpClient.execute(httpGet, httpClientContext);
+            okhttp3.Response response = httpClient.newCall(httpGet).execute();
 
             return response;
 
         } catch (Exception e) {
+            okhttp3.Request httpGet = httpGetBuilder.build();
             executeFilter(null, httpGet, null, this, null, e, FilterTypes.REQUESTEXCEPTIONFILTER);
         }
 
