@@ -4,8 +4,8 @@ GroundWork - RESTClient - HTTP-Component for Android
 The RESTClient http-component for Android implementation module provides an easy way to call REST endpoints. It is part of the GroundWork Project by Viascom.
 
 ### Version:
-[![release](https://img.shields.io/badge/release-v1.0--SNAPSHOT-red.svg)](https://github.com/Viascom/groundwork/tree/master/restclient-android)<br/>
-[![develop](https://img.shields.io/badge/develop-v1.0--SNAPSHOT-red.svg)](https://github.com/Viascom/groundwork/tree/develop/restclient-android)
+[![release](https://img.shields.io/badge/release-v1.0-red.svg)](https://github.com/Viascom/groundwork/tree/master/restclient-android)<br/>
+[![develop](https://img.shields.io/badge/develop-v1.0-red.svg)](https://github.com/Viascom/groundwork/tree/develop/restclient-android)
 
 ### Quick Start:
 To add this implementation into your project:
@@ -17,13 +17,13 @@ To add this implementation into your project:
 <dependency>
     <groupId>ch.viascom.groundwork</groupId>
     <artifactId>restclient-android</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 </dependency>
 ```
 
 ##### gradle
 ```
-compile 'ch.viascom.groundwork:restclient-android:1.0-SNAPSHOT'
+compile 'ch.viascom.groundwork:restclient-android:1.0'
 ```
 
 #### How to use
@@ -59,7 +59,7 @@ Possible injection points are:
 - On a successful response code (SuccessResponseCodeFilter)
 - On a error response code (ErrorResponseCodeFilter)
 
-Preinstalled filter: 
+Preinstalled filter:
 - BasicAuthFilter
 - BearerTokenFilter
 - DefaultSuccessResponseCodeFilter
