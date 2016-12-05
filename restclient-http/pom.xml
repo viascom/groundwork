@@ -7,11 +7,11 @@
     <parent>
         <groupId>ch.viascom.groundwork</groupId>
         <artifactId>pom</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.1</version>
     </parent>
 
     <artifactId>restclient-http</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
 
     <name>GroundWork - RESTClient - HTTP</name>
     <description>The RESTClient http module provides an easy way to call REST endpoints. It is part of the GroundWork Project by Viascom.</description>
