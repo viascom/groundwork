@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ch.viascom.groundwork</groupId>
+        <artifactId>pom</artifactId>
+        <version>1.1</version>
+    </parent>
+
+    <artifactId>service-result</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <name>GroundWork - ServiceResult</name>
+    <description>The ServiceResult module provides a standard result for your REST application. It is part of the GroundWork Project by Viascom.</description>
+    <url>https://github.com/viascom/groundwork/</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, Version 3.0</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Patrick Bösch</name>
+            <email>patrick.boesch@viascom.ch</email>
+            <organization>Viascom</organization>
+            <organizationUrl>http://www.viascom.ch</organizationUrl>
+        </developer>
+        <developer>
+            <name>Nikola Stankovic</name>
+            <email>nikola.stankovic@viascom.ch</email>
+            <organization>Viascom</organization>
+            <organizationUrl>http://www.viascom.ch</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:viascom/groundwork.git</connection>
+        <developerConnection>scm:git:git@github.com:viascom/groundwork.git</developerConnection>
+        <url>git@github.com:viascom/groundwork.git</url>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+
+    <dependencies>
+        <!-- Lombock -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- Apache commons lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- Junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert-core</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
