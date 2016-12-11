@@ -13,9 +13,12 @@ import ch.viascom.groundwork.serviceresult.exception.ServiceFault;
 import ch.viascom.groundwork.serviceresult.util.Metadata;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 
 /**
@@ -26,6 +29,7 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
 
     private ServiceResultStatus status;
     private Class<T> type;
+    @Getter(AccessLevel.PRIVATE)
     private T content;
     private String hash;
     private String destination;
@@ -75,10 +79,12 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
         return response.toString();
     }
 
-    public T getContent() {
+    public T getContent(Class<T> contentClass) {
         try {
-            ServiceResult<T> result = parser.fromJson(getStringBody(), new TypeToken<ServiceResult<T>>() {
-            }.getType());
+
+            Type type = new ServiceResultParameterizedType(contentClass);
+
+            ServiceResult<T> result = parser.fromJson(getStringBody(), type);
 
             this.type = result.getType();
             this.hash = result.getHash();
