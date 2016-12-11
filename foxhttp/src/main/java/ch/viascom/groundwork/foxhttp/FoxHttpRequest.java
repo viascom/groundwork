@@ -146,9 +146,10 @@ public class FoxHttpRequest<T extends Serializable> {
 
             connection.connect();
 
+            int responseCode = ((HttpURLConnection) connection).getResponseCode();
+
             if (!skipResponseBody) {
                 InputStream is;
-                int responseCode = ((HttpURLConnection) connection).getResponseCode();
                 if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
                     //On success response code
                     is = connection.getInputStream();
