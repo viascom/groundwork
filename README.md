@@ -5,6 +5,7 @@ GroundWork Project
 Collection of useful libraries for Java and Android.
 
 ### Version:
+[![FoxHttp](https://img.shields.io/badge/FoxHttp-coming soon-lightgray.svg)](https://github.com/viascom/groundwork)<br/>
 [![POM](https://img.shields.io/badge/POM-v1.1-red.svg)](https://github.com/viascom/groundwork)<br/>
 [![Service-Result](https://img.shields.io/badge/Service--Result-v1.0-red.svg)](https://github.com/viascom/groundwork)<br/>
 [![REST-Client](https://img.shields.io/badge/REST--Client-v2.2-red.svg)](https://github.com/viascom/groundwork)<br/>
