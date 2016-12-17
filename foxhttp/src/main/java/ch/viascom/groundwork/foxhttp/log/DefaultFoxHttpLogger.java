@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Default logger for FoxHttp
+ *
  * @author patrick.boesch@viascom.ch
  */
 public class DefaultFoxHttpLogger implements FoxHttpLogger {
@@ -28,30 +30,9 @@ public class DefaultFoxHttpLogger implements FoxHttpLogger {
     }
 
     @Override
-    public void debug(String message) {
+    public void log(String message) {
         if (enabled) {
             logger.log(Level.FINE, message);
-        }
-    }
-
-    @Override
-    public void info(String message) {
-        if (enabled) {
-            logger.log(Level.INFO, message);
-        }
-    }
-
-    @Override
-    public void warn(String message) {
-        if (enabled) {
-            logger.log(Level.WARNING, message);
-        }
-    }
-
-    @Override
-    public void error(String message) {
-        if (enabled) {
-            logger.log(Level.SEVERE, message);
         }
     }
 }

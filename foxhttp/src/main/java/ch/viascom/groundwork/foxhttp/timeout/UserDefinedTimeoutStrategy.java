@@ -1,16 +1,16 @@
 package ch.viascom.groundwork.foxhttp.timeout;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * @author patrick.boesch@viascom.ch
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class DefaultTimeoutStrategy implements FoxHttpTimeoutStrategy {
+public class UserDefinedTimeoutStrategy implements FoxHttpTimeoutStrategy {
     private int connectionTimeout = 0;
     private int readTimeout = 0;
 }

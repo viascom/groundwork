@@ -4,13 +4,18 @@ import ch.viascom.groundwork.foxhttp.body.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.type.ContentType;
 import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
+import lombok.ToString;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
 
 /**
+ * RequestStringBody for FoxHttp
+ *
+ * Stores a string for a request body.
+ *
  * @author patrick.boesch@viascom.ch
  */
+@ToString
 public class RequestStringBody extends FoxHttpRequestBody {
     private String content;
 

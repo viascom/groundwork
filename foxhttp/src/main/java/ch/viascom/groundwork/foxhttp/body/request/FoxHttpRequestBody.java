@@ -12,6 +12,8 @@ import lombok.Getter;
 import java.io.ByteArrayOutputStream;
 
 /**
+ * Abstract FoxHttpRequestBody
+ *
  * @author patrick.boesch@viascom.ch
  */
 public abstract class FoxHttpRequestBody implements FoxHttpBody {
@@ -26,6 +28,7 @@ public abstract class FoxHttpRequestBody implements FoxHttpBody {
     public abstract ContentType getOutputContentType();
 
     protected void executeInterceptor(FoxHttpRequestBodyContext context) throws FoxHttpException {
+        context.getRequest().getFoxHttpClient().getFoxHttpLogger().log("executeRequestBodyInterceptor()");
         FoxHttpInterceptorExecutor.executeRequestBodyInterceptor(
                 new FoxHttpRequestBodyInterceptorContext(context.getUrlConnection(), this, context.getRequest(), context.getClient())
         );

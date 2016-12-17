@@ -40,6 +40,7 @@ public class FoxHttpClient {
     private FoxHttpParser foxHttpRequestParser;
 
     @Getter
+    @Setter
     //Interceptors
     private HashMap<FoxHttpInterceptorType, ArrayList<FoxHttpInterceptor>> foxHttpInterceptors = new HashMap<>();
 

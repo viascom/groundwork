@@ -7,12 +7,14 @@ import ch.viascom.groundwork.foxhttp.exception.FoxHttpResponseException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
 import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptorExecutor;
 import ch.viascom.groundwork.foxhttp.interceptor.response.context.FoxHttpResponseBodyInterceptorContext;
+import ch.viascom.groundwork.foxhttp.type.RequestType;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 
 /**
  * @author patrick.boesch@viascom.ch
@@ -82,5 +84,41 @@ public class FoxHttpResponse<T extends Serializable> {
         } catch (IOException e) {
             throw new FoxHttpResponseException(e);
         }
+    }
+
+    /**
+     * Returns a readable summary uf the response
+     *
+     * @param showBody should the response body be included
+     * @return summary uf the response
+     */
+    public String toString(boolean showBody) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("======= Request =======\n");
+        stringBuilder.append("Request-URL: ").append(foxHttpRequest.getUrl().toString()).append("\n");
+        stringBuilder.append("Request-Method: ").append(foxHttpRequest.getRequestType()).append("\n");
+        stringBuilder.append("Request-Header: ").append(foxHttpRequest.getRequestHeader()).append("\n");
+        if (foxHttpRequest.getRequestType() == RequestType.POST || foxHttpRequest.getRequestType() == RequestType.PUT) {
+            stringBuilder.append("Request-Body: ").append(foxHttpRequest.getRequestBody()).append("\n");
+        }
+        stringBuilder.append("\n");
+        stringBuilder.append("======= Response =======\n");
+        stringBuilder.append("Response-Code: ").append(responseCode);
+        try {
+            stringBuilder.append(" ").append(((HttpURLConnection) foxHttpRequest.getConnection()).getResponseMessage());
+        } catch (IOException e) {
+        }
+        stringBuilder.append("\n");
+        stringBuilder.append("Response-Headers: ").append(responseHeaders).append("\n");
+        if (showBody) {
+            stringBuilder.append("Response-Body: \n");
+            try {
+                stringBuilder.append(getStringBody()).append("\n");
+            } catch (IOException e) {
+                stringBuilder.append("null (IOException)").append("\n");
+            }
+        }
+        return stringBuilder.toString();
     }
 }

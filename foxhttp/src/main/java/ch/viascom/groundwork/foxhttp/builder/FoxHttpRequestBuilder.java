@@ -89,17 +89,17 @@ public class FoxHttpRequestBuilder<T extends Serializable> {
     }
 
     public FoxHttpRequestBuilder addRequestHeader(HeaderField headerField) {
-        foxHttpRequest.addRequestHeader(headerField.getName(), headerField.getValue());
+        foxHttpRequest.getRequestHeader().addHeader(headerField.getName(), headerField.getValue());
         return this;
     }
 
     public FoxHttpRequestBuilder addRequestHeader(String name, String value) {
-        foxHttpRequest.addRequestHeader(name, value);
+        foxHttpRequest.getRequestHeader().addHeader(name, value);
         return this;
     }
 
     public FoxHttpRequestBuilder addRequestHeader(HeaderTypes name, String value) {
-        foxHttpRequest.addRequestHeader(name, value);
+        foxHttpRequest.getRequestHeader().addHeader(name, value);
         return this;
     }
 

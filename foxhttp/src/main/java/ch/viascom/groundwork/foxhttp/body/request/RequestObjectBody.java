@@ -4,13 +4,20 @@ import ch.viascom.groundwork.foxhttp.body.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.type.ContentType;
 import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
+import lombok.ToString;
 
 import java.io.DataOutputStream;
 import java.io.Serializable;
 
 /**
+ * RequestObjectBody for FoxHttp
+ *
+ * Stores an object for a request body.
+ * To use this you have to set a RequestParser.
+ *
  * @author patrick.boesch@viascom.ch
  */
+@ToString
 public class RequestObjectBody extends FoxHttpRequestBody {
     private Serializable content;
 

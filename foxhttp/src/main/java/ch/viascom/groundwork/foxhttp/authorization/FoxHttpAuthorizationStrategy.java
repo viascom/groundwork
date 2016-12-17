@@ -4,6 +4,8 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 
 /**
+ * FoxHttpAuthorizationStrategy interface
+ *
  * @author patrick.boesch@viascom.ch
  */
 public interface FoxHttpAuthorizationStrategy {

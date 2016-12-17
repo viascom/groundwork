@@ -1,5 +1,6 @@
 package ch.viascom.groundwork.foxhttp.interceptors;
 
+import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
 import ch.viascom.groundwork.foxhttp.interceptor.response.FoxHttpResponseInterceptor;
 import ch.viascom.groundwork.foxhttp.interceptor.response.context.FoxHttpResponseInterceptorContext;
 
@@ -8,7 +9,12 @@ import ch.viascom.groundwork.foxhttp.interceptor.response.context.FoxHttpRespons
  */
 public class ResponseInterceptor implements FoxHttpResponseInterceptor {
     @Override
-    public void onIntercept(FoxHttpResponseInterceptorContext context) {
+    public void onIntercept(FoxHttpResponseInterceptorContext context) throws FoxHttpException {
 
+    }
+
+    @Override
+    public int getWeight() {
+        return 0;
     }
 }
