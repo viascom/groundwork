@@ -17,7 +17,7 @@ public enum FoxHttpInterceptorType {
 
     private Class interceptorClass;
 
-    private FoxHttpInterceptorType(Class interceptorClass) {
+    FoxHttpInterceptorType(Class interceptorClass) {
         this.interceptorClass = interceptorClass;
     }
 

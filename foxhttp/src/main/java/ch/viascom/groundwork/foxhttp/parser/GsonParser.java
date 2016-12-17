@@ -9,13 +9,13 @@ import java.io.Serializable;
  */
 public class GsonParser implements FoxHttpParser {
     @Override
-    public Serializable jsonToObject(String json, Class<Serializable> type) {
+    public Serializable serializedToObject(String json, Class<Serializable> type) {
         Gson gson = new Gson();
         return gson.fromJson(json, type);
     }
 
     @Override
-    public String objectToJson(Serializable o) {
+    public String objectToSerialized(Serializable o) {
         Gson gson = new Gson();
         return gson.toJson(o);
     }
