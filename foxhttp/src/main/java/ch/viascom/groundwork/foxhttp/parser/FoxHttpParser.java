@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @author patrick.boesch@viascom.ch
  */
 public interface FoxHttpParser {
-    Serializable jsonToObject(String json, Class<Serializable> type) ;
+    Serializable serializedToObject(String input, Class<Serializable> type) ;
 
-    String objectToJson(Serializable o);
+    String objectToSerialized(Serializable o);
 }

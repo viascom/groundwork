@@ -80,7 +80,7 @@ public class FoxHttpResponse<T extends Serializable> {
             throw new FoxHttpResponseException("getParsedBody needs a FoxHttpResponseParser to deserialize the body");
         }
         try {
-            return (T) foxHttpClient.getFoxHttpResponseParser().jsonToObject(getStringBody(), (Class<Serializable>) parseClass);
+            return (T) foxHttpClient.getFoxHttpResponseParser().serializedToObject(getStringBody(), (Class<Serializable>) parseClass);
         } catch (IOException e) {
             throw new FoxHttpResponseException(e);
         }

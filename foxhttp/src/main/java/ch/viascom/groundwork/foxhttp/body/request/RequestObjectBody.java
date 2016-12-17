@@ -38,7 +38,7 @@ public class RequestObjectBody extends FoxHttpRequestBody {
             throw new FoxHttpRequestException("RequestObjectBody needs a FoxHttpRequestParser to serialize the body");
         }
 
-        String json = context.getClient().getFoxHttpRequestParser().objectToJson(content);
+        String json = context.getClient().getFoxHttpRequestParser().objectToSerialized(content);
 
         //Add Content-Length header if not exist
         if (context.getUrlConnection().getRequestProperty(HeaderTypes.CONTENT_LENGTH.toString()) == null) {
