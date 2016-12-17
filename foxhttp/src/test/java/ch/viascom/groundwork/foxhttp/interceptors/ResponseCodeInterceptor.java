@@ -11,4 +11,9 @@ public class ResponseCodeInterceptor implements FoxHttpResponseCodeInterceptor {
     @Override
     public void onIntercept(FoxHttpResponseCodeInterceptorContext context) throws FoxHttpRequestException {
     }
+
+    @Override
+    public int getWeight() {
+        return 0;
+    }
 }

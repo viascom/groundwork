@@ -1,21 +1,23 @@
 package ch.viascom.groundwork.foxhttp.authorization;
 
 import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.net.URLConnection;
 import java.util.Base64;
 
 /**
+ * Basic Auth for FoxHttp
+ *
+ * This FoxHttpAuthorization will create a header with data for a basic authentication.
+ *
  * @author patrick.boesch@viascom.ch
  */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class BasicAuthAuthorization implements FoxHttpAuthorization {
 
     private String username;
@@ -27,6 +29,11 @@ public class BasicAuthAuthorization implements FoxHttpAuthorization {
     }
 
 
+    /**
+     * Create user:password string for authentication.
+     *
+     * @return user:password string
+     */
     private String getBasicAuthenticationEncoding() {
         String userPassword = username + ":" + password;
         return new String(Base64.getEncoder().encode(userPassword.getBytes()));

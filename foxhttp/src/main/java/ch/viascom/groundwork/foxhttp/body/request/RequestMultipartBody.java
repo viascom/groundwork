@@ -4,6 +4,7 @@ import ch.viascom.groundwork.foxhttp.body.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.type.ContentType;
 import ch.viascom.groundwork.foxhttp.util.NamedInputStream;
+import lombok.ToString;
 
 import java.io.*;
 import java.net.URLConnection;
@@ -11,8 +12,13 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 
 /**
+ * RequestMultipartBody for FoxHttp
+ *
+ * Stores multiple data for a request body
+ *
  * @author patrick.boesch@viascom.ch
  */
+@ToString
 public class RequestMultipartBody extends FoxHttpRequestBody {
 
     private final String boundary;
@@ -37,7 +43,6 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
     @Override
     public void setBody(FoxHttpRequestBodyContext context) throws FoxHttpRequestException {
         try {
-            //outputStream = urlConnection.getOutputStream();
             writer = new PrintWriter(new OutputStreamWriter(outputStream, charset), true);
 
             processFormFields();
@@ -90,9 +95,9 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
     }
 
     /**
-     * Adds a upload file section to the request
+     * Adds a file to the request
      *
-     * @param fieldName  name attribute in <input type="file" name="..." />
+     * @param fieldName  name attribute
      * @param uploadFile a File to be uploaded
      * @throws IOException
      */
@@ -100,6 +105,12 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
         stream.put(fieldName, new NamedInputStream(uploadFile.getName(), new FileInputStream(uploadFile)));
     }
 
+    /**
+     * Adds an inputstream to te request
+     * @param name
+     * @param filename
+     * @param inputStream
+     */
     public void addInputStreamPart(String name, String filename, InputStream inputStream) {
         stream.put(name, new NamedInputStream(filename, inputStream));
     }

@@ -11,4 +11,9 @@ public class RequestHeaderInterceptor implements FoxHttpRequestHeaderInterceptor
     public void onIntercept(FoxHttpRequestHeaderInterceptorContext context) {
 
     }
+
+    @Override
+    public int getWeight() {
+        return 0;
+    }
 }

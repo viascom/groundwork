@@ -16,9 +16,9 @@ import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestI
 import ch.viascom.groundwork.foxhttp.interceptor.response.context.FoxHttpResponseCodeInterceptorContext;
 import ch.viascom.groundwork.foxhttp.interceptor.response.context.FoxHttpResponseInterceptorContext;
 import ch.viascom.groundwork.foxhttp.query.FoxHttpRequestQuery;
-import ch.viascom.groundwork.foxhttp.type.ContentType;
 import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -70,6 +70,7 @@ public class FoxHttpRequest<T extends Serializable> {
     @Setter
     private FoxHttpClient foxHttpClient;
 
+    @Getter(AccessLevel.PROTECTED)
     private URLConnection connection;
 
 
@@ -81,14 +82,30 @@ public class FoxHttpRequest<T extends Serializable> {
         this.foxHttpClient = foxHttpClient;
     }
 
-    public FoxHttpResponse<T> execute() throws Exception {
+    /**
+     * Execute a this request
+     *
+     * @return Response if this request
+     * @throws FoxHttpException
+     */
+    public FoxHttpResponse<T> execute() throws FoxHttpException {
         return execute(foxHttpClient);
     }
 
-    public FoxHttpResponse<T> execute(FoxHttpClient foxHttpClient) throws Exception {
+    /**
+     * Execute a this request
+     *
+     * @param foxHttpClient a specific client which will be used for this request
+     * @return Response if this request
+     * @throws FoxHttpException
+     */
+    public FoxHttpResponse<T> execute(FoxHttpClient foxHttpClient) throws FoxHttpException {
+        foxHttpClient.getFoxHttpLogger().log("========= Request =========");
 
+        foxHttpClient.getFoxHttpLogger().log("setFoxHttpClient(" + foxHttpClient + ")");
         this.foxHttpClient = foxHttpClient;
 
+        foxHttpClient.getFoxHttpLogger().log("verifyRequest()");
         verifyRequest();
 
         return executeHttp((url.getProtocol().equals("https")));
@@ -97,77 +114,107 @@ public class FoxHttpRequest<T extends Serializable> {
     private FoxHttpResponse<T> executeHttp(boolean isHttps) throws FoxHttpRequestException {
         try {
             //Execute interceptor
+            foxHttpClient.getFoxHttpLogger().log("executeRequestInterceptor()");
             FoxHttpInterceptorExecutor.executeRequestInterceptor(new FoxHttpRequestInterceptorContext(url, this, foxHttpClient));
 
+            foxHttpClient.getFoxHttpLogger().log("setCookieStore(" + foxHttpClient.getFoxHttpCookieStore() + ")");
             CookieHandler.setDefault((CookieManager) foxHttpClient.getFoxHttpCookieStore());
+
+            foxHttpClient.getFoxHttpLogger().log("prepareQuery(" + getRequestQuery() + ")");
             prepareQuery();
 
             //Create connection
+            foxHttpClient.getFoxHttpLogger().log("createConnection(" + url + ")");
             if (foxHttpClient.getFoxHttpProxyStrategy() == null) {
                 connection = url.openConnection();
             } else {
+                foxHttpClient.getFoxHttpLogger().log("useProxy(" + foxHttpClient.getFoxHttpProxyStrategy() + ")");
                 connection = url.openConnection(foxHttpClient.getFoxHttpProxyStrategy().getProxy(url));
                 if (foxHttpClient.getFoxHttpProxyStrategy().hasProxyAuthorization(url)) {
                     setHeaderIfNotExist(HeaderTypes.PROXY_AUTHORIZATION, foxHttpClient.getFoxHttpProxyStrategy().getProxyAuthorization(url), connection);
                 }
             }
+
+            foxHttpClient.getFoxHttpLogger().log("setRequestMethod(" + requestType.toString() + ")");
             ((HttpURLConnection) connection).setRequestMethod(requestType.toString());
+
             //Set headers
+            foxHttpClient.getFoxHttpLogger().log("prepareHeader(" + getRequestHeader() + ")");
             prepareHeader(connection);
+
             //Set User-Agent if not exist
+            foxHttpClient.getFoxHttpLogger().log("setUserAgentIfNotExist(" + foxHttpClient.getFoxHttpUserAgent() + ")");
             setHeaderIfNotExist(HeaderTypes.USER_AGENT, foxHttpClient.getFoxHttpUserAgent(), connection);
+
 
             connection.setUseCaches(false);
             connection.setDoInput(true);
+            foxHttpClient.getFoxHttpLogger().log("setDoOutput(" + doOutput() + ")");
             connection.setDoOutput(doOutput());
+            foxHttpClient.getFoxHttpLogger().log("setFollowRedirects(" + followRedirect + ")");
             ((HttpURLConnection) connection).setInstanceFollowRedirects(followRedirect);
             HttpURLConnection.setFollowRedirects(followRedirect);
+            foxHttpClient.getFoxHttpLogger().log("setFoxHttpTimeoutStrategy(" + foxHttpClient.getFoxHttpTimeoutStrategy() + ")");
             connection.setConnectTimeout(foxHttpClient.getFoxHttpTimeoutStrategy().getConnectionTimeout());
             connection.setReadTimeout(foxHttpClient.getFoxHttpTimeoutStrategy().getReadTimeout());
 
             if (isHttps) {
+                foxHttpClient.getFoxHttpLogger().log("setSSLSocketFactory(" + foxHttpClient.getFoxHttpSSLTrustStrategy() + ")");
                 ((HttpsURLConnection) connection).setSSLSocketFactory(foxHttpClient.getFoxHttpSSLTrustStrategy().getSSLSocketFactory(((HttpsURLConnection) connection)));
+                foxHttpClient.getFoxHttpLogger().log("setHostnameVerifier(" + foxHttpClient.getFoxHttpHostTrustStrategy() + ")");
                 ((HttpsURLConnection) connection).setHostnameVerifier(foxHttpClient.getFoxHttpHostTrustStrategy());
             }
 
             //Process authorization strategy
+            foxHttpClient.getFoxHttpLogger().log("processAuthorizationStrategy(" + foxHttpClient.getFoxHttpAuthorizationStrategy() + ")");
             processAuthorizationStrategy(connection);
 
             //Execute interceptor
+            foxHttpClient.getFoxHttpLogger().log("executeRequestHeaderInterceptor()");
             FoxHttpInterceptorExecutor.executeRequestHeaderInterceptor(new FoxHttpRequestHeaderInterceptorContext(connection, this, foxHttpClient));
 
             //Send request
             if (doOutput()) {
                 //Add Content-Type header if not exist
+                foxHttpClient.getFoxHttpLogger().log("setContentTypeIfNotExist(" + requestBody.getOutputContentType().toString() + ")");
                 setHeaderIfNotExist(HeaderTypes.CONTENT_TYPE, requestBody.getOutputContentType().toString(), connection);
                 //Set request body
+                foxHttpClient.getFoxHttpLogger().log("setRequestBodyStream(" + getRequestBody() + ")");
                 setRequestBodyStream(connection);
             }
 
+            foxHttpClient.getFoxHttpLogger().log("sendRequest()");
             connection.connect();
 
             int responseCode = ((HttpURLConnection) connection).getResponseCode();
+            foxHttpClient.getFoxHttpLogger().log("responseCode(" + responseCode + ")");
 
             if (!skipResponseBody) {
                 InputStream is;
                 if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
                     //On success response code
+                    foxHttpClient.getFoxHttpLogger().log("getResponseBody(success)");
                     is = connection.getInputStream();
                 } else {
                     //On error response code
+                    foxHttpClient.getFoxHttpLogger().log("getResponseBody(error)");
                     is = ((HttpURLConnection) connection).getErrorStream();
                 }
 
                 //Execute interceptor
+                foxHttpClient.getFoxHttpLogger().log("executeResponseCodeInterceptor()");
                 FoxHttpInterceptorExecutor.executeResponseCodeInterceptor(
                         new FoxHttpResponseCodeInterceptorContext(responseCode, this, foxHttpClient)
                 );
 
+                foxHttpClient.getFoxHttpLogger().log("createFoxHttpResponse()");
                 foxHttpResponse = new FoxHttpResponse<>(is, this, responseCode, foxHttpClient, new FoxHttpResponseInformation(url, requestType));
                 //Process response headers
+                foxHttpClient.getFoxHttpLogger().log("processResponseHeader()");
                 processResponseHeader(foxHttpResponse, connection);
 
                 //Execute interceptor
+                foxHttpClient.getFoxHttpLogger().log("executeResponseInterceptor()");
                 FoxHttpInterceptorExecutor.executeResponseInterceptor(
                         new FoxHttpResponseInterceptorContext(responseCode, foxHttpResponse, this, foxHttpClient)
                 );
@@ -216,11 +263,12 @@ public class FoxHttpRequest<T extends Serializable> {
 
     private void processAuthorizationStrategy(URLConnection connection) {
         ArrayList<FoxHttpAuthorization> foxHttpAuthorizations = foxHttpClient.getFoxHttpAuthorizationStrategy().getAuthorization(connection, FoxHttpAuthorizationScope.create(
-                url, RequestType.valueOf(((HttpURLConnection) connection).getRequestMethod()))
+                url.toString(), RequestType.valueOf(((HttpURLConnection) connection).getRequestMethod()))
         );
         for (FoxHttpAuthorization foxHttpAuthorization : foxHttpAuthorizations) {
+            foxHttpClient.getFoxHttpLogger().log("-> doAuthorization(" + foxHttpAuthorization + ")");
             foxHttpAuthorization.doAuthorization(connection, FoxHttpAuthorizationScope.create(
-                    url, RequestType.valueOf(((HttpURLConnection) connection).getRequestMethod()))
+                    url.toString(), RequestType.valueOf(((HttpURLConnection) connection).getRequestMethod()))
             );
         }
     }
@@ -256,22 +304,5 @@ public class FoxHttpRequest<T extends Serializable> {
         if (foxHttpClient == null) {
             throw new FoxHttpRequestException("FoxHttpClient of the request ist not defined");
         }
-    }
-
-
-    public void addRequestHeader(String name, String value) {
-        this.getRequestHeader().addHeader(name, value);
-    }
-
-    public void addRequestHeader(HeaderTypes name, String value) {
-        this.getRequestHeader().addHeader(name, value);
-    }
-
-    public void addRequestHeader(String name, ContentType value) {
-        this.getRequestHeader().addHeader(name, value.toString());
-    }
-
-    public void addRequestHeader(HeaderTypes name, ContentType value) {
-        this.getRequestHeader().addHeader(name, value.toString());
     }
 }

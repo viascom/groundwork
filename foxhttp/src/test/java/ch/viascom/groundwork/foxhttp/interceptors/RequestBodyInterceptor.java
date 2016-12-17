@@ -11,4 +11,9 @@ public class RequestBodyInterceptor implements FoxHttpRequestBodyInterceptor {
     public void onIntercept(FoxHttpRequestBodyInterceptorContext context) {
 
     }
+
+    @Override
+    public int getWeight() {
+        return 0;
+    }
 }

@@ -7,14 +7,19 @@ import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
 import ch.viascom.groundwork.foxhttp.util.QueryBuilder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 
 /**
+ * RequestUrlEncodedFormBody for FoxHttp
+ *
+ * Stores a fromData map for a request body.
+ *
  * @author patrick.boesch@viascom.ch
  */
+@ToString
 public class RequestUrlEncodedFormBody extends FoxHttpRequestBody {
     @Getter
     @Setter
@@ -66,4 +71,5 @@ public class RequestUrlEncodedFormBody extends FoxHttpRequestBody {
     public ContentType getOutputContentType() {
         return outputContentType;
     }
+
 }
