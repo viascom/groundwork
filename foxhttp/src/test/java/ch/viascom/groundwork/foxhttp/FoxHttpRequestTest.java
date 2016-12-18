@@ -4,11 +4,13 @@ import ch.viascom.groundwork.foxhttp.authorization.BasicAuthAuthorization;
 import ch.viascom.groundwork.foxhttp.authorization.BearerTokenAuthorization;
 import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
 import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBody;
-import ch.viascom.groundwork.foxhttp.body.request.RequestObjectBody;
 import ch.viascom.groundwork.foxhttp.body.request.RequestStringBody;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpRequestHeader;
-import ch.viascom.groundwork.foxhttp.models.*;
+import ch.viascom.groundwork.foxhttp.models.BasicAuthResponse;
+import ch.viascom.groundwork.foxhttp.models.GetResponse;
+import ch.viascom.groundwork.foxhttp.models.PostResponse;
+import ch.viascom.groundwork.foxhttp.models.QueryDataHolder;
 import ch.viascom.groundwork.foxhttp.objects.RemoveMeAuthorization;
 import ch.viascom.groundwork.foxhttp.parser.GsonParser;
 import ch.viascom.groundwork.foxhttp.proxy.FoxHttpProxyStrategy;
@@ -71,8 +73,8 @@ public class FoxHttpRequestTest {
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
-        assertThat(foxHttpResponse.getResponseInformation().getRequestType()).isEqualTo(RequestType.GET);
-        assertThat(foxHttpResponse.getResponseInformation().getRequestUrl()).isEqualTo(new URL(endpoint + "get"));
+        assertThat(foxHttpResponse.getFoxHttpRequest().getRequestType()).isEqualTo(RequestType.GET);
+        assertThat(foxHttpResponse.getFoxHttpRequest().getUrl()).isEqualTo(new URL(endpoint + "get"));
 
         GetResponse getResponse = foxHttpResponse.getParsedBody(GetResponse.class);
 
@@ -205,31 +207,6 @@ public class FoxHttpRequestTest {
         PostResponse postResponse = foxHttpResponse.getParsedBody(PostResponse.class);
 
         assertThat(postResponse.getData()).isEqualTo("test string body 1234 - ?");
-    }
-
-    @Test
-    public void postObjectRequest() throws Exception {
-
-        FoxHttpClient foxHttpClient = new FoxHttpClient();
-        foxHttpClient.setFoxHttpResponseParser(new GsonParser());
-        foxHttpClient.setFoxHttpRequestParser(new GsonParser());
-
-        FoxHttpRequestBody requestBody = new RequestObjectBody(new User());
-
-        FoxHttpRequest<PostResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
-        foxHttpRequest.setUrl(new URL(endpoint + "post"));
-        foxHttpRequest.setRequestType(RequestType.POST);
-        foxHttpRequest.setFollowRedirect(true);
-        foxHttpRequest.setRequestBody(requestBody);
-
-        FoxHttpResponse<PostResponse> foxHttpResponse = foxHttpRequest.execute();
-
-        assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
-        assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
-
-        PostResponse postResponse = foxHttpResponse.getParsedBody(PostResponse.class);
-
-        assertThat(postResponse.getData()).isEqualTo(new GsonParser().objectToSerialized(new User()));
     }
 
     @Test
@@ -382,8 +359,8 @@ public class FoxHttpRequestTest {
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
-        assertThat(foxHttpResponse.getResponseInformation().getRequestType()).isEqualTo(RequestType.GET);
-        assertThat(foxHttpResponse.getResponseInformation().getRequestUrl()).isEqualTo(new URL(sslEndpoint + "get"));
+        assertThat(foxHttpResponse.getFoxHttpRequest().getRequestType()).isEqualTo(RequestType.GET);
+        assertThat(foxHttpResponse.getFoxHttpRequest().getUrl()).isEqualTo(new URL(sslEndpoint + "get"));
 
         GetResponse getResponse = foxHttpResponse.getParsedBody(GetResponse.class);
 

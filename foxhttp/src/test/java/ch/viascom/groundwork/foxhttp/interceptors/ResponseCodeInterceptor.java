@@ -10,6 +10,9 @@ import ch.viascom.groundwork.foxhttp.interceptor.response.context.FoxHttpRespons
 public class ResponseCodeInterceptor implements FoxHttpResponseCodeInterceptor {
     @Override
     public void onIntercept(FoxHttpResponseCodeInterceptorContext context) throws FoxHttpRequestException {
+        if(context.getResponseCode() == 404){
+            throw new FoxHttpRequestException("Found 404");
+        }
     }
 
     @Override

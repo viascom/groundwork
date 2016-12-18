@@ -10,7 +10,7 @@ import ch.viascom.groundwork.foxhttp.interceptor.response.context.FoxHttpRespons
 public class ResponseInterceptor implements FoxHttpResponseInterceptor {
     @Override
     public void onIntercept(FoxHttpResponseInterceptorContext context) throws FoxHttpException {
-
+        context.getFoxHttpResponse().setResponseCode(500);
     }
 
     @Override

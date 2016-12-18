@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 /**
  * RequestMultipartBody for FoxHttp
- *
+ * <p>
  * Stores multiple data for a request body
  *
  * @author patrick.boesch@viascom.ch
@@ -107,12 +107,13 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
 
     /**
      * Adds an inputstream to te request
+     *
      * @param name
-     * @param filename
+     * @param inputStreamName
      * @param inputStream
      */
-    public void addInputStreamPart(String name, String filename, InputStream inputStream) {
-        stream.put(name, new NamedInputStream(filename, inputStream));
+    public void addInputStreamPart(String name, String inputStreamName, InputStream inputStream) {
+        stream.put(name, new NamedInputStream(inputStreamName, inputStream));
     }
 
     private void processStream() throws IOException {

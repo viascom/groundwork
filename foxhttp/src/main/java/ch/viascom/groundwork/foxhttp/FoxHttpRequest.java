@@ -4,7 +4,6 @@ import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorization;
 import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
 import ch.viascom.groundwork.foxhttp.body.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBody;
-import ch.viascom.groundwork.foxhttp.body.response.FoxHttpResponseInformation;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
@@ -207,7 +206,7 @@ public class FoxHttpRequest<T extends Serializable> {
                 );
 
                 foxHttpClient.getFoxHttpLogger().log("createFoxHttpResponse()");
-                foxHttpResponse = new FoxHttpResponse<>(is, this, responseCode, foxHttpClient, new FoxHttpResponseInformation(url, requestType));
+                foxHttpResponse = new FoxHttpResponse<>(is, this, responseCode, foxHttpClient);
                 //Process response headers
                 foxHttpClient.getFoxHttpLogger().log("processResponseHeader()");
                 processResponseHeader(foxHttpResponse, connection);

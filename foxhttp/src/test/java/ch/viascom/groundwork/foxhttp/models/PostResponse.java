@@ -15,5 +15,7 @@ public class PostResponse implements Serializable {
     private HashMap<String, String> args;
     private HashMap<String, String> headers;
 
+
+    private HashMap<String, String> form;
     private String data;
 }

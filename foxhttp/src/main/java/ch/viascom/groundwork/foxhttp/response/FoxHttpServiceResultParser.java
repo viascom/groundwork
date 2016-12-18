@@ -4,7 +4,6 @@ import ch.viascom.groundwork.foxhttp.FoxHttpClient;
 import ch.viascom.groundwork.foxhttp.FoxHttpRequest;
 import ch.viascom.groundwork.foxhttp.FoxHttpResponse;
 import ch.viascom.groundwork.foxhttp.body.response.FoxHttpResponseBody;
-import ch.viascom.groundwork.foxhttp.body.response.FoxHttpResponseInformation;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
 import ch.viascom.groundwork.serviceresult.ServiceResult;
@@ -36,7 +35,6 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
     private HashMap<String, Metadata> metadata = new HashMap<>();
 
     private FoxHttpResponseBody responseBody = new FoxHttpResponseBody();
-    private FoxHttpResponseInformation responseInformation;
     private int responseCode = -1;
     private FoxHttpHeader responseHeaders;
     private FoxHttpClient foxHttpClient;
@@ -50,7 +48,6 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
         this.foxHttpClient = foxHttpResponse.getFoxHttpClient();
         this.responseCode = foxHttpResponse.getResponseCode();
         this.foxHttpRequest = foxHttpResponse.getFoxHttpRequest();
-        this.responseInformation = foxHttpResponse.getResponseInformation();
         this.responseHeaders = foxHttpResponse.getResponseHeaders();
 
     }
