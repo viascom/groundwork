@@ -11,7 +11,7 @@ public class RegexUtil {
         if (inputScope.getUrl().equals(compareScope)) {
             return true;
         }
-        String matchRegex = compareScope.replaceAll("\\*", "[\\\\w\\/:]*").replaceAll("\\.", "\\\\.").replaceAll("\\/", "\\\\/");
+        String matchRegex = compareScope.replaceAll("\\*", "[ -~]*").replaceAll("\\.", "\\\\.").replaceAll("\\/", "\\\\/");
         return inputScope.toString().matches(matchRegex);
     }
 }
