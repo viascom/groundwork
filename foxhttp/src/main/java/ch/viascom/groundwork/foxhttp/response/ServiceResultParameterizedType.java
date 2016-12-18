@@ -30,6 +30,4 @@ public class ServiceResultParameterizedType implements ParameterizedType {
     public Type getOwnerType() {
         return null;
     }
-
-    // implement equals method too! (as per javadoc)
 }

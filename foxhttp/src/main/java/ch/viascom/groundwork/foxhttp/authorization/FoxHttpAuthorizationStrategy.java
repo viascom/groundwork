@@ -13,5 +13,5 @@ public interface FoxHttpAuthorizationStrategy {
 
     void addAuthorization(FoxHttpAuthorizationScope foxHttpAuthorizationScope, FoxHttpAuthorization foxHttpAuthorization);
 
-    void removeAuthorization(FoxHttpAuthorizationScope foxHttpAuthorizationScope, Class<FoxHttpAuthorization> foxHttpAuthorizationClass);
+    void removeAuthorization(FoxHttpAuthorizationScope foxHttpAuthorizationScope, FoxHttpAuthorization foxHttpAuthorization);
 }

@@ -5,14 +5,14 @@ import lombok.Getter;
 
 /**
  * FoxHttpAuthorizationScope
- *
+ * <p>
  * Stores information about the scope for an Authorization
  *
  * @author patrick.boesch@viascom.ch
  */
 public class FoxHttpAuthorizationScope {
 
-    public static final FoxHttpAuthorizationScope ANY = new FoxHttpAuthorizationScope(null, null);
+    public static final FoxHttpAuthorizationScope ANY = new FoxHttpAuthorizationScope("*", null);
 
     @Getter
     private final String url;
@@ -56,7 +56,7 @@ public class FoxHttpAuthorizationScope {
      */
     @Override
     public String toString() {
-        return this.getRequestType() + " " + this.getUrl();
+        return ((this.getRequestType() == null) ? "" : this.getRequestType() + " ") + this.getUrl();
     }
 
 }
