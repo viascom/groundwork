@@ -100,13 +100,11 @@ public class FoxHttpRequest<T extends Serializable> {
      * @throws FoxHttpException
      */
     public FoxHttpResponse<T> execute(FoxHttpClient foxHttpClient) throws FoxHttpException {
+        verifyRequest();
         foxHttpClient.getFoxHttpLogger().log("========= Request =========");
 
         foxHttpClient.getFoxHttpLogger().log("setFoxHttpClient(" + foxHttpClient + ")");
         this.foxHttpClient = foxHttpClient;
-
-        foxHttpClient.getFoxHttpLogger().log("verifyRequest()");
-        verifyRequest();
 
         return executeHttp((url.getProtocol().equals("https")));
     }
@@ -162,6 +160,7 @@ public class FoxHttpRequest<T extends Serializable> {
                 foxHttpClient.getFoxHttpLogger().log("setSSLSocketFactory(" + foxHttpClient.getFoxHttpSSLTrustStrategy() + ")");
                 ((HttpsURLConnection) connection).setSSLSocketFactory(foxHttpClient.getFoxHttpSSLTrustStrategy().getSSLSocketFactory(((HttpsURLConnection) connection)));
                 foxHttpClient.getFoxHttpLogger().log("setHostnameVerifier(" + foxHttpClient.getFoxHttpHostTrustStrategy() + ")");
+                HttpsURLConnection.setDefaultHostnameVerifier(foxHttpClient.getFoxHttpHostTrustStrategy());
                 ((HttpsURLConnection) connection).setHostnameVerifier(foxHttpClient.getFoxHttpHostTrustStrategy());
             }
 
@@ -304,5 +303,6 @@ public class FoxHttpRequest<T extends Serializable> {
         if (foxHttpClient == null) {
             throw new FoxHttpRequestException("FoxHttpClient of the request ist not defined");
         }
+        foxHttpClient.getFoxHttpLogger().log("verifyRequest()");
     }
 }

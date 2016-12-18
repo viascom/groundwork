@@ -12,4 +12,5 @@ public class DefaultHostTrustStrategy implements FoxHttpHostTrustStrategy {
     public boolean verify(String s, SSLSession sslSession) {
         return HttpsURLConnection.getDefaultHostnameVerifier().verify(s, sslSession);
     }
+
 }

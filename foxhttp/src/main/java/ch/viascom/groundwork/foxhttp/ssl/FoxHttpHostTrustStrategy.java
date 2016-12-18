@@ -6,4 +6,5 @@ import javax.net.ssl.HostnameVerifier;
  * @author patrick.boesch@viascom.ch
  */
 public interface FoxHttpHostTrustStrategy extends HostnameVerifier {
+
 }

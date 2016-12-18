@@ -71,10 +71,17 @@ public class DefaultAuthorizationStrategy implements FoxHttpAuthorizationStrateg
      * Remove a defined FoxHttpAuthorization from the AuthorizationStrategy
      *
      * @param foxHttpAuthorizationScope scope in which the authorization is used
-     * @param foxHttpAuthorizationClass class of the authorization
+     * @param foxHttpAuthorization      object of the same authorization
      */
     @Override
-    public void removeAuthorization(FoxHttpAuthorizationScope foxHttpAuthorizationScope, Class<FoxHttpAuthorization> foxHttpAuthorizationClass) {
-        foxHttpAuthorizations.remove(foxHttpAuthorizationScope.toString());
+    public void removeAuthorization(FoxHttpAuthorizationScope foxHttpAuthorizationScope, FoxHttpAuthorization foxHttpAuthorization) {
+        ArrayList<FoxHttpAuthorization> authorizations = foxHttpAuthorizations.get(foxHttpAuthorizationScope.toString());
+        ArrayList<FoxHttpAuthorization> cleandAuthorizations = new ArrayList<>();
+        for (FoxHttpAuthorization authorization : authorizations) {
+            if (authorization.getClass() != foxHttpAuthorization.getClass()) {
+                cleandAuthorizations.add(authorization);
+            }
+        }
+        foxHttpAuthorizations.put(foxHttpAuthorizationScope.toString(), cleandAuthorizations);
     }
 }
