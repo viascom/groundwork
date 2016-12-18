@@ -12,6 +12,7 @@ import java.util.HashMap;
 public class GetResponse implements Serializable {
     private String url;
     private String origin;
+    private String method;
     private HashMap<String, String> args;
     private HashMap<String, String> headers;
 }

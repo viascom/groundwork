@@ -9,7 +9,7 @@ import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestI
 public class RequestInterceptor implements FoxHttpRequestInterceptor {
     @Override
     public void onIntercept(FoxHttpRequestInterceptorContext context) {
-
+        context.getRequest().getRequestQuery().addQueryEntry("key","Fox");
     }
 
     @Override
