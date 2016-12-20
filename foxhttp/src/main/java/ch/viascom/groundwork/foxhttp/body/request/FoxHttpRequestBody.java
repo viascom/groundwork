@@ -1,7 +1,6 @@
 package ch.viascom.groundwork.foxhttp.body.request;
 
 import ch.viascom.groundwork.foxhttp.body.FoxHttpBody;
-import ch.viascom.groundwork.foxhttp.body.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptorExecutor;

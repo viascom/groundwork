@@ -1,8 +1,8 @@
 package ch.viascom.groundwork.foxhttp.body.request;
 
-import ch.viascom.groundwork.foxhttp.body.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.type.ContentType;
+import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
 import ch.viascom.groundwork.foxhttp.util.NamedInputStream;
 import lombok.ToString;
 
@@ -30,16 +30,34 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
 
     private PrintWriter writer;
 
+    /**
+     * Create a new RequestMultipartBody
+     * <i>lineFeed is set to \n</i>
+     *
+     * @param charset used charset for the body
+     */
     public RequestMultipartBody(Charset charset) {
         this(charset, "\n");
     }
 
+    /**
+     * Create a new RequestMultipartBody
+     *
+     * @param charset used charset for the body
+     * @param lineFeed linefeed used for the body
+     */
     public RequestMultipartBody(Charset charset, String lineFeed) {
         this.charset = charset;
         this.lineFeed = lineFeed;
         this.boundary = "===" + System.currentTimeMillis() + "===";
     }
 
+    /**
+     * Set the body of the request
+     *
+     * @param context context of the request
+     * @throws FoxHttpRequestException can throw different exception based on input streams and interceptors
+     */
     @Override
     public void setBody(FoxHttpRequestBodyContext context) throws FoxHttpRequestException {
         try {
@@ -55,6 +73,11 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
             //Execute interceptor
             executeInterceptor(context);
 
+            //Add Content-Length header if not exist
+            if (context.getUrlConnection().getRequestProperty(HeaderTypes.CONTENT_LENGTH.toString()) == null) {
+                context.getUrlConnection().setRequestProperty(HeaderTypes.CONTENT_LENGTH.toString(), Integer.toString(outputStream.size()));
+            }
+
             context.getUrlConnection().getOutputStream().write(outputStream.toByteArray());
 
         } catch (Exception e) {
@@ -63,11 +86,21 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
 
     }
 
+    /**
+     * Checks if the body contains data
+     *
+     * @return true if data is stored in the body
+     */
     @Override
     public boolean hasBody() {
         return (stream.size() > 0 || forms.size() > 0);
     }
 
+    /**
+     * Get the ContentType of this body
+     *
+     * @return ContentType of this body
+     */
     @Override
     public ContentType getOutputContentType() {
         return ContentType.create("multipart/form-data; boundary=" + boundary, charset);

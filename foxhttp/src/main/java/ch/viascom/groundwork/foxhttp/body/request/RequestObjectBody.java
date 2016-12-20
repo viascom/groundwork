@@ -1,6 +1,5 @@
 package ch.viascom.groundwork.foxhttp.body.request;
 
-import ch.viascom.groundwork.foxhttp.body.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.type.ContentType;
 import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
@@ -21,17 +20,33 @@ import java.io.Serializable;
 public class RequestObjectBody extends FoxHttpRequestBody {
     private Serializable content;
 
-
+    /**
+     * Create a new RequestObjectBody
+     *
+     * @param content serializable object
+     */
     public RequestObjectBody(Serializable content) {
         this.content = content;
         this.outputContentType = ContentType.APPLICATION_JSON;
     }
 
+    /**
+     * Create a new RequestObjectBody
+     *
+     * @param content serializable object
+     * @param contentType type of the content
+     */
     public RequestObjectBody(Serializable content, ContentType contentType) {
         this.content = content;
         this.outputContentType = contentType;
     }
 
+    /**
+     * Set the body of the request
+     *
+     * @param context context of the request
+     * @throws FoxHttpRequestException can throw different exception based on input streams and interceptors
+     */
     @Override
     public void setBody(FoxHttpRequestBodyContext context) throws FoxHttpRequestException {
         if (context.getClient().getFoxHttpRequestParser() == null) {
@@ -60,11 +75,21 @@ public class RequestObjectBody extends FoxHttpRequestBody {
         }
     }
 
+    /**
+     * Checks if the body contains data
+     *
+     * @return true if data is stored in the body
+     */
     @Override
     public boolean hasBody() {
         return content != null;
     }
 
+    /**
+     * Get the ContentType of this body
+     *
+     * @return ContentType of this body
+     */
     @Override
     public ContentType getOutputContentType() {
         return outputContentType;
