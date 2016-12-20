@@ -55,11 +55,6 @@ public class RequestObjectBody extends FoxHttpRequestBody {
 
         String json = context.getClient().getFoxHttpRequestParser().objectToSerialized(content);
 
-        //Add Content-Length header if not exist
-        if (context.getUrlConnection().getRequestProperty(HeaderTypes.CONTENT_LENGTH.toString()) == null) {
-            context.getUrlConnection().setRequestProperty(HeaderTypes.CONTENT_LENGTH.toString(), Integer.toString(json.length()));
-        }
-
         try {
             DataOutputStream wr = new DataOutputStream(outputStream);
             wr.writeBytes(json);
@@ -68,6 +63,11 @@ public class RequestObjectBody extends FoxHttpRequestBody {
 
             //Execute interceptor
             executeInterceptor(context);
+
+            //Add Content-Length header if not exist
+            if (context.getUrlConnection().getRequestProperty(HeaderTypes.CONTENT_LENGTH.toString()) == null) {
+                context.getUrlConnection().setRequestProperty(HeaderTypes.CONTENT_LENGTH.toString(), Integer.toString(outputStream.size()));
+            }
 
             context.getUrlConnection().getOutputStream().write(outputStream.toByteArray());
         } catch (Exception e) {

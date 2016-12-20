@@ -159,7 +159,6 @@ public class FoxHttpRequest<T extends Serializable> {
                 foxHttpClient.getFoxHttpLogger().log("setSSLSocketFactory(" + foxHttpClient.getFoxHttpSSLTrustStrategy() + ")");
                 ((HttpsURLConnection) connection).setSSLSocketFactory(foxHttpClient.getFoxHttpSSLTrustStrategy().getSSLSocketFactory(((HttpsURLConnection) connection)));
                 foxHttpClient.getFoxHttpLogger().log("setHostnameVerifier(" + foxHttpClient.getFoxHttpHostTrustStrategy() + ")");
-                HttpsURLConnection.setDefaultHostnameVerifier(foxHttpClient.getFoxHttpHostTrustStrategy());
                 ((HttpsURLConnection) connection).setHostnameVerifier(foxHttpClient.getFoxHttpHostTrustStrategy());
             }
 

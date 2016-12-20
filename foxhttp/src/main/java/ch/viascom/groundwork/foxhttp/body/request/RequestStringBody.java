@@ -47,11 +47,6 @@ public class RequestStringBody extends FoxHttpRequestBody {
      */
     @Override
     public void setBody(FoxHttpRequestBodyContext context) throws FoxHttpRequestException {
-        //Add Content-Length header if not exist
-        if (context.getUrlConnection().getRequestProperty(HeaderTypes.CONTENT_LENGTH.toString()) == null) {
-            context.getUrlConnection().setRequestProperty(HeaderTypes.CONTENT_LENGTH.toString(), Integer.toString(content.length()));
-        }
-
         try {
             DataOutputStream wr = new DataOutputStream(outputStream);
             wr.writeBytes(content);
@@ -60,6 +55,11 @@ public class RequestStringBody extends FoxHttpRequestBody {
 
             //Execute interceptor
             executeInterceptor(context);
+
+            //Add Content-Length header if not exist
+            if (context.getUrlConnection().getRequestProperty(HeaderTypes.CONTENT_LENGTH.toString()) == null) {
+                context.getUrlConnection().setRequestProperty(HeaderTypes.CONTENT_LENGTH.toString(), Integer.toString(outputStream.size()));
+            }
 
             context.getUrlConnection().getOutputStream().write(outputStream.toByteArray());
         } catch (Exception e) {

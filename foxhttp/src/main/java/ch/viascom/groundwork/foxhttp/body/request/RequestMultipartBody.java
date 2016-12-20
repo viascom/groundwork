@@ -43,7 +43,7 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
     /**
      * Create a new RequestMultipartBody
      *
-     * @param charset used charset for the body
+     * @param charset  used charset for the body
      * @param lineFeed linefeed used for the body
      */
     public RequestMultipartBody(Charset charset, String lineFeed) {
@@ -120,7 +120,7 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
         for (String key : forms.keySet()) {
             writer.append("--" + boundary).append(lineFeed);
             writer.append("Content-Disposition: form-data; name=\"" + key + "\"").append(lineFeed);
-            writer.append("Content-Type: text/plain; charset=" + charset).append(lineFeed);
+            writer.append("Content-Type: text/plain; charset=" + charset.displayName()).append(lineFeed);
             writer.append(lineFeed);
             writer.append(forms.get(key)).append(lineFeed);
             writer.flush();
@@ -135,7 +135,7 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
      * @throws FileNotFoundException
      */
     public void addFilePart(String fieldName, File uploadFile) throws FileNotFoundException {
-        stream.put(fieldName, new NamedInputStream(uploadFile.getName(), new FileInputStream(uploadFile)));
+        stream.put(fieldName, new NamedInputStream(uploadFile.getName(), new FileInputStream(uploadFile), "binary", URLConnection.guessContentTypeFromName(uploadFile.getName())));
     }
 
     /**
@@ -144,17 +144,18 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
      * @param name
      * @param inputStreamName
      * @param inputStream
+     * @contentTransferEncoding usually binary
      */
-    public void addInputStreamPart(String name, String inputStreamName, InputStream inputStream) {
-        stream.put(name, new NamedInputStream(inputStreamName, inputStream));
+    public void addInputStreamPart(String name, String inputStreamName, InputStream inputStream, String contentTransferEncoding, String contentType) {
+        stream.put(name, new NamedInputStream(inputStreamName, inputStream, contentTransferEncoding, contentType));
     }
 
     private void processStream() throws IOException {
         for (String key : stream.keySet()) {
             writer.append("--" + boundary).append(lineFeed);
             writer.append("Content-Disposition: form-data; name=\"" + key + "\"; filename=\"" + stream.get(key).getName() + "\"").append(lineFeed);
-            writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(stream.get(key).getName())).append(lineFeed);
-            writer.append("Content-Transfer-Encoding: binary").append(lineFeed);
+            writer.append("Content-Type: " + stream.get(key).getType()).append(lineFeed);
+            writer.append("Content-Transfer-Encoding: " + stream.get(key).getContentTransferEncoding()).append(lineFeed);
             writer.append(lineFeed);
             writer.flush();
 
