@@ -30,6 +30,7 @@ public class FoxHttpResponseTest {
 
         try{
             foxHttpResponse.getParsedBody(GetResponse.class);
+            assertThat(false).isEqualTo(true);
         } catch (FoxHttpResponseException e) {
             assertThat(e.getMessage()).isEqualTo("getParsedBody needs a FoxHttpResponseParser to deserialize the body");
         }

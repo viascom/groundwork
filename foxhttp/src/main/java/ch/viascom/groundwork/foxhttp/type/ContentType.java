@@ -51,7 +51,7 @@ public class ContentType implements Serializable {
      * Creates a new instance of {@link ContentType}.
      *
      * @param mimeType MIME type. It may not be <code>null</code> or empty. It may not contain
-     *                 characters <">, <;>, <,> reserved by the HTTP specification.
+     *                 characters &lt;"&gt;, &lt;;&gt;, &lt;,&gt; reserved by the HTTP specification.
      * @param charset  charset.
      * @return content type
      */

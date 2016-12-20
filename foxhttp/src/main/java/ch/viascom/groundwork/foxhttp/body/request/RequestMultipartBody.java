@@ -99,7 +99,7 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
      *
      * @param fieldName  name attribute
      * @param uploadFile a File to be uploaded
-     * @throws IOException
+     * @throws FileNotFoundException
      */
     public void addFilePart(String fieldName, File uploadFile) throws FileNotFoundException {
         stream.put(fieldName, new NamedInputStream(uploadFile.getName(), new FileInputStream(uploadFile)));
