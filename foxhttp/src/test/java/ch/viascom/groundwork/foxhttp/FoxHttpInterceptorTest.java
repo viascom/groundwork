@@ -110,8 +110,9 @@ public class FoxHttpInterceptorTest {
         FoxHttpRequestBuilder<GetResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "status/404", RequestType.GET, clientBuilder.build());
         FoxHttpRequest<GetResponse> request = requestBuilder.build();
 
-        try{
+        try {
             request.execute().getParsedBody(GetResponse.class);
+            assertThat(false).isEqualTo(true);
         } catch (FoxHttpRequestException e) {
             assertThat(e.getMessage()).isEqualTo("Found 404");
         }
@@ -147,6 +148,28 @@ public class FoxHttpInterceptorTest {
         FoxHttpResponse<GetResponse> response = request.execute();
 
         assertThat(response.getStringBody()).isEqualTo("Hi!");
+    }
+
+    @Test
+    public void requestInterceptorWeightTest() throws Exception {
+        FoxHttpClientBuilder clientBuilder = new FoxHttpClientBuilder();
+        clientBuilder.setFoxHttpResponseParser(new GsonParser());
+
+        //Add query entry
+        clientBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.REQUEST_HEADER, new RequestHeaderInterceptor(10));
+
+        //Add header entry
+        RequestHeaderInterceptor headerInterceptor = new RequestHeaderInterceptor(5);
+        clientBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.REQUEST_HEADER, headerInterceptor);
+
+
+        FoxHttpRequestBuilder<GetResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "get", RequestType.GET, clientBuilder.build());
+        FoxHttpRequest<GetResponse> request = requestBuilder.build();
+
+        GetResponse response = request.execute().getParsedBody(GetResponse.class);
+
+        assertThat(request.getFoxHttpClient().getFoxHttpInterceptors().get(FoxHttpInterceptorType.REQUEST_HEADER).get(0).getWeight()).isEqualTo(5);
+        assertThat(request.getFoxHttpClient().getFoxHttpInterceptors().get(FoxHttpInterceptorType.REQUEST_HEADER).get(1).getWeight()).isEqualTo(10);
     }
 
 }

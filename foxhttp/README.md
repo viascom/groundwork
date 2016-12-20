@@ -4,7 +4,7 @@ The FoxHttp provides a fast and easy http client for java and android. It is par
 
 [![release](https://img.shields.io/badge/release-cooming soon-lightgray.svg)](https://github.com/Viascom/groundwork/tree/master)
 [![develop](https://img.shields.io/badge/develop-cooming soon-lightgray.svg)](https://github.com/Viascom/groundwork/tree/foxhttp-develop)
-[![coverage](https://img.shields.io/badge/test--coverage-72%25-green.svg)](https://github.com/Viascom/groundwork/tree/foxhttp-develop)
+[![coverage](https://img.shields.io/badge/test--coverage-80%25-green.svg)](https://github.com/Viascom/groundwork/tree/foxhttp-develop)
 
 
 ## Functions

@@ -5,6 +5,7 @@ import ch.viascom.groundwork.foxhttp.FoxHttpRequest;
 import ch.viascom.groundwork.foxhttp.FoxHttpResponse;
 import ch.viascom.groundwork.foxhttp.body.response.FoxHttpResponseBody;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
+import ch.viascom.groundwork.foxhttp.exception.FoxHttpResponseException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
 import ch.viascom.groundwork.serviceresult.ServiceResult;
 import ch.viascom.groundwork.serviceresult.ServiceResultStatus;
@@ -27,7 +28,7 @@ import java.util.HashMap;
 public class FoxHttpServiceResultParser<T extends Serializable> {
 
     private ServiceResultStatus status;
-    private Class<T> type;
+    private String type;
     @Getter(AccessLevel.PRIVATE)
     private T content;
     private String hash;
@@ -41,15 +42,21 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
     private FoxHttpRequest foxHttpRequest;
 
     private Gson parser = new Gson();
+    private FoxHttpServiceResultHasher objectHasher;
 
 
     public FoxHttpServiceResultParser(FoxHttpResponse foxHttpResponse) throws IOException, FoxHttpException {
+        this(foxHttpResponse, null);
+    }
+
+    public FoxHttpServiceResultParser(FoxHttpResponse foxHttpResponse, FoxHttpServiceResultHasher objectHasher) throws IOException, FoxHttpException {
         this.responseBody = foxHttpResponse.getResponseBody();
         this.foxHttpClient = foxHttpResponse.getFoxHttpClient();
         this.responseCode = foxHttpResponse.getResponseCode();
         this.foxHttpRequest = foxHttpResponse.getFoxHttpRequest();
         this.responseHeaders = foxHttpResponse.getResponseHeaders();
-
+        this.objectHasher = objectHasher;
+        foxHttpClient.getFoxHttpLogger().log("FoxHttpServiceResultParser(" + foxHttpResponse + "," + objectHasher + ")");
     }
 
     public InputStream getInputStreamBody() {
@@ -76,37 +83,65 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
         return response.toString();
     }
 
-    public T getContent(Class<T> contentClass) {
+    public T getContent(Class<T> contentClass) throws FoxHttpResponseException {
+        return getContent(contentClass, false);
+    }
+
+    public T getContent(Class<T> contentClass, boolean checkHash) throws FoxHttpResponseException {
         try {
 
             Type type = new ServiceResultParameterizedType(contentClass);
 
-            ServiceResult<T> result = parser.fromJson(getStringBody(), type);
+            String body = getStringBody();
 
+            ServiceResult<T> result = parser.fromJson(body, type);
+            foxHttpClient.getFoxHttpLogger().log("processServiceResult(" + result + ")");
             this.type = result.getType();
             this.hash = result.getHash();
             this.destination = result.getDestination();
             this.metadata = result.getMetadata();
+            this.content = result.getContent();
 
-            return result.getContent();
+            checkHash(checkHash, body, result);
+
+            return this.content;
         } catch (IOException e) {
-            return null;
+            throw new FoxHttpResponseException(e);
         }
 
     }
 
-    public ServiceFault getFault() {
-        try {
-            ServiceResult<ServiceFault> result = parser.fromJson(getStringBody(), new TypeToken<ServiceResult<ServiceFault>>() {
-            }.getType());
+    private void checkHash(boolean checkHash, String body, ServiceResult<?> result) throws FoxHttpResponseException {
+        if (checkHash && objectHasher != null) {
+            foxHttpClient.getFoxHttpLogger().log("checkHash(" + result.getHash() + ")");
+            if (!objectHasher.hash(result, body).equals(result.getHash())) {
+                throw new FoxHttpResponseException("Hash not Equal!");
+            }
+            foxHttpClient.getFoxHttpLogger().log("-> successful");
+        }
+    }
 
+    public ServiceFault getFault() throws FoxHttpResponseException {
+        return getFault(false);
+    }
+
+    public ServiceFault getFault(boolean checkHash) throws FoxHttpResponseException {
+        try {
+
+            String body = getStringBody();
+
+            ServiceResult<ServiceFault> result = parser.fromJson(body, new TypeToken<ServiceResult<ServiceFault>>() {
+            }.getType());
+            foxHttpClient.getFoxHttpLogger().log("processFault(" + result + ")");
             this.hash = result.getHash();
             this.destination = result.getDestination();
             this.metadata = result.getMetadata();
 
+            checkHash(checkHash, body, result);
+
             return result.getContent();
         } catch (IOException e) {
-            return null;
+            throw new FoxHttpResponseException(e);
         }
 
     }

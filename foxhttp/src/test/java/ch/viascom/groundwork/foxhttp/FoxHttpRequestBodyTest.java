@@ -13,6 +13,7 @@ import ch.viascom.groundwork.foxhttp.parser.GsonParser;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -36,6 +37,7 @@ public class FoxHttpRequestBodyTest {
 
         try {
             requestBuilder.build().execute();
+            assertThat(false).isEqualTo(true);
         } catch (FoxHttpRequestException e) {
             assertThat(e.getMessage()).isEqualTo("RequestObjectBody needs a FoxHttpRequestParser to serialize the body");
         }
@@ -91,6 +93,7 @@ public class FoxHttpRequestBodyTest {
 
         RequestMultipartBody requestBody = new RequestMultipartBody(Charset.forName("UTF-8"));
         requestBody.addFormField("filename", "test.data");
+        requestBody.addInputStreamPart("file", "file.json", new ByteArrayInputStream("{\"name\":\"FoxHttp\"}".getBytes()));
 
         FoxHttpRequestBuilder<PostResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "post", RequestType.POST, clientBuilder.build());
         requestBuilder.setRequestBody(requestBody);

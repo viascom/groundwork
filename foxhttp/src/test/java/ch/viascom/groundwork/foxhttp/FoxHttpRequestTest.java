@@ -5,12 +5,13 @@ import ch.viascom.groundwork.foxhttp.authorization.BearerTokenAuthorization;
 import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
 import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBody;
 import ch.viascom.groundwork.foxhttp.body.request.RequestStringBody;
+import ch.viascom.groundwork.foxhttp.builder.FoxHttpClientBuilder;
+import ch.viascom.groundwork.foxhttp.builder.FoxHttpRequestBuilder;
+import ch.viascom.groundwork.foxhttp.cookie.DefaultCookieStore;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpRequestHeader;
-import ch.viascom.groundwork.foxhttp.models.BasicAuthResponse;
-import ch.viascom.groundwork.foxhttp.models.GetResponse;
-import ch.viascom.groundwork.foxhttp.models.PostResponse;
-import ch.viascom.groundwork.foxhttp.models.QueryDataHolder;
+import ch.viascom.groundwork.foxhttp.log.SystemOutFoxHttpLogger;
+import ch.viascom.groundwork.foxhttp.models.*;
 import ch.viascom.groundwork.foxhttp.objects.RemoveMeAuthorization;
 import ch.viascom.groundwork.foxhttp.parser.GsonParser;
 import ch.viascom.groundwork.foxhttp.proxy.FoxHttpProxyStrategy;
@@ -18,11 +19,15 @@ import ch.viascom.groundwork.foxhttp.query.FoxHttpRequestQuery;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.net.HttpCookie;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -42,6 +47,7 @@ public class FoxHttpRequestTest {
 
         try {
             foxHttpRequestURL.execute();
+            assertThat(false).isEqualTo(true);
         } catch (FoxHttpRequestException e) {
             assertThat(e.getMessage()).isEqualTo("URL of the request ist not defined");
         }
@@ -52,6 +58,7 @@ public class FoxHttpRequestTest {
 
         try {
             foxHttpRequestClient.execute();
+            assertThat(false).isEqualTo(true);
         } catch (FoxHttpRequestException e) {
             assertThat(e.getMessage()).isEqualTo("FoxHttpClient of the request ist not defined");
         }
@@ -178,6 +185,7 @@ public class FoxHttpRequestTest {
 
         try {
             FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
+            assertThat(false).isEqualTo(true);
         } catch (FoxHttpRequestException e) {
             assertThat(e.getMessage()).isEqualTo("Request type 'GET' does not allow a request body!");
         }
@@ -345,6 +353,30 @@ public class FoxHttpRequestTest {
     }
 
     @Test
+    public void cookieTest() throws Exception {
+        FoxHttpRequestQuery foxHttpQuery = new FoxHttpRequestQuery();
+        foxHttpQuery.addQueryEntry("k1", "v1");
+        foxHttpQuery.addQueryEntry("k2", "v2");
+
+        FoxHttpClient foxHttpClient = new FoxHttpClientBuilder(new GsonParser(),new GsonParser()).build();
+
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequestBuilder("http://httpbin.org/cookies/set",RequestType.GET,foxHttpClient)
+                .setRequestQuery(foxHttpQuery).build();
+
+        FoxHttpResponse<CookieResponse> foxHttpResponse = foxHttpRequest.execute();
+
+        CookieResponse cookieResponse = foxHttpResponse.getParsedBody(CookieResponse.class);
+
+        assertThat(cookieResponse.getCookies()).containsKey("k1");
+        assertThat(cookieResponse.getCookies()).containsKey("k2");
+
+        List<HttpCookie> cookies = ((DefaultCookieStore) foxHttpClient.getFoxHttpCookieStore()).getCookieStore().getCookies();
+
+        assertThat(cookies.get(0).getValue()).isEqualTo("v1");
+        assertThat(cookies.get(1).getValue()).isEqualTo("v2");
+    }
+
+    @Test
     public void getSSLRequest() throws Exception {
 //TODO: Test with invalide SSL
         FoxHttpClient foxHttpClient = new FoxHttpClient();
@@ -365,6 +397,29 @@ public class FoxHttpRequestTest {
         GetResponse getResponse = foxHttpResponse.getParsedBody(GetResponse.class);
 
         assertThat(getResponse.getUrl()).isEqualTo(sslEndpoint + "get");
+    }
+
+    @Test
+    public void systemOutLoggerTest(){
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+
+        PrintStream old = System.out;
+
+        System.setOut(ps);
+
+        SystemOutFoxHttpLogger logger = new SystemOutFoxHttpLogger(true, "TEST-CASE");
+        logger.log("Test 1");
+        logger.log("Test 2","TEST-CASE-Override");
+        logger.log("Test3");
+
+        System.out.flush();
+        System.setOut(old);
+
+        assertThat(baos.toString()).contains("TEST-CASE: Test 1");
+        assertThat(baos.toString()).contains("TEST-CASE-Override: Test 2");
+        assertThat(baos.toString()).contains("TEST-CASE: Test3");
     }
 
 }

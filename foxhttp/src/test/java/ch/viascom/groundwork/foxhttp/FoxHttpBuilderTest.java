@@ -113,7 +113,7 @@ public class FoxHttpBuilderTest {
         assertThat(foxHttpClient.getFoxHttpInterceptors().get(FoxHttpInterceptorType.RESPONSE).get(0).getWeight()).isEqualTo(100);
 
 
-        foxHttpClientBuilder.activteFoxHttpDefaultLogger(true);
+        foxHttpClientBuilder.activteFoxHttpLogger(true);
         foxHttpClientBuilder.setFoxHttpTimeoutStrategy(foxHttpTimeoutStrategy);
         foxHttpClientBuilder.setFoxHttpInterceptors(new HashMap<>());
         foxHttpClientBuilder.activteDeflateResponseInterceptor(true, 100);
@@ -187,7 +187,7 @@ public class FoxHttpBuilderTest {
         requestBuilder.addRequestHeader(headerField);
         requestBuilder.addRequestQueryEntry("name", "FoxHttp");
         requestBuilder.setSkipResponseBody(false);
-        requestBuilder.registerInterceptor(FoxHttpInterceptorType.REQUEST_BODY, foxHttpInterceptor);
+        requestBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.REQUEST_BODY, foxHttpInterceptor);
         requestBuilder.setRequestBody(new RequestStringBody("Hi!"));
 
         FoxHttpRequest<PostResponse> foxHttpRequest = requestBuilder.build();
