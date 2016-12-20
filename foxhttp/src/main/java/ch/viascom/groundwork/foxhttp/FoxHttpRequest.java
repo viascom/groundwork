@@ -2,7 +2,7 @@ package ch.viascom.groundwork.foxhttp;
 
 import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorization;
 import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
-import ch.viascom.groundwork.foxhttp.body.FoxHttpRequestBodyContext;
+import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBody;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;

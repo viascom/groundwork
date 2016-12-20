@@ -1,4 +1,4 @@
-package ch.viascom.groundwork.foxhttp.body;
+package ch.viascom.groundwork.foxhttp.body.request;
 
 import ch.viascom.groundwork.foxhttp.FoxHttpClient;
 import ch.viascom.groundwork.foxhttp.FoxHttpRequest;

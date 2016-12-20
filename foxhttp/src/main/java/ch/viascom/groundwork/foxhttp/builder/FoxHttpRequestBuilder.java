@@ -54,6 +54,13 @@ public class FoxHttpRequestBuilder<T extends Serializable> {
         this(url, RequestType.GET);
     }
 
+    /**
+     * Create a new builder with a default request and set the url
+     *
+     * @param url         url of the request
+     * @param requestType request type
+     * @throws MalformedURLException If the url is not well formed
+     */
     public FoxHttpRequestBuilder(String url, RequestType requestType) throws MalformedURLException {
         this(new URL(url), requestType);
     }
