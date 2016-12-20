@@ -10,6 +10,7 @@ import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.models.PostResponse;
 import ch.viascom.groundwork.foxhttp.models.User;
 import ch.viascom.groundwork.foxhttp.parser.GsonParser;
+import ch.viascom.groundwork.foxhttp.type.ContentType;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
 import org.junit.Test;
 
@@ -93,7 +94,7 @@ public class FoxHttpRequestBodyTest {
 
         RequestMultipartBody requestBody = new RequestMultipartBody(Charset.forName("UTF-8"));
         requestBody.addFormField("filename", "test.data");
-        requestBody.addInputStreamPart("file", "file.json", new ByteArrayInputStream("{\"name\":\"FoxHttp\"}".getBytes()));
+        requestBody.addInputStreamPart("file", "file.json", new ByteArrayInputStream("{\"name\":\"FoxHttp\"}".getBytes()), "QUOTED-PRINTABLE", ContentType.DEFAULT_TEXT.getMimeType());
 
         FoxHttpRequestBuilder<PostResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "post", RequestType.POST, clientBuilder.build());
         requestBuilder.setRequestBody(requestBody);

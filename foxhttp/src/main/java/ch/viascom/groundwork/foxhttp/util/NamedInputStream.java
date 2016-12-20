@@ -13,4 +13,6 @@ import java.io.InputStream;
 public class NamedInputStream {
     private String name;
     private InputStream inputStream;
+    private String contentTransferEncoding;
+    private String type;
 }
