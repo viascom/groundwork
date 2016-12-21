@@ -4,7 +4,7 @@ import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * QueryBuilder fox FoxHttp
@@ -14,13 +14,20 @@ import java.util.HashMap;
 public class QueryBuilder {
 
     /**
+     * Utility classes, which are a collection of static members, are not meant to be instantiated.
+     */
+    private QueryBuilder() {
+        throw new IllegalAccessError("Utility class");
+    }
+
+    /**
      * Return a string of key/value pair's based on a map
      *
      * @param entries
      * @return
      * @throws FoxHttpRequestException
      */
-    public static String buildQuery(HashMap<String, String> entries) throws FoxHttpRequestException {
+    public static String buildQuery(Map<String, String> entries) throws FoxHttpRequestException {
         return buildQuery(entries, "UTF-8");
     }
 
@@ -32,15 +39,15 @@ public class QueryBuilder {
      * @return
      * @throws FoxHttpRequestException
      */
-    public static String buildQuery(HashMap<String, String> entries, String encoding) throws FoxHttpRequestException {
+    public static String buildQuery(Map<String, String> entries, String encoding) throws FoxHttpRequestException {
         if (entries.size() > 0) {
             StringBuilder sb = new StringBuilder();
             String dataString;
             try {
-                for (String key : entries.keySet()) {
-                    sb.append(URLEncoder.encode(key, encoding));
+                for (Map.Entry<String, String> entry : entries.entrySet()) {
+                    sb.append(URLEncoder.encode(entry.getKey(), encoding));
                     sb.append("=");
-                    sb.append(URLEncoder.encode(entries.get(key), encoding));
+                    sb.append(URLEncoder.encode(entry.getValue(), encoding));
                     sb.append("&");
                 }
                 sb.deleteCharAt(sb.lastIndexOf("&"));

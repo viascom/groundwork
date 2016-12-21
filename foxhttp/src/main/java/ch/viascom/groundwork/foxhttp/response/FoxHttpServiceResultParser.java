@@ -74,7 +74,7 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
     private String getStringBody() throws IOException {
         BufferedReader rd = new BufferedReader(new InputStreamReader(getInputStreamBody()));
         String line;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
         while ((line = rd.readLine()) != null) {
             response.append(line);
             response.append('\n');
@@ -90,11 +90,11 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
     public T getContent(Class<T> contentClass, boolean checkHash) throws FoxHttpResponseException {
         try {
 
-            Type type = new ServiceResultParameterizedType(contentClass);
+            Type parameterizedType = new ServiceResultParameterizedType(contentClass);
 
             String body = getStringBody();
 
-            ServiceResult<T> result = parser.fromJson(body, type);
+            ServiceResult<T> result = parser.fromJson(body, parameterizedType);
             foxHttpClient.getFoxHttpLogger().log("processServiceResult(" + result + ")");
             this.type = result.getType();
             this.hash = result.getHash();

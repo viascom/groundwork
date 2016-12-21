@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import java.io.DataOutputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * RequestUrlEncodedFormBody for FoxHttp
@@ -22,7 +23,7 @@ import java.util.HashMap;
 public class RequestUrlEncodedFormBody extends FoxHttpRequestBody {
     @Getter
     @Setter
-    private HashMap<String, String> formData = new HashMap<>();
+    private Map<String, String> formData = new HashMap<>();
 
     /**
      * Create a new RequestUrlEncodedFormBody
@@ -36,7 +37,7 @@ public class RequestUrlEncodedFormBody extends FoxHttpRequestBody {
      *
      * @param formData map of form data entries
      */
-    public RequestUrlEncodedFormBody(HashMap<String, String> formData) {
+    public RequestUrlEncodedFormBody(Map<String, String> formData) {
         this.formData = formData;
         this.outputContentType = ContentType.APPLICATION_FORM_URLENCODED;
     }

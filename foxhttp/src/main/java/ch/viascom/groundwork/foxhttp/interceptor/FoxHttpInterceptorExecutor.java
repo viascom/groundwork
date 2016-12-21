@@ -21,6 +21,13 @@ import java.util.Collections;
  */
 public class FoxHttpInterceptorExecutor {
 
+    /**
+     * Utility classes, which are a collection of static members, are not meant to be instantiated.
+     */
+    private FoxHttpInterceptorExecutor() {
+        throw new IllegalAccessError("Utility class");
+    }
+
     public static void executeRequestInterceptor(FoxHttpRequestInterceptorContext context) throws FoxHttpException {
         if (context.getClient().getFoxHttpInterceptors().containsKey(FoxHttpInterceptorType.REQUEST)) {
             Collections.sort(context.getClient().getFoxHttpInterceptors().get(FoxHttpInterceptorType.REQUEST), new FoxHttpInterceptorComparator());

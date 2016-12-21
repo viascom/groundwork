@@ -7,6 +7,13 @@ import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
  */
 public class RegexUtil {
 
+    /**
+     * Utility classes, which are a collection of static members, are not meant to be instantiated.
+     */
+    private RegexUtil() {
+        throw new IllegalAccessError("Utility class");
+    }
+
     public static boolean doesURLMatch(FoxHttpAuthorizationScope inputScope, String compareScope) {
         if (inputScope.getUrl().equals(compareScope)) {
             return true;

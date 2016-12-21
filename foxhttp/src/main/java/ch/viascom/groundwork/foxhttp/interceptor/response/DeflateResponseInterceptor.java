@@ -44,11 +44,10 @@ public class DeflateResponseInterceptor implements FoxHttpResponseInterceptor {
     @Override
     public void onIntercept(FoxHttpResponseInterceptorContext context) throws FoxHttpException {
         try {
-            if (context.getFoxHttpResponse().getResponseHeaders().getHeader("Content-Encoding") != null) {
-                if ("deflate".equals(context.getFoxHttpResponse().getResponseHeaders().getHeader("Content-Encoding").getValue())) {
-                    InputStream is = new InflaterInputStream(context.getFoxHttpResponse().getInputStreamBody(), new Inflater(nowrap));
-                    context.getFoxHttpResponse().getResponseBody().setBody(is, true);
-                }
+            if (context.getFoxHttpResponse().getResponseHeaders().getHeader("Content-Encoding") != null &&
+                    "deflate".equals(context.getFoxHttpResponse().getResponseHeaders().getHeader("Content-Encoding").getValue())) {
+                InputStream is = new InflaterInputStream(context.getFoxHttpResponse().getInputStreamBody(), new Inflater(nowrap));
+                context.getFoxHttpResponse().getResponseBody().setBody(is, true);
             }
         } catch (Exception e) {
             throw new FoxHttpException(e);

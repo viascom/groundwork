@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * FoxHttpRequestQuery stores query entries for a request
@@ -46,7 +46,7 @@ public class FoxHttpRequestQuery {
      * @return true if more than 0 entries stored
      */
     public boolean hasQueryEntries() {
-        return (queryMap.size() > 0);
+        return queryMap.size() > 0;
     }
 
     /**
@@ -66,7 +66,7 @@ public class FoxHttpRequestQuery {
      * @param o object with the attributes
      * @throws FoxHttpRequestException can throw an exception if a field does not exist
      */
-    public void parseObjectAsQueryMap(ArrayList<String> params, Object o) throws FoxHttpRequestException {
+    public void parseObjectAsQueryMap(List<String> params, Object o) throws FoxHttpRequestException {
         try {
             Class clazz = o.getClass();
             HashMap<String, String> paramMap = new HashMap<>();

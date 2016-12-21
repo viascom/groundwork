@@ -6,9 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Default AuthorizationStrategy for FoxHttp
@@ -35,16 +33,16 @@ public class DefaultAuthorizationStrategy implements FoxHttpAuthorizationStrateg
      * @return
      */
     @Override
-    public ArrayList<FoxHttpAuthorization> getAuthorization(URLConnection connection, FoxHttpAuthorizationScope foxHttpAuthorizationScope) {
+    public List<FoxHttpAuthorization> getAuthorization(URLConnection connection, FoxHttpAuthorizationScope foxHttpAuthorizationScope) {
         ArrayList<FoxHttpAuthorization> foxHttpAuthorizationList = new ArrayList<>();
 
-        for (String url : foxHttpAuthorizations.keySet()) {
-            if (RegexUtil.doesURLMatch(foxHttpAuthorizationScope, url)) {
-                foxHttpAuthorizationList.addAll(foxHttpAuthorizations.get(url));
+        for (Map.Entry<String, ArrayList<FoxHttpAuthorization>> entry : foxHttpAuthorizations.entrySet()) {
+            if (RegexUtil.doesURLMatch(foxHttpAuthorizationScope, entry.getKey())) {
+                foxHttpAuthorizationList.addAll(entry.getValue());
             }
         }
 
-        if (foxHttpAuthorizations.containsKey(FoxHttpAuthorizationScope.ANY.toString()) && (foxHttpAuthorizationList.size() == 0)) {
+        if (foxHttpAuthorizations.containsKey(FoxHttpAuthorizationScope.ANY.toString()) && (foxHttpAuthorizationList.isEmpty())) {
             foxHttpAuthorizationList.addAll(foxHttpAuthorizations.get(FoxHttpAuthorizationScope.ANY.toString()));
         }
 

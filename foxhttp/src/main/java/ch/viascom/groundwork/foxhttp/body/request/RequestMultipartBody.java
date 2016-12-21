@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * RequestMultipartBody for FoxHttp
@@ -93,7 +94,7 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
      */
     @Override
     public boolean hasBody() {
-        return (stream.size() > 0 || forms.size() > 0);
+        return stream.size() > 0 || forms.size() > 0;
     }
 
     /**
@@ -117,12 +118,12 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
     }
 
     private void processFormFields() {
-        for (String key : forms.keySet()) {
+        for (Map.Entry<String, String> entry : forms.entrySet()) {
             writer.append("--" + boundary).append(lineFeed);
-            writer.append("Content-Disposition: form-data; name=\"" + key + "\"").append(lineFeed);
+            writer.append("Content-Disposition: form-data; name=\"" + entry.getKey() + "\"").append(lineFeed);
             writer.append("Content-Type: text/plain; charset=" + charset.displayName()).append(lineFeed);
             writer.append(lineFeed);
-            writer.append(forms.get(key)).append(lineFeed);
+            writer.append(entry.getValue()).append(lineFeed);
             writer.flush();
         }
     }
@@ -151,17 +152,17 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
     }
 
     private void processStream() throws IOException {
-        for (String key : stream.keySet()) {
+        for (Map.Entry<String, NamedInputStream> entry : stream.entrySet()) {
             writer.append("--" + boundary).append(lineFeed);
-            writer.append("Content-Disposition: form-data; name=\"" + key + "\"; filename=\"" + stream.get(key).getName() + "\"").append(lineFeed);
-            writer.append("Content-Type: " + stream.get(key).getType()).append(lineFeed);
-            writer.append("Content-Transfer-Encoding: " + stream.get(key).getContentTransferEncoding()).append(lineFeed);
+            writer.append("Content-Disposition: form-data; name=\"" + entry.getKey() + "\"; filename=\"" + entry.getValue().getName() + "\"").append(lineFeed);
+            writer.append("Content-Type: " + entry.getValue().getType()).append(lineFeed);
+            writer.append("Content-Transfer-Encoding: " + entry.getValue().getContentTransferEncoding()).append(lineFeed);
             writer.append(lineFeed);
             writer.flush();
 
-            InputStream inputStream = stream.get(key).getInputStream();
+            InputStream inputStream = entry.getValue().getInputStream();
             byte[] buffer = new byte[4096];
-            int bytesRead = -1;
+            int bytesRead;
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, bytesRead);
             }

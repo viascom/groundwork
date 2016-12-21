@@ -2,8 +2,8 @@ package ch.viascom.groundwork.foxhttp;
 
 import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorization;
 import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
-import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBody;
+import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
@@ -25,7 +25,6 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -105,7 +104,7 @@ public class FoxHttpRequest<T extends Serializable> {
         foxHttpClient.getFoxHttpLogger().log("setFoxHttpClient(" + foxHttpClient + ")");
         this.foxHttpClient = foxHttpClient;
 
-        return executeHttp((url.getProtocol().equals("https")));
+        return executeHttp("https".equals(url.getProtocol()));
     }
 
     private FoxHttpResponse<T> executeHttp(boolean isHttps) throws FoxHttpRequestException {
@@ -157,7 +156,7 @@ public class FoxHttpRequest<T extends Serializable> {
 
             if (isHttps) {
                 foxHttpClient.getFoxHttpLogger().log("setSSLSocketFactory(" + foxHttpClient.getFoxHttpSSLTrustStrategy() + ")");
-                ((HttpsURLConnection) connection).setSSLSocketFactory(foxHttpClient.getFoxHttpSSLTrustStrategy().getSSLSocketFactory(((HttpsURLConnection) connection)));
+                ((HttpsURLConnection) connection).setSSLSocketFactory(foxHttpClient.getFoxHttpSSLTrustStrategy().getSSLSocketFactory((HttpsURLConnection) connection));
                 foxHttpClient.getFoxHttpLogger().log("setHostnameVerifier(" + foxHttpClient.getFoxHttpHostTrustStrategy() + ")");
                 ((HttpsURLConnection) connection).setHostnameVerifier(foxHttpClient.getFoxHttpHostTrustStrategy());
             }
@@ -220,13 +219,10 @@ public class FoxHttpRequest<T extends Serializable> {
             } else {
                 return null;
             }
+        } catch (FoxHttpRequestException e) {
+            throw e;
         } catch (Exception e) {
-            //Error handling
-            if (e instanceof FoxHttpRequestException) {
-                throw (FoxHttpRequestException) e;
-            } else {
-                throw new FoxHttpRequestException(e);
-            }
+            throw new FoxHttpRequestException(e);
         } finally {
 
             if (connection != null) {
@@ -241,7 +237,7 @@ public class FoxHttpRequest<T extends Serializable> {
         }
     }
 
-    private void setRequestBodyStream(URLConnection urlConnection) throws Exception {
+    private void setRequestBodyStream(URLConnection urlConnection) throws FoxHttpRequestException {
         requestBody.setBody(new FoxHttpRequestBodyContext(urlConnection, this, foxHttpClient));
     }
 
@@ -258,8 +254,8 @@ public class FoxHttpRequest<T extends Serializable> {
         }
     }
 
-    private void processAuthorizationStrategy(URLConnection connection) {
-        ArrayList<FoxHttpAuthorization> foxHttpAuthorizations = foxHttpClient.getFoxHttpAuthorizationStrategy().getAuthorization(connection, FoxHttpAuthorizationScope.create(
+    private void processAuthorizationStrategy(URLConnection connection) throws FoxHttpRequestException {
+        List<FoxHttpAuthorization> foxHttpAuthorizations = foxHttpClient.getFoxHttpAuthorizationStrategy().getAuthorization(connection, FoxHttpAuthorizationScope.create(
                 url.toString(), RequestType.valueOf(((HttpURLConnection) connection).getRequestMethod()))
         );
         for (FoxHttpAuthorization foxHttpAuthorization : foxHttpAuthorizations) {
@@ -283,7 +279,7 @@ public class FoxHttpRequest<T extends Serializable> {
     }
 
     private boolean doOutput() {
-        return (requestBody != null && requestBody.hasBody());
+        return requestBody != null && requestBody.hasBody();
     }
 
     private void verifyRequest() throws FoxHttpException {
