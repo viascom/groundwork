@@ -57,7 +57,7 @@ public class BasicAuthAuthorization implements FoxHttpAuthorization {
 
                 return (String) (encoderMethod.invoke(objectToInvokeOn, userPassword.getBytes(), 2));
             } catch (Exception e1) {
-                throw new FoxHttpRequestException(e);
+                throw new FoxHttpRequestException(e1);
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new FoxHttpRequestException(e);
