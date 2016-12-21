@@ -10,18 +10,20 @@ import java.util.Locale;
  */
 public class ContentType {
 
+    private static final String UTF8 = "UTF-8";
+    
     // constants
-    public static final ContentType APPLICATION_ATOM_XML = create("application/atom+xml", Charset.forName("UTF-8"));
-    public static final ContentType APPLICATION_FORM_URLENCODED = create("application/x-www-form-urlencoded", Charset.forName("UTF-8"));
-    public static final ContentType APPLICATION_JSON = create("application/json", Charset.forName("UTF-8"));
+    public static final ContentType APPLICATION_ATOM_XML = create("application/atom+xml", Charset.forName(UTF8));
+    public static final ContentType APPLICATION_FORM_URLENCODED = create("application/x-www-form-urlencoded", Charset.forName(UTF8));
+    public static final ContentType APPLICATION_JSON = create("application/json", Charset.forName(UTF8));
     public static final ContentType APPLICATION_OCTET_STREAM = create("application/octet-stream", (Charset) null);
-    public static final ContentType APPLICATION_SVG_XML = create("application/svg+xml", Charset.forName("UTF-8"));
-    public static final ContentType APPLICATION_XHTML_XML = create("application/xhtml+xml", Charset.forName("UTF-8"));
-    public static final ContentType APPLICATION_XML = create("application/xml", Charset.forName("UTF-8"));
-    public static final ContentType MULTIPART_FORM_DATA = create("multipart/form-data", Charset.forName("UTF-8"));
-    public static final ContentType TEXT_HTML = create("text/html", Charset.forName("UTF-8"));
-    public static final ContentType TEXT_PLAIN = create("text/plain", Charset.forName("UTF-8"));
-    public static final ContentType TEXT_XML = create("text/xml", Charset.forName("UTF-8"));
+    public static final ContentType APPLICATION_SVG_XML = create("application/svg+xml", Charset.forName(UTF8));
+    public static final ContentType APPLICATION_XHTML_XML = create("application/xhtml+xml", Charset.forName(UTF8));
+    public static final ContentType APPLICATION_XML = create("application/xml", Charset.forName(UTF8));
+    public static final ContentType MULTIPART_FORM_DATA = create("multipart/form-data", Charset.forName(UTF8));
+    public static final ContentType TEXT_HTML = create("text/html", Charset.forName(UTF8));
+    public static final ContentType TEXT_PLAIN = create("text/plain", Charset.forName(UTF8));
+    public static final ContentType TEXT_XML = create("text/xml", Charset.forName(UTF8));
     public static final ContentType WILDCARD = create("*/*", (Charset) null);
 
     // defaults
