@@ -15,9 +15,6 @@ public class FoxHttpResponseBody implements FoxHttpBody {
 
     private ByteArrayOutputStream body = new ByteArrayOutputStream();
 
-    public FoxHttpResponseBody() {
-    }
-
     public void setBody(ByteArrayOutputStream body) {
         this.body = body;
     }

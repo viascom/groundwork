@@ -12,19 +12,19 @@ import java.security.KeyStore;
 public class OnwSSLCertificateTrustStrategy implements FoxHttpSSLTrustStrategy {
 
     private InputStream keyStoreInputStream;
-    private String JKSPassword;
-    private String KEYPassword;
+    private String JksPassword;
+    private String KeyPassword;
 
-    public OnwSSLCertificateTrustStrategy(InputStream keyStoreInputStream, String JKSPassword, String KEYPassword) {
+    public OnwSSLCertificateTrustStrategy(InputStream keyStoreInputStream, String JksPassword, String KeyPassword) {
         this.keyStoreInputStream = keyStoreInputStream;
-        this.JKSPassword = JKSPassword;
-        this.KEYPassword = KEYPassword;
+        this.JksPassword = JksPassword;
+        this.KeyPassword = KeyPassword;
     }
 
     @Override
     public SSLSocketFactory getSSLSocketFactory(HttpsURLConnection httpsURLConnection) {
-        final char[] JKS_PASSWORD = JKSPassword.toCharArray();
-        final char[] KEY_PASSWORD = KEYPassword.toCharArray();
+        final char[] JKS_PASSWORD = JksPassword.toCharArray();
+        final char[] KEY_PASSWORD = KeyPassword.toCharArray();
         try {
             /* Get the JKS contents */
             final KeyStore keyStore = KeyStore.getInstance("JKS");
@@ -44,8 +44,7 @@ public class OnwSSLCertificateTrustStrategy implements FoxHttpSSLTrustStrategy {
              */
             final SSLContext sc = SSLContext.getInstance("TLS");
             sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(), new java.security.SecureRandom());
-            final SSLSocketFactory socketFactory = sc.getSocketFactory();
-            return socketFactory;
+            return sc.getSocketFactory();
 
         } catch (final GeneralSecurityException | IOException exc) {
             throw new RuntimeException(exc);
