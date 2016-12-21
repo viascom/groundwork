@@ -2,14 +2,13 @@ package ch.viascom.groundwork.foxhttp.type;
 
 import lombok.Getter;
 
-import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
 /**
  * @author patrick.boesch@viascom.ch
  */
-public class ContentType implements Serializable {
+public class ContentType {
 
     // constants
     public static final ContentType APPLICATION_ATOM_XML = create("application/atom+xml", Charset.forName("UTF-8"));

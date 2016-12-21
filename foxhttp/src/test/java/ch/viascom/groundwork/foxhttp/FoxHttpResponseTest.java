@@ -28,7 +28,7 @@ public class FoxHttpResponseTest {
 
         FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
 
-        try{
+        try {
             foxHttpResponse.getParsedBody(GetResponse.class);
             assertThat(false).isEqualTo(true);
         } catch (FoxHttpResponseException e) {
@@ -50,7 +50,7 @@ public class FoxHttpResponseTest {
         FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
 
 
-        assertThat(foxHttpResponse.toString(true).length() > 0);
+        assertThat(foxHttpResponse.toString(true).length() > 0).isEqualTo(true);
 
 
     }

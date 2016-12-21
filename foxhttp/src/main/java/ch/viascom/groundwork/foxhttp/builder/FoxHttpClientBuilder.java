@@ -19,7 +19,7 @@ import ch.viascom.groundwork.foxhttp.timeout.FoxHttpTimeoutStrategy;
 import ch.viascom.groundwork.foxhttp.timeout.UserDefinedTimeoutStrategy;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * FoxHttpClient builder to create a new FoxHttpClient
@@ -105,7 +105,7 @@ public class FoxHttpClientBuilder {
      * @param foxHttpInterceptors Map of interceptors
      * @return FoxHttpClientBuilder (this)
      */
-    public FoxHttpClientBuilder setFoxHttpInterceptors(HashMap<FoxHttpInterceptorType, ArrayList<FoxHttpInterceptor>> foxHttpInterceptors) {
+    public FoxHttpClientBuilder setFoxHttpInterceptors(Map<FoxHttpInterceptorType, ArrayList<FoxHttpInterceptor>> foxHttpInterceptors) {
         foxHttpClient.setFoxHttpInterceptors(foxHttpInterceptors);
         return this;
     }

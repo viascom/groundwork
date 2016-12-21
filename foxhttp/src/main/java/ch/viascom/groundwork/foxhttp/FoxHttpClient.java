@@ -22,7 +22,8 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * @author patrick.boesch@viascom.ch
@@ -42,7 +43,7 @@ public class FoxHttpClient {
     @Getter
     @Setter
     //Interceptors
-    private HashMap<FoxHttpInterceptorType, ArrayList<FoxHttpInterceptor>> foxHttpInterceptors = new HashMap<>();
+    private Map<FoxHttpInterceptorType, ArrayList<FoxHttpInterceptor>> foxHttpInterceptors = new EnumMap<>(FoxHttpInterceptorType.class);
 
     //@Getter
     //Caching

@@ -56,7 +56,7 @@ public class FoxHttpResponse<T extends Serializable> {
     public String getStringBody() throws IOException {
         BufferedReader rd = new BufferedReader(new InputStreamReader(getInputStreamBody()));
         String line;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
         while ((line = rd.readLine()) != null) {
             if (response.length() != 0) {
                 response.append('\n');
@@ -100,6 +100,7 @@ public class FoxHttpResponse<T extends Serializable> {
         try {
             stringBuilder.append(" ").append(((HttpURLConnection) foxHttpRequest.getConnection()).getResponseMessage());
         } catch (IOException e) {
+            stringBuilder.append(" [couldn't load ResponseMessage]");
         }
         stringBuilder.append("\n");
         stringBuilder.append("Response-Headers: ").append(responseHeaders).append("\n");
@@ -108,7 +109,7 @@ public class FoxHttpResponse<T extends Serializable> {
             try {
                 stringBuilder.append(getStringBody()).append("\n");
             } catch (IOException e) {
-                stringBuilder.append("null (IOException)").append("\n");
+                stringBuilder.append("null (").append(e.getMessage()).append(")").append("\n");
             }
         }
         return stringBuilder.toString();

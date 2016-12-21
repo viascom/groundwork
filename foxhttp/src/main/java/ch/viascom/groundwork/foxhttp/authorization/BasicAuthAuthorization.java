@@ -1,8 +1,10 @@
 package ch.viascom.groundwork.foxhttp.authorization;
 
+import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
 import lombok.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLConnection;
 
@@ -24,7 +26,7 @@ public class BasicAuthAuthorization implements FoxHttpAuthorization {
     private String password;
 
     @Override
-    public void doAuthorization(URLConnection connection, FoxHttpAuthorizationScope foxHttpAuthorizationScope) {
+    public void doAuthorization(URLConnection connection, FoxHttpAuthorizationScope foxHttpAuthorizationScope) throws FoxHttpRequestException {
         connection.setRequestProperty(HeaderTypes.AUTHORIZATION.toString(), "Basic " + getBasicAuthenticationEncoding());
     }
 
@@ -34,7 +36,7 @@ public class BasicAuthAuthorization implements FoxHttpAuthorization {
      *
      * @return user:password string
      */
-    private String getBasicAuthenticationEncoding() {
+    private String getBasicAuthenticationEncoding() throws FoxHttpRequestException {
         String userPassword = username + ":" + password;
 
         Class<?> base64;
@@ -45,8 +47,8 @@ public class BasicAuthAuthorization implements FoxHttpAuthorization {
             Object encoder = encoderMethod.invoke(objectToInvokeOn);
             Method method = encoder.getClass().getDeclaredMethod("encodeToString", byte[].class);
 
-            return (String) (method.invoke(encoder, userPassword.getBytes()));
-        } catch (Exception e) {
+            return (String) (method.invoke(encoder, (Object) userPassword.getBytes()));
+        } catch (ClassNotFoundException e) {
             try {
                 base64 = Class.forName("android.util.Base64");
 
@@ -55,10 +57,11 @@ public class BasicAuthAuthorization implements FoxHttpAuthorization {
 
                 return (String) (encoderMethod.invoke(objectToInvokeOn, userPassword.getBytes(), 2));
             } catch (Exception e1) {
+                throw new FoxHttpRequestException(e);
             }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new FoxHttpRequestException(e);
         }
-
-        throw new RuntimeException();
 
     }
 }

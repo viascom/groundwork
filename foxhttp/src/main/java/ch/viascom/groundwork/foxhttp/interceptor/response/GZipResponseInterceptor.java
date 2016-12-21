@@ -29,11 +29,10 @@ public class GZipResponseInterceptor implements FoxHttpResponseInterceptor {
     @Override
     public void onIntercept(FoxHttpResponseInterceptorContext context) throws FoxHttpException {
         try {
-            if (context.getFoxHttpResponse().getResponseHeaders().getHeader("Content-Encoding") != null) {
-                if ("gzip".equals(context.getFoxHttpResponse().getResponseHeaders().getHeader("Content-Encoding").getValue())) {
-                    InputStream is = new GZIPInputStream(context.getFoxHttpResponse().getInputStreamBody());
-                    context.getFoxHttpResponse().getResponseBody().setBody(is, true);
-                }
+            if (context.getFoxHttpResponse().getResponseHeaders().getHeader("Content-Encoding") != null &&
+                    "gzip".equals(context.getFoxHttpResponse().getResponseHeaders().getHeader("Content-Encoding").getValue())) {
+                InputStream is = new GZIPInputStream(context.getFoxHttpResponse().getInputStreamBody());
+                context.getFoxHttpResponse().getResponseBody().setBody(is, true);
             }
         } catch (Exception e) {
             throw new FoxHttpException(e);

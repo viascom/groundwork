@@ -32,7 +32,7 @@ import org.junit.Test;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.EnumMap;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -76,7 +76,7 @@ public class FoxHttpBuilderTest {
         foxHttpClientBuilder.setFoxHttpRequestParser(foxHttpParser);
         foxHttpClientBuilder.setFoxHttpAuthorizationStrategy(foxHttpAuthorizationStrategy);
         foxHttpClientBuilder.setFoxHttpCookieStore(foxHttpCookieStore);
-        foxHttpClientBuilder.setFoxHttpInterceptors(new HashMap<>());
+        foxHttpClientBuilder.setFoxHttpInterceptors(new EnumMap<>(FoxHttpInterceptorType.class));
         foxHttpClientBuilder.setFoxHttpProxyStrategy(foxHttpProxyStrategy);
         foxHttpClientBuilder.setFoxHttpSSLTrustStrategy(foxHttpSSLTrustStrategy);
         foxHttpClientBuilder.setFoxHttpTimeouts(0, 0);
@@ -115,7 +115,7 @@ public class FoxHttpBuilderTest {
 
         foxHttpClientBuilder.activteFoxHttpLogger(true);
         foxHttpClientBuilder.setFoxHttpTimeoutStrategy(foxHttpTimeoutStrategy);
-        foxHttpClientBuilder.setFoxHttpInterceptors(new HashMap<>());
+        foxHttpClientBuilder.setFoxHttpInterceptors(new EnumMap<>(FoxHttpInterceptorType.class));
         foxHttpClientBuilder.activteDeflateResponseInterceptor(true, 100);
 
         FoxHttpClient foxHttpClient2 = foxHttpClientBuilder.build();
@@ -124,7 +124,7 @@ public class FoxHttpBuilderTest {
         assertThat(foxHttpClient2.getFoxHttpInterceptors().get(FoxHttpInterceptorType.RESPONSE)).isNotEmpty();
         assertThat(foxHttpClient2.getFoxHttpInterceptors().get(FoxHttpInterceptorType.RESPONSE).get(0).getWeight()).isEqualTo(100);
 
-        foxHttpClientBuilder.setFoxHttpInterceptors(new HashMap<>());
+        foxHttpClientBuilder.setFoxHttpInterceptors(new EnumMap<>(FoxHttpInterceptorType.class));
         foxHttpClientBuilder.activteDeflateResponseInterceptor(true);
         foxHttpClientBuilder.activteGZipResponseInterceptor();
 

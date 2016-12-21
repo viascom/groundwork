@@ -8,6 +8,7 @@ import javax.net.ssl.SSLSocketFactory;
 /**
  * @author patrick.boesch@viascom.ch
  */
+@FunctionalInterface
 public interface FoxHttpSSLTrustStrategy {
     SSLSocketFactory getSSLSocketFactory(HttpsURLConnection httpsURLConnection) throws FoxHttpSSLTrustStrategyException;
 }

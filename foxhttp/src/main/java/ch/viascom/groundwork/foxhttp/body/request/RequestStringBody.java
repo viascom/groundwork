@@ -74,7 +74,7 @@ public class RequestStringBody extends FoxHttpRequestBody {
      */
     @Override
     public boolean hasBody() {
-        return (content != null && !content.isEmpty());
+        return content != null && !content.isEmpty();
     }
 
     /**
