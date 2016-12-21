@@ -12,28 +12,28 @@ import java.security.KeyStore;
 public class OnwSSLCertificateTrustStrategy implements FoxHttpSSLTrustStrategy {
 
     private InputStream keyStoreInputStream;
-    private String JksPassword;
-    private String KeyPassword;
+    private String jksPassword;
+    private String keyPassword;
 
-    public OnwSSLCertificateTrustStrategy(InputStream keyStoreInputStream, String JksPassword, String KeyPassword) {
+    public OnwSSLCertificateTrustStrategy(InputStream keyStoreInputStream, String jksPassword, String keyPassword) {
         this.keyStoreInputStream = keyStoreInputStream;
-        this.JksPassword = JksPassword;
-        this.KeyPassword = KeyPassword;
+        this.jksPassword = jksPassword;
+        this.keyPassword = keyPassword;
     }
 
     @Override
     public SSLSocketFactory getSSLSocketFactory(HttpsURLConnection httpsURLConnection) {
-        final char[] JKS_PASSWORD = JksPassword.toCharArray();
-        final char[] KEY_PASSWORD = KeyPassword.toCharArray();
+        final char[] jksPasswordCharArray = jksPassword.toCharArray();
+        final char[] keyPasswordCharArray = keyPassword.toCharArray();
         try {
             /* Get the JKS contents */
             final KeyStore keyStore = KeyStore.getInstance("JKS");
             try (final InputStream is = keyStoreInputStream) {
-                keyStore.load(is, JKS_PASSWORD);
+                keyStore.load(is, jksPasswordCharArray);
             }
             final KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory
                     .getDefaultAlgorithm());
-            kmf.init(keyStore, KEY_PASSWORD);
+            kmf.init(keyStore, keyPasswordCharArray);
             final TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory
                     .getDefaultAlgorithm());
             tmf.init(keyStore);
