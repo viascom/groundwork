@@ -145,7 +145,8 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
      * @param name
      * @param inputStreamName
      * @param inputStream
-     * @contentTransferEncoding usually binary
+     * @param contentTransferEncoding usually binary
+     * @param contentType
      */
     public void addInputStreamPart(String name, String inputStreamName, InputStream inputStream, String contentTransferEncoding, String contentType) {
         stream.put(name, new NamedInputStream(inputStreamName, inputStream, contentTransferEncoding, contentType));
