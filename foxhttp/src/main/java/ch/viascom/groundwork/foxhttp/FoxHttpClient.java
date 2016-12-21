@@ -95,7 +95,6 @@ public class FoxHttpClient {
      *
      * @param interceptorType    Type of the interceptor
      * @param foxHttpInterceptor Interceptor instance
-     * @return FoxHttpClientBuilder (this)
      * @throws FoxHttpException Throws an exception if the interceptor does not match the type
      */
     public void register(FoxHttpInterceptorType interceptorType, FoxHttpInterceptor foxHttpInterceptor) throws FoxHttpException {
