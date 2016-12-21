@@ -2,13 +2,11 @@ package ch.viascom.groundwork.foxhttp.body.request;
 
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.type.ContentType;
-import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
 import ch.viascom.groundwork.foxhttp.util.QueryBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.DataOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,24 +60,7 @@ public class RequestUrlEncodedFormBody extends FoxHttpRequestBody {
     public void setBody(FoxHttpRequestBodyContext context) throws FoxHttpRequestException {
         String formOutputData = QueryBuilder.buildQuery(formData);
 
-        try {
-            DataOutputStream wr = new DataOutputStream(outputStream);
-            wr.writeBytes(formOutputData);
-            wr.flush();
-            wr.close();
-
-            //Execute interceptor
-            executeInterceptor(context);
-
-            //Add Content-Length header if not exist
-            if (context.getUrlConnection().getRequestProperty(HeaderTypes.CONTENT_LENGTH.toString()) == null) {
-                context.getUrlConnection().setRequestProperty(HeaderTypes.CONTENT_LENGTH.toString(), Integer.toString(outputStream.size()));
-            }
-
-            context.getUrlConnection().getOutputStream().write(outputStream.toByteArray());
-        } catch (Exception e) {
-            throw new FoxHttpRequestException(e);
-        }
+        writeBody(context, formOutputData);
     }
 
     /**

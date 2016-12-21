@@ -2,10 +2,8 @@ package ch.viascom.groundwork.foxhttp.body.request;
 
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.type.ContentType;
-import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
 import lombok.ToString;
 
-import java.io.DataOutputStream;
 import java.io.Serializable;
 
 /**
@@ -55,24 +53,7 @@ public class RequestObjectBody extends FoxHttpRequestBody {
 
         String json = context.getClient().getFoxHttpRequestParser().objectToSerialized(content);
 
-        try {
-            DataOutputStream wr = new DataOutputStream(outputStream);
-            wr.writeBytes(json);
-            wr.flush();
-            wr.close();
-
-            //Execute interceptor
-            executeInterceptor(context);
-
-            //Add Content-Length header if not exist
-            if (context.getUrlConnection().getRequestProperty(HeaderTypes.CONTENT_LENGTH.toString()) == null) {
-                context.getUrlConnection().setRequestProperty(HeaderTypes.CONTENT_LENGTH.toString(), Integer.toString(outputStream.size()));
-            }
-
-            context.getUrlConnection().getOutputStream().write(outputStream.toByteArray());
-        } catch (Exception e) {
-            throw new FoxHttpRequestException(e);
-        }
+        writeBody(context, json);
     }
 
     /**
