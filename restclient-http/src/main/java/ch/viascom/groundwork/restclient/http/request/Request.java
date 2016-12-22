@@ -203,7 +203,7 @@ public abstract class Request<T extends Response> implements RequestInterface<T>
         } else if (filterType == FilterTypes.REQUESTWRITEFILTER) {
             restFilters.addAll(requestWriteFilters.values());
         } else if (filterType == FilterTypes.REQUESTEXCEPTIONFILTER) {
-            restFilters.addAll(responseExceptionFilters.values());
+            restFilters.addAll(requestExceptionFilters.values());
         } else if (filterType == FilterTypes.RESPONSEFILTER) {
             restFilters.addAll(responseFilters.values());
         } else if (filterType == FilterTypes.RESPONSEREADFILTER) {
