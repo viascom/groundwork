@@ -9,32 +9,47 @@ import java.util.HashMap;
 
 /**
  * Represents a general response for all requests.
- *
- *  - hash: hash of the content
- *  - destination: this field can contain information about the response destination
+ * <p>
+ * - hash: hash of the content
+ * - destination: this field can contain information about the response destination
  *
  * @param <T> Type of the content
  */
 @Data
-public class ServiceResult<T extends Serializable> {
-	private ServiceResultStatus status;
-    private Class<T> type;
-	private T content;
-	private String hash;
-	private String destination;
-	private HashMap<String, Metadata> metadata = new HashMap<>();
+public class ServiceResult<T extends Serializable> implements Serializable {
+    private ServiceResultStatus status;
+    private String type;
+    private T content;
+    private String hash;
+    private String destination;
+    private HashMap<String, Metadata> metadata = new HashMap<>();
 
-    public ServiceResult(Class<T> type){
+    public ServiceResult(String type) {
         this.setType(type);
     }
 
-    public ServiceResult(Class<T> type, T serviceResultContent){
+    public ServiceResult(Class<T> type) {
+        this.setType(type.getCanonicalName());
+    }
+
+    public ServiceResult(String type, T serviceResultContent) {
         this.setType(type);
         this.setContent(serviceResultContent);
     }
 
-    public ServiceResult(Class<T> type, T serviceResultContent, ServiceResultStatus status){
+    public ServiceResult(Class<T> type, T serviceResultContent) {
+        this.setType(type.getCanonicalName());
+        this.setContent(serviceResultContent);
+    }
+
+    public ServiceResult(String type, T serviceResultContent, ServiceResultStatus status) {
         this.setType(type);
+        this.setContent(serviceResultContent);
+        this.setStatus(status);
+    }
+
+    public ServiceResult(Class<T> type, T serviceResultContent, ServiceResultStatus status) {
+        this.setType(type.getCanonicalName());
         this.setContent(serviceResultContent);
         this.setStatus(status);
     }
@@ -45,11 +60,11 @@ public class ServiceResult<T extends Serializable> {
      * @param serviceResultContent
      * @return
      */
-	public ServiceResult<T> setContent(T serviceResultContent) {
-		content = serviceResultContent;
-		setHash(ObjectHasher.hash(content));
-		return this;
-	}
+    public ServiceResult<T> setContent(T serviceResultContent) {
+        content = serviceResultContent;
+        setHash(ObjectHasher.hash(content));
+        return this;
+    }
 
     /**
      * Add a new set of Metadata
@@ -58,8 +73,8 @@ public class ServiceResult<T extends Serializable> {
      * @param metadata
      * @return
      */
-	public ServiceResult<T> addMetadata(String key, Metadata metadata){
-        this.getMetadata().put(key,metadata);
+    public ServiceResult<T> addMetadata(String key, Metadata metadata) {
+        this.getMetadata().put(key, metadata);
         return this;
     }
 }
