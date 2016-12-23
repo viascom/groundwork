@@ -41,10 +41,20 @@ public class FoxHttpResponse<T extends Serializable> {
         );
     }
 
+    /**
+     * Get the body as input stream
+     *
+     * @return body as input stream
+     */
     public InputStream getInputStreamBody() {
         return new ByteArrayInputStream(responseBody.getBody().toByteArray());
     }
 
+    /**
+     * Get the body as output stream
+     *
+     * @return body as output stream
+     */
     public ByteArrayOutputStream getByteArrayOutputStreamBody() {
         return responseBody.getBody();
     }
@@ -53,6 +63,12 @@ public class FoxHttpResponse<T extends Serializable> {
         this.responseBody.setBody(body);
     }
 
+    /**
+     * Get the response body as string
+     *
+     * @return body as string
+     * @throws IOException if the stream is not accessible
+     */
     public String getStringBody() throws IOException {
         BufferedReader rd = new BufferedReader(new InputStreamReader(getInputStreamBody()));
         String line;
@@ -67,6 +83,14 @@ public class FoxHttpResponse<T extends Serializable> {
         return response.toString();
     }
 
+    /**
+     * Get the parsed result
+     * <i>uses the response parser of the FoxHttpClient</i>
+     *
+     * @param parseClass class of the return object
+     * @return deserialized result
+     * @throws FoxHttpResponseException Exception during the deserialization
+     */
     public T getParsedBody(Class<T> parseClass) throws FoxHttpResponseException {
         if (foxHttpClient.getFoxHttpResponseParser() == null) {
             throw new FoxHttpResponseException("getParsedBody needs a FoxHttpResponseParser to deserialize the body");
