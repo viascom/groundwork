@@ -1,4 +1,4 @@
-package ch.viascom.groundwork.foxhttp.response;
+package ch.viascom.groundwork.foxhttp.response.serviceresult;
 
 import ch.viascom.groundwork.serviceresult.ServiceResult;
 

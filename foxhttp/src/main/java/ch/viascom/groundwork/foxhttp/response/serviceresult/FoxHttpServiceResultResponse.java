@@ -1,4 +1,4 @@
-package ch.viascom.groundwork.foxhttp.response;
+package ch.viascom.groundwork.foxhttp.response.serviceresult;
 
 import ch.viascom.groundwork.foxhttp.FoxHttpClient;
 import ch.viascom.groundwork.foxhttp.FoxHttpRequest;
@@ -24,7 +24,7 @@ import java.util.HashMap;
  * @author patrick.boesch@viascom.ch
  */
 @Data
-public class FoxHttpServiceResultParser<T extends Serializable> {
+public class FoxHttpServiceResultResponse<T extends Serializable> {
 
     private ServiceResultStatus status;
     private String type;
@@ -49,7 +49,7 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
      *
      * @param foxHttpResponse response with a serialized service result
      */
-    public FoxHttpServiceResultParser(FoxHttpResponse foxHttpResponse) {
+    public FoxHttpServiceResultResponse(FoxHttpResponse foxHttpResponse) throws FoxHttpResponseException {
         this(foxHttpResponse, null);
     }
 
@@ -59,13 +59,26 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
      * @param foxHttpResponse response with a serialized service result
      * @param objectHasher    object hasher to check the result
      */
-    public FoxHttpServiceResultParser(FoxHttpResponse foxHttpResponse, FoxHttpServiceResultHasher objectHasher) {
+    public FoxHttpServiceResultResponse(FoxHttpResponse foxHttpResponse, FoxHttpServiceResultHasher objectHasher) throws FoxHttpResponseException {
         this.responseBody = foxHttpResponse.getResponseBody();
         this.foxHttpClient = foxHttpResponse.getFoxHttpClient();
         this.responseCode = foxHttpResponse.getResponseCode();
         this.foxHttpRequest = foxHttpResponse.getFoxHttpRequest();
         this.responseHeaders = foxHttpResponse.getResponseHeaders();
         this.objectHasher = objectHasher;
+
+        try {
+            String body = getStringBody();
+            ServiceResult result = parser.fromJson(body, ServiceResult.class);
+            this.type = result.getType();
+            this.hash = result.getHash();
+            this.destination = result.getDestination();
+            this.metadata = result.getMetadata();
+            this.status = result.getStatus();
+        } catch (IOException e) {
+            throw new FoxHttpResponseException(e);
+        }
+
         foxHttpClient.getFoxHttpLogger().log("FoxHttpServiceResultParser(" + foxHttpResponse + "," + objectHasher + ")");
     }
 
@@ -139,10 +152,6 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
 
             ServiceResult<T> result = parser.fromJson(body, parameterizedType);
             foxHttpClient.getFoxHttpLogger().log("processServiceResult(" + result + ")");
-            this.type = result.getType();
-            this.hash = result.getHash();
-            this.destination = result.getDestination();
-            this.metadata = result.getMetadata();
             this.content = result.getContent();
 
             checkHash(checkHash, body, result);
@@ -189,9 +198,6 @@ public class FoxHttpServiceResultParser<T extends Serializable> {
             ServiceResult<ServiceFault> result = parser.fromJson(body, new TypeToken<ServiceResult<ServiceFault>>() {
             }.getType());
             foxHttpClient.getFoxHttpLogger().log("processFault(" + result + ")");
-            this.hash = result.getHash();
-            this.destination = result.getDestination();
-            this.metadata = result.getMetadata();
 
             checkHash(checkHash, body, result);
 

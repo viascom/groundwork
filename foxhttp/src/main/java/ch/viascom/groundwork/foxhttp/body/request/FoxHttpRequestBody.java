@@ -14,6 +14,14 @@ import java.io.DataOutputStream;
 
 /**
  * Abstract FoxHttpRequestBody
+ * <p>
+ * !! Do not use this class directly as body for a request. !!
+ * <p>
+ * Extend this class or use a default implementation:
+ * - RequestMultipartBody
+ * - RequestObjectBody
+ * - RequestStringBody
+ * - RequestUrlEncodedFormBody
  *
  * @author patrick.boesch@viascom.ch
  */
