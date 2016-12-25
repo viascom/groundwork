@@ -2,8 +2,8 @@
 
 The FoxHttp provides a fast and easy http client for java and android. It is part of the GroundWork Project by Viascom.
 
-[![release](https://img.shields.io/badge/release-cooming soon-lightgray.svg)](https://github.com/Viascom/groundwork/tree/master)
-[![develop](https://img.shields.io/badge/develop-cooming soon-lightgray.svg)](https://github.com/Viascom/groundwork/tree/foxhttp-develop)<br/>
+[![release](https://img.shields.io/badge/release-v1.0-brightgreen.svg)](https://github.com/Viascom/groundwork/tree/master)
+[![develop](https://img.shields.io/badge/develop-v1.0-brightgreen.svg)](https://github.com/Viascom/groundwork/tree/foxhttp-develop)<br/>
 [![coverage](https://img.shields.io/badge/test--coverage-80%25-brightgreen.svg)](https://github.com/Viascom/groundwork/tree/foxhttp-develop)
 [![Snap CI branch](https://img.shields.io/snap-ci/Viascom/groundwork/foxhttp-develop.svg)]()
 [![Maven Central](https://img.shields.io/maven-central/v/ch.viascom.groundwork/foxhttp.svg)]()
