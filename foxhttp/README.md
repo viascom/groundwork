@@ -1,4 +1,4 @@
-![FoxHttp-Logo](https://github.com/Viascom/groundwork/blob/foxhttp/create/foxhttp/FoxHttp.png?raw=true)
+![FoxHttp-Logo](https://github.com/Viascom/groundwork/blob/develop/foxhttp/FoxHttp.png?raw=true)
 
 The FoxHttp provides a fast and easy http client for java and android. It is part of the GroundWork Project by Viascom.
 
