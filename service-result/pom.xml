@@ -7,11 +7,11 @@
     <parent>
         <groupId>ch.viascom.groundwork</groupId>
         <artifactId>pom</artifactId>
-        <version>1.1</version>
+        <version>1.2</version>
     </parent>
 
     <artifactId>service-result</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <name>GroundWork - ServiceResult</name>
