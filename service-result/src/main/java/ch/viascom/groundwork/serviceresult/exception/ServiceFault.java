@@ -16,7 +16,7 @@ public class ServiceFault implements Serializable {
     protected String code;
     protected String message;
     protected String requestUrl;
-    protected String requestedType;
+    protected Class<?> requestedType;
 
     protected int responseStatusCode = 500;
     protected List<NameValuePair> requestParams;
@@ -49,11 +49,6 @@ public class ServiceFault implements Serializable {
         requestUrl = url;
         return this;
     }
-
-    public void setRequestedType(Class requestedType){
-        this.requestedType = requestedType.getCanonicalName();
-    }
-
 
     /**
      * Adds a name-value pair to the request parameter list.
