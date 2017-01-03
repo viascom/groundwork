@@ -32,10 +32,12 @@ public class FoxHttpResponse<T extends Serializable> {
 
     public FoxHttpResponse(InputStream body, FoxHttpRequest foxHttpRequest, int responseCode, FoxHttpClient foxHttpClient) throws IOException, FoxHttpException {
         this.responseBody.setBody(body);
+        foxHttpClient.getFoxHttpLogger().log("setResponseBody("+getStringBody()+")");
         this.foxHttpClient = foxHttpClient;
         this.responseCode = responseCode;
         this.foxHttpRequest = foxHttpRequest;
         //Execute interceptor
+        foxHttpClient.getFoxHttpLogger().log("executeResponseBodyInterceptor()");
         FoxHttpInterceptorExecutor.executeResponseBodyInterceptor(
                 new FoxHttpResponseBodyInterceptorContext(responseCode, this, foxHttpRequest, foxHttpClient)
         );
