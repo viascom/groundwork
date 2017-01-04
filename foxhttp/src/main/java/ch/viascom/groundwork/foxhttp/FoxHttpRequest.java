@@ -107,7 +107,7 @@ public class FoxHttpRequest<T extends Serializable> {
         return executeHttp("https".equals(url.getProtocol()));
     }
 
-    private FoxHttpResponse<T> executeHttp(boolean isHttps) throws FoxHttpRequestException {
+    private FoxHttpResponse<T> executeHttp(boolean isHttps) throws FoxHttpException {
         try {
             //Execute interceptor
             foxHttpClient.getFoxHttpLogger().log("executeRequestInterceptor()");
@@ -221,7 +221,7 @@ public class FoxHttpRequest<T extends Serializable> {
             } else {
                 return null;
             }
-        } catch (FoxHttpRequestException e) {
+        } catch (FoxHttpException e) {
             throw e;
         } catch (Exception e) {
             throw new FoxHttpRequestException(e);
