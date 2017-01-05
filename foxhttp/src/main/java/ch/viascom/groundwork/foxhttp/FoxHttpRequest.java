@@ -107,7 +107,7 @@ public class FoxHttpRequest<T extends Serializable> {
         return executeHttp("https".equals(url.getProtocol()));
     }
 
-    private FoxHttpResponse<T> executeHttp(boolean isHttps) throws FoxHttpRequestException {
+    private FoxHttpResponse<T> executeHttp(boolean isHttps) throws FoxHttpException {
         try {
             //Execute interceptor
             foxHttpClient.getFoxHttpLogger().log("executeRequestInterceptor()");
@@ -182,6 +182,8 @@ public class FoxHttpRequest<T extends Serializable> {
             foxHttpClient.getFoxHttpLogger().log("sendRequest()");
             connection.connect();
 
+            foxHttpClient.getFoxHttpLogger().log("========= Response =========");
+
             int responseCode = ((HttpURLConnection) connection).getResponseCode();
             foxHttpClient.getFoxHttpLogger().log("responseCode(" + responseCode + ")");
 
@@ -219,7 +221,7 @@ public class FoxHttpRequest<T extends Serializable> {
             } else {
                 return null;
             }
-        } catch (FoxHttpRequestException e) {
+        } catch (FoxHttpException e) {
             throw e;
         } catch (Exception e) {
             throw new FoxHttpRequestException(e);
@@ -272,6 +274,7 @@ public class FoxHttpRequest<T extends Serializable> {
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
             if (entry.getKey() != null) {
                 responseHeaders.addHeader(entry.getKey(), entry.getValue().get(0));
+                foxHttpClient.getFoxHttpLogger().log("-> ResponseHeader(" + entry.getKey() + ":" + entry.getValue().get(0) + ")");
             }
         }
 
