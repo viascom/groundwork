@@ -2,7 +2,8 @@ package ch.viascom.groundwork.serviceresult;
 
 import ch.viascom.groundwork.serviceresult.util.ObjectHasher;
 import org.junit.Test;
-import static org.fest.assertions.api.Assertions.*;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * @author patrick.boesch@viascom.ch
@@ -10,8 +11,8 @@ import static org.fest.assertions.api.Assertions.*;
 public class ObjectHasherTest {
 
     @Test
-    public void hashTest(){
-        ServiceResult<String> result = new ServiceResult<>();
+    public void hashTest() {
+        ServiceResult<String> result = new ServiceResult<>(String.class);
         result.setContent("Test");
 
         String hash = ObjectHasher.hash(result.getContent());
@@ -20,4 +21,5 @@ public class ObjectHasherTest {
         hash = ObjectHasher.hash(null);
         assertThat(hash).isEqualTo("");
     }
+
 }
