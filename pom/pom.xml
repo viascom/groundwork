@@ -6,7 +6,7 @@
 
     <groupId>ch.viascom.groundwork</groupId>
     <artifactId>pom</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.3</version>
     <packaging>pom</packaging>
 
     <name>GroundWork - POM</name>
@@ -175,7 +175,7 @@
                     <plugin>
                         <groupId>org.wildfly.plugins</groupId>
                         <artifactId>wildfly-maven-plugin</artifactId>
-                        <version>1.0.1.Final</version>
+                        <version>1.0.2.Final</version>
                         <configuration>
                             <hostname>${applicationserver.wildfly.hostname}</hostname>
                             <username>${applicationserver.wildfly.username}</username>
@@ -296,6 +296,7 @@
         <profile>
             <id>executable-jar</id>
             <build>
+                <finalName>${executable.finalName}</finalName>
                 <plugins>
                     <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
@@ -308,7 +309,6 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
-                            <finalName>${executable.finalName}</finalName>
                             <appendAssemblyId>${executable.jar.appendAssemblyId}</appendAssemblyId>
                         </configuration>
                         <executions>
@@ -325,6 +325,71 @@
             </build>
         </profile>
         <!-- end jar helper -->
+        <profile>
+            <id>full-build</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.3</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <!-- ==================================================================================== -->
@@ -336,23 +401,28 @@
             <dependency>
                 <groupId>ch.viascom.groundwork</groupId>
                 <artifactId>service-result</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.2</version>
             </dependency>
 
             <dependency>
                 <groupId>ch.viascom.groundwork</groupId>
                 <artifactId>restclient</artifactId>
-                <version>2.1-SNAPSHOT</version>
+                <version>2.2</version>
             </dependency>
             <dependency>
                 <groupId>ch.viascom.groundwork</groupId>
                 <artifactId>restclient-http</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.1</version>
             </dependency>
             <dependency>
                 <groupId>ch.viascom.groundwork</groupId>
                 <artifactId>restclient-jaxrs</artifactId>
                 <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.viascom.groundwork</groupId>
+                <artifactId>foxhttp</artifactId>
+                <version>1.2</version>
             </dependency>
 
             <!-- Lombock -->
@@ -367,7 +437,7 @@
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>2.9.4</version>
+                <version>2.9.6</version>
             </dependency>
 
             <dependency>
@@ -402,7 +472,7 @@
             <dependency>
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>
-                <version>2.0-EDR2</version>
+                <version>2.0.Alpha5</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -424,7 +494,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>2.2.0</version>
+                <version>2.2.28</version>
                 <scope>test</scope>
             </dependency>
 
@@ -432,7 +502,7 @@
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
-                <version>2.7</version>
+                <version>2.8.0</version>
             </dependency>
 
             <!-- Apache Commons -->
@@ -445,7 +515,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.4</version>
+                <version>3.5</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -509,7 +579,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.6</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -641,7 +711,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -731,7 +801,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.6</version>
+                    <version>3.7</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -756,7 +826,7 @@
                 <plugin>
                     <groupId>com.samaxes.maven</groupId>
                     <artifactId>minify-maven-plugin</artifactId>
-                    <version>1.7.4</version>
+                    <version>1.7.6</version>
                     <executions>
                         <execution>
                             <id>default-minify</id>
