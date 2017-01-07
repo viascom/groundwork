@@ -32,6 +32,25 @@ public class FoxHttpServiceResultTest {
             "      \"destination\": \"ch.viascom.groundwork.foxhttp:method\",\n" +
             "      \"metadata\": {}\n" +
             "  }\n";
+    private String rawBodynoCheck = "{\n" +
+            "      \"status\": \"successful\",\n" +
+            "      \"type\": \"ch.viascom.groundwork.foxhttp.models.User\",\n" +
+            "      \"content\": {\n" +
+            "        \"username\": \"foxhttp@viascom.ch\",\n" +
+            "        \"firstname\": \"Fox\",\n" +
+            "        \"lastname\": \"Http\"\n" +
+            "      },\n" +
+            "      \"hash\": \"\",\n" +
+            "      \"destination\": \"ch.viascom.groundwork.foxhttp:method\",\n" +
+            "      \"metadata\": {" +
+            "           \"ch.viascom.foxhttp\":{" +
+            "               \"type\":\"ch.viascom.groundwork.foxhttp.models.User\"," +
+            "               \"content\":{" +
+            "                   \"username\":\"nikola\"" +
+            "               }" +
+            "           }" +
+            "       }\n" +
+            "  }\n";
 
     private String rawBodyWrongHash = "{\n" +
             "      \"status\": \"successful\",\n" +
@@ -100,6 +119,17 @@ public class FoxHttpServiceResultTest {
         FoxHttpResponse foxHttpResponse = new FoxHttpResponse(new ByteArrayInputStream(rawBody.getBytes()), new FoxHttpRequest(), 200, new FoxHttpClient());
 
         User user = new FoxHttpServiceResultResponse(foxHttpResponse).getContent(User.class);
+        assertThat(user.getUsername()).isEqualTo("foxhttp@viascom.ch");
+        assertThat(user.getFirstname()).isEqualTo("Fox");
+    }
+
+    @Test
+    public void serviceResultParseTestNoCheckNoType() throws Exception {
+        FoxHttpResponse foxHttpResponse = new FoxHttpResponse(new ByteArrayInputStream(rawBodynoCheck.getBytes()), new FoxHttpRequest(), 200, new FoxHttpClient());
+
+        FoxHttpServiceResultResponse resultResponse = new FoxHttpServiceResultResponse(foxHttpResponse);
+
+        User user = resultResponse.getContentFromType();
         assertThat(user.getUsername()).isEqualTo("foxhttp@viascom.ch");
         assertThat(user.getFirstname()).isEqualTo("Fox");
     }

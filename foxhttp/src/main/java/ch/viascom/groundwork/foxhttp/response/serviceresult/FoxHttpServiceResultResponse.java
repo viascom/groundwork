@@ -12,6 +12,7 @@ import ch.viascom.groundwork.serviceresult.ServiceResultStatus;
 import ch.viascom.groundwork.serviceresult.exception.ServiceFault;
 import ch.viascom.groundwork.serviceresult.util.Metadata;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -20,7 +21,6 @@ import lombok.Getter;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author patrick.boesch@viascom.ch
@@ -34,7 +34,7 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
     private Serializable content;
     private String hash;
     private String destination;
-    private Map<String, Metadata> metadata = new HashMap<>();
+    private HashMap metadata = new HashMap<>();
 
     private FoxHttpResponseBody responseBody = new FoxHttpResponseBody();
     private int responseCode = -1;
@@ -42,7 +42,7 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
     private FoxHttpClient foxHttpClient;
     private FoxHttpRequest foxHttpRequest;
 
-    private Gson parser = new Gson();
+    private Gson parser;
     private FoxHttpServiceResultHasher objectHasher;
 
 
@@ -68,6 +68,10 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
         this.foxHttpRequest = foxHttpResponse.getFoxHttpRequest();
         this.responseHeaders = foxHttpResponse.getResponseHeaders();
         this.objectHasher = objectHasher;
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Metadata.class, new MetaDataDeserializer());
+        this.parser = gsonBuilder.create();
 
         try {
             String body = getStringBody();
@@ -155,6 +159,43 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
      */
     public <T extends Serializable> T getContent(Class<T> contentClass) throws FoxHttpResponseException {
         return getContent(contentClass, false);
+    }
+
+    /**
+     * Get the content of the service result
+     *
+     * @param <T> Type of the content
+     * @return deserialized content of the service result
+     * @throws FoxHttpResponseException Exception during the deserialization
+     */
+    public <T extends Serializable> T getContentFromType() throws FoxHttpResponseException {
+        try {
+            return getContent((Class<T>) Class.forName(this.type), false);
+        } catch (FoxHttpResponseException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new FoxHttpResponseException(e);
+        }
+
+    }
+
+    /**
+     * Get the content of the service result
+     *
+     * @param checkHash should the result be checked
+     * @param <T>       Type of the content
+     * @return deserialized content of the service result
+     * @throws FoxHttpResponseException Exception during the deserialization
+     */
+    public <T extends Serializable> T getContentFromType(boolean checkHash) throws FoxHttpResponseException {
+        try {
+            return getContent((Class<T>) Class.forName(this.type), checkHash);
+        } catch (FoxHttpResponseException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new FoxHttpResponseException(e);
+        }
+
     }
 
     /**
