@@ -12,13 +12,14 @@ import lombok.NoArgsConstructor;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.nio.charset.Charset;
 
 /**
  * @author patrick.boesch@viascom.ch
  */
 @Data
 @NoArgsConstructor
-public class FoxHttpResponse<T extends Serializable> {
+public class FoxHttpResponse {
 
     private FoxHttpResponseBody responseBody = new FoxHttpResponseBody();
 
@@ -32,7 +33,7 @@ public class FoxHttpResponse<T extends Serializable> {
 
     public FoxHttpResponse(InputStream body, FoxHttpRequest foxHttpRequest, int responseCode, FoxHttpClient foxHttpClient) throws IOException, FoxHttpException {
         this.responseBody.setBody(body);
-        foxHttpClient.getFoxHttpLogger().log("setResponseBody("+getStringBody()+")");
+        foxHttpClient.getFoxHttpLogger().log("setResponseBody(" + getStringBody() + ")");
         this.foxHttpClient = foxHttpClient;
         this.responseCode = responseCode;
         this.foxHttpRequest = foxHttpRequest;
@@ -72,7 +73,18 @@ public class FoxHttpResponse<T extends Serializable> {
      * @throws IOException if the stream is not accessible
      */
     public String getStringBody() throws IOException {
-        BufferedReader rd = new BufferedReader(new InputStreamReader(getInputStreamBody()));
+        return getStringBody(Charset.defaultCharset());
+    }
+
+    /**
+     * Get the response body as string
+     *
+     * @param charset charset for the byte to String conversion
+     * @return body as string
+     * @throws IOException if the stream is not accessible
+     */
+    public String getStringBody(Charset charset) throws IOException {
+        BufferedReader rd = new BufferedReader(new InputStreamReader(getInputStreamBody(), charset));
         String line;
         StringBuilder response = new StringBuilder();
         while ((line = rd.readLine()) != null) {
@@ -93,7 +105,8 @@ public class FoxHttpResponse<T extends Serializable> {
      * @return deserialized result
      * @throws FoxHttpResponseException Exception during the deserialization
      */
-    public T getParsedBody(Class<T> parseClass) throws FoxHttpResponseException {
+    @SuppressWarnings("unchecked")
+    public <T extends Serializable> T getParsedBody(Class<T> parseClass) throws FoxHttpResponseException {
         if (foxHttpClient.getFoxHttpResponseParser() == null) {
             throw new FoxHttpResponseException("getParsedBody needs a FoxHttpResponseParser to deserialize the body");
         }

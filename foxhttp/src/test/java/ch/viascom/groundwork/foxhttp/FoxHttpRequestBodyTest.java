@@ -33,7 +33,7 @@ public class FoxHttpRequestBodyTest {
 
         FoxHttpRequestBody requestBody = new RequestObjectBody(new User());
 
-        FoxHttpRequestBuilder<PostResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "post", RequestType.POST, clientBuilder.build());
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "post", RequestType.POST, clientBuilder.build());
         requestBuilder.setRequestBody(requestBody);
 
         try {
@@ -52,9 +52,9 @@ public class FoxHttpRequestBodyTest {
 
         FoxHttpRequestBody requestBody = new RequestObjectBody(new User());
 
-        FoxHttpRequestBuilder<PostResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "post", RequestType.POST, clientBuilder.build());
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "post", RequestType.POST, clientBuilder.build());
         requestBuilder.setRequestBody(requestBody);
-        FoxHttpResponse<PostResponse> foxHttpResponse = requestBuilder.build().execute();
+        FoxHttpResponse foxHttpResponse = requestBuilder.build().execute();
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
@@ -73,9 +73,9 @@ public class FoxHttpRequestBodyTest {
         requestBody.addFormEntry("username", "Fox");
         requestBody.addFormEntry("password", "GroundWork1234");
 
-        FoxHttpRequestBuilder<PostResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "post", RequestType.POST, clientBuilder.build());
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "post", RequestType.POST, clientBuilder.build());
         requestBuilder.setRequestBody(requestBody);
-        FoxHttpResponse<PostResponse> foxHttpResponse = requestBuilder.build().execute();
+        FoxHttpResponse foxHttpResponse = requestBuilder.build().execute();
 
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
@@ -96,9 +96,9 @@ public class FoxHttpRequestBodyTest {
         requestBody.addFormField("filename", "test.data");
         requestBody.addInputStreamPart("file", "file.json", new ByteArrayInputStream("{\"name\":\"FoxHttp\"}".getBytes()), "QUOTED-PRINTABLE", ContentType.DEFAULT_TEXT.getMimeType());
 
-        FoxHttpRequestBuilder<PostResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "post", RequestType.POST, clientBuilder.build());
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "post", RequestType.POST, clientBuilder.build());
         requestBuilder.setRequestBody(requestBody);
-        FoxHttpResponse<PostResponse> foxHttpResponse = requestBuilder.build().execute();
+        FoxHttpResponse foxHttpResponse = requestBuilder.build().execute();
 
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);

@@ -7,16 +7,16 @@ import ch.viascom.groundwork.foxhttp.builder.FoxHttpRequestBuilder;
 import ch.viascom.groundwork.foxhttp.cookie.DefaultCookieStore;
 import ch.viascom.groundwork.foxhttp.cookie.FoxHttpCookieStore;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
-import ch.viascom.groundwork.foxhttp.header.HeaderField;
+import ch.viascom.groundwork.foxhttp.header.HeaderEntry;
 import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptor;
 import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptorType;
 import ch.viascom.groundwork.foxhttp.interceptor.request.FoxHttpRequestBodyInterceptor;
 import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestBodyInterceptorContext;
 import ch.viascom.groundwork.foxhttp.log.DefaultFoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.log.FoxHttpLogger;
-import ch.viascom.groundwork.foxhttp.models.PostResponse;
 import ch.viascom.groundwork.foxhttp.parser.FoxHttpParser;
 import ch.viascom.groundwork.foxhttp.parser.GsonParser;
+import ch.viascom.groundwork.foxhttp.placeholder.FoxHttpPlaceholderStrategy;
 import ch.viascom.groundwork.foxhttp.proxy.FoxHttpProxyStrategy;
 import ch.viascom.groundwork.foxhttp.ssl.DefaultHostTrustStrategy;
 import ch.viascom.groundwork.foxhttp.ssl.DefaultSSLTrustStrategy;
@@ -33,6 +33,7 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.util.EnumMap;
+import java.util.Map;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -69,6 +70,42 @@ public class FoxHttpBuilderTest {
         FoxHttpSSLTrustStrategy foxHttpSSLTrustStrategy = new DefaultSSLTrustStrategy();
         FoxHttpTimeoutStrategy foxHttpTimeoutStrategy = new DefaultTimeoutStrategy();
         FoxHttpAuthorization authorization = new BasicAuthAuthorization("name", "passwd");
+        FoxHttpPlaceholderStrategy placeholderStrategy = new FoxHttpPlaceholderStrategy() {
+            @Override
+            public String getPlaceholderEscapeCharStart() {
+                return "[";
+            }
+
+            @Override
+            public void setPlaceholderEscapeCharStart(String placeholderEscapeChar) {
+
+            }
+
+            @Override
+            public String getPlaceholderEscapeCharEnd() {
+                return null;
+            }
+
+            @Override
+            public void setPlaceholderEscapeCharEnd(String placeholderEscapeChar) {
+
+            }
+
+            @Override
+            public String getPlaceholderMatchRegex() {
+                return null;
+            }
+
+            @Override
+            public void addPlaceholder(String placeholder, String value) {
+
+            }
+
+            @Override
+            public Map<String, String> getPlaceholderMap() {
+                return null;
+            }
+        };
 
         foxHttpClientBuilder.setFoxHttpHostTrustStrategy(foxHttpHostTrustStrategy);
         foxHttpClientBuilder.setFoxHttpResponseParser(foxHttpParser);
@@ -94,6 +131,7 @@ public class FoxHttpBuilderTest {
                 return 0;
             }
         });
+        foxHttpClientBuilder.setFoxHttpPlaceholderStrategy(placeholderStrategy);
 
         FoxHttpClient foxHttpClient = foxHttpClientBuilder.build();
 
@@ -111,7 +149,7 @@ public class FoxHttpBuilderTest {
         assertThat(foxHttpClient.getFoxHttpAuthorizationStrategy().getAuthorization(null, FoxHttpAuthorizationScope.ANY).get(0)).isEqualTo(authorization);
         assertThat(foxHttpClient.getFoxHttpInterceptors().get(FoxHttpInterceptorType.RESPONSE)).isNotEmpty();
         assertThat(foxHttpClient.getFoxHttpInterceptors().get(FoxHttpInterceptorType.RESPONSE).get(0).getWeight()).isEqualTo(100);
-
+        assertThat(foxHttpClient.getFoxHttpPlaceholderStrategy().getPlaceholderEscapeCharStart()).isEqualTo("[");
 
         foxHttpClientBuilder.activteFoxHttpLogger(true);
         foxHttpClientBuilder.setFoxHttpTimeoutStrategy(foxHttpTimeoutStrategy);
@@ -177,9 +215,9 @@ public class FoxHttpBuilderTest {
             }
         };
 
-        HeaderField headerField = new HeaderField("Product", "GroundWork");
+        HeaderEntry headerField = new HeaderEntry("Product", "GroundWork");
 
-        FoxHttpRequestBuilder<PostResponse> requestBuilder = new FoxHttpRequestBuilder<>("http://httpbin.org/post");
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder("http://httpbin.org/{method}");
         requestBuilder.setRequestType(RequestType.POST);
         requestBuilder.setFollowRedirect(true);
         requestBuilder.addRequestHeader("Fox-Header", "true");
@@ -189,30 +227,32 @@ public class FoxHttpBuilderTest {
         requestBuilder.setSkipResponseBody(false);
         requestBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.REQUEST_BODY, foxHttpInterceptor);
         requestBuilder.setRequestBody(new RequestStringBody("Hi!"));
+        requestBuilder.addFoxHttpPlaceholderEntry("method","post");
 
-        FoxHttpRequest<PostResponse> foxHttpRequest = requestBuilder.build();
+        FoxHttpRequest foxHttpRequest = requestBuilder.build();
 
         assertThat(foxHttpRequest.getRequestType()).isEqualTo(RequestType.POST);
         assertThat(foxHttpRequest.getUrl().toString()).isEqualTo("http://httpbin.org/post");
+        assertThat(foxHttpRequest.getFoxHttpClient().getFoxHttpPlaceholderStrategy().getPlaceholderMap().get("method")).isEqualTo("post");
 
     }
 
     @Test
     public void requestConstructorBuilderTest() throws Exception {
 
-        FoxHttpRequestBuilder<PostResponse> requestBuilder = new FoxHttpRequestBuilder<>();
-        FoxHttpRequest<PostResponse> foxHttpRequest = requestBuilder.build();
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder();
+        FoxHttpRequest foxHttpRequest = requestBuilder.build();
         assertThat(foxHttpRequest.getFoxHttpClient()).isNotNull();
 
-        FoxHttpRequestBuilder<PostResponse> requestBuilder2 = new FoxHttpRequestBuilder<>("http://httpbin.org/post", RequestType.DELETE);
-        FoxHttpRequest<PostResponse> foxHttpRequest2 = requestBuilder2.build();
+        FoxHttpRequestBuilder requestBuilder2 = new FoxHttpRequestBuilder("http://httpbin.org/post", RequestType.DELETE);
+        FoxHttpRequest foxHttpRequest2 = requestBuilder2.build();
         assertThat(foxHttpRequest2.getFoxHttpClient()).isNotNull();
         assertThat(foxHttpRequest2.getRequestType()).isEqualTo(RequestType.DELETE);
         assertThat(foxHttpRequest2.getUrl().toString()).isEqualTo("http://httpbin.org/post");
 
         FoxHttpClient foxHttpClient = new FoxHttpClient();
-        FoxHttpRequestBuilder<PostResponse> requestBuilder3 = new FoxHttpRequestBuilder<>("http://httpbin.org/put", RequestType.PUT, foxHttpClient);
-        FoxHttpRequest<PostResponse> foxHttpRequest3 = requestBuilder3.build();
+        FoxHttpRequestBuilder requestBuilder3 = new FoxHttpRequestBuilder("http://httpbin.org/put", RequestType.PUT, foxHttpClient);
+        FoxHttpRequest foxHttpRequest3 = requestBuilder3.build();
         assertThat(foxHttpRequest3.getFoxHttpClient()).isNotNull();
         assertThat(foxHttpRequest3.getRequestType()).isEqualTo(RequestType.PUT);
         assertThat(foxHttpRequest3.getUrl().toString()).isEqualTo("http://httpbin.org/put");

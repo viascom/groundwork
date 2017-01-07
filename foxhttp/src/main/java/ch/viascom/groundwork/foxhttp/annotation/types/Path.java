@@ -1,0 +1,13 @@
+package ch.viascom.groundwork.foxhttp.annotation.types;
+
+import java.lang.annotation.*;
+
+/**
+ * @author patrick.boesch@viascom.ch
+ */
+@Documented
+@Target({ElementType.TYPE, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Path {
+    String value();
+}

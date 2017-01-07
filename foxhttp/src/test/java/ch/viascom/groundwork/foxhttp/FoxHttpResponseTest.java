@@ -21,12 +21,12 @@ public class FoxHttpResponseTest {
 
         FoxHttpClient foxHttpClient = new FoxHttpClient();
 
-        FoxHttpRequest<GetResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(endpoint + "get"));
         foxHttpRequest.setRequestType(RequestType.GET);
         foxHttpRequest.setFollowRedirect(true);
 
-        FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         try {
             foxHttpResponse.getParsedBody(GetResponse.class);
@@ -42,12 +42,12 @@ public class FoxHttpResponseTest {
 
         FoxHttpClient foxHttpClient = new FoxHttpClient();
 
-        FoxHttpRequest<GetResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(endpoint + "get"));
         foxHttpRequest.setRequestType(RequestType.GET);
         foxHttpRequest.setFollowRedirect(true);
 
-        FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
 
         assertThat(foxHttpResponse.toString(true).length() > 0).isEqualTo(true);
