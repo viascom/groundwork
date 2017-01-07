@@ -18,15 +18,15 @@ The FoxHttp provides a fast and easy http client for java and android. It is par
 
 ### POM
 The POM module provides a parent pom which is also use in the GroundWork Project. It is part of the GroundWork Project by Viascom.<br/>
-[![master](https://img.shields.io/badge/master-v1.2-brightgreen.svg)]()
-[![develop](https://img.shields.io/badge/develop-v1.2-brightgreen.svg)]()
+[![master](https://img.shields.io/badge/master-v1.3-brightgreen.svg)]()
+[![develop](https://img.shields.io/badge/develop-v1.3-brightgreen.svg)]()
 [![Maven Central](https://img.shields.io/maven-central/v/ch.viascom.groundwork/pom.svg)]()
 [![Bintray](https://img.shields.io/bintray/v/viascom/GroundWork/ch.viascom.groundwork%3Apom.svg)]()
 
 #### Service-Result
 The ServiceResult module provides a standard result for your REST applications. It is part of the GroundWork Project by Viascom.<br/>
-[![master](https://img.shields.io/badge/master-v1.1-brightgreen.svg)]()
-[![develop](https://img.shields.io/badge/develop-v1.1-brightgreen.svg)]()
+[![master](https://img.shields.io/badge/master-v1.2-brightgreen.svg)]()
+[![develop](https://img.shields.io/badge/develop-v1.2-brightgreen.svg)]()
 [![Maven Central](https://img.shields.io/maven-central/v/ch.viascom.groundwork/service-result.svg)]()
 [![Bintray](https://img.shields.io/bintray/v/viascom/GroundWork/ch.viascom.groundwork%3Aservice-result.svg)]()
 
