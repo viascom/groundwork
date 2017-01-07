@@ -43,7 +43,7 @@ public class FoxHttpRequestTest {
     @Test
     public void requestValidateExceptionTest() throws Exception {
         //URL of the request ist not defined
-        FoxHttpRequest<GetResponse> foxHttpRequestURL = new FoxHttpRequest<>();
+        FoxHttpRequest foxHttpRequestURL = new FoxHttpRequest();
 
         try {
             foxHttpRequestURL.execute();
@@ -53,7 +53,7 @@ public class FoxHttpRequestTest {
         }
 
         //FoxHttpClient of the request ist not defined
-        FoxHttpRequest<GetResponse> foxHttpRequestClient = new FoxHttpRequest<>(null);
+        FoxHttpRequest foxHttpRequestClient = new FoxHttpRequest(null);
         foxHttpRequestClient.setUrl(new URL(endpoint + "get"));
 
         try {
@@ -71,12 +71,12 @@ public class FoxHttpRequestTest {
         FoxHttpClient foxHttpClient = new FoxHttpClient();
         foxHttpClient.setFoxHttpResponseParser(new GsonParser());
 
-        FoxHttpRequest<GetResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(endpoint + "get"));
         foxHttpRequest.setRequestType(RequestType.GET);
         foxHttpRequest.setFollowRedirect(true);
 
-        FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
@@ -97,13 +97,13 @@ public class FoxHttpRequestTest {
         FoxHttpRequestQuery requestQuery = new FoxHttpRequestQuery();
         requestQuery.addQueryEntry("name", "FoxHttp");
 
-        FoxHttpRequest<GetResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(endpoint + "get"));
         foxHttpRequest.setRequestType(RequestType.GET);
         foxHttpRequest.setRequestQuery(requestQuery);
         foxHttpRequest.setFollowRedirect(true);
 
-        FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
@@ -112,6 +112,28 @@ public class FoxHttpRequestTest {
 
         assertThat(getResponse.getUrl()).isEqualTo(endpoint + "get" + requestQuery.getQueryString());
         assertThat(getResponse.getArgs().get("name")).isEqualTo("FoxHttp");
+    }
+
+    @Test
+    public void getRequestPlaceholder() throws Exception {
+
+        FoxHttpClient foxHttpClient = new FoxHttpClient();
+        foxHttpClient.setFoxHttpResponseParser(new GsonParser());
+        foxHttpClient.getFoxHttpPlaceholderStrategy().addPlaceholder("endpoint", endpoint);
+        foxHttpClient.setFoxHttpLogger(new SystemOutFoxHttpLogger(true, "test"));
+
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
+        foxHttpRequest.setUrl("{endpoint}/get");
+        foxHttpRequest.setRequestType(RequestType.GET);
+        foxHttpRequest.setFollowRedirect(true);
+
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
+
+        assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
+        assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
+
+        GetResponse getResponse = foxHttpResponse.getParsedBody(GetResponse.class);
+        assertThat(getResponse.getUrl()).isEqualTo(endpoint + "get");
     }
 
     @Test
@@ -126,13 +148,13 @@ public class FoxHttpRequestTest {
         FoxHttpRequestQuery requestQuery = new FoxHttpRequestQuery();
         requestQuery.parseObjectAsQueryMap(new ArrayList<>(Arrays.asList("name", "index", "key")), queryDataHolder);
 
-        FoxHttpRequest<GetResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(endpoint + "get"));
         foxHttpRequest.setRequestType(RequestType.GET);
         foxHttpRequest.setRequestQuery(requestQuery);
         foxHttpRequest.setFollowRedirect(true);
 
-        FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
@@ -155,13 +177,13 @@ public class FoxHttpRequestTest {
         FoxHttpRequestHeader foxHttpHeader = new FoxHttpRequestHeader();
         foxHttpHeader.addHeader("Name", "FoxHttp");
 
-        FoxHttpRequest<GetResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(endpoint + "get"));
         foxHttpRequest.setRequestType(RequestType.GET);
         foxHttpRequest.setRequestHeader(foxHttpHeader);
         foxHttpRequest.setFollowRedirect(true);
 
-        FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
@@ -175,7 +197,7 @@ public class FoxHttpRequestTest {
     @Test
     public void getRequestBodyException() throws Exception {
 
-        FoxHttpRequest<GetResponse> foxHttpRequest = new FoxHttpRequest<>();
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest();
         foxHttpRequest.setUrl(new URL(endpoint + "get"));
         foxHttpRequest.setRequestType(RequestType.GET);
         foxHttpRequest.setFollowRedirect(true);
@@ -184,7 +206,7 @@ public class FoxHttpRequestTest {
         foxHttpRequest.setRequestBody(new RequestStringBody("EXCEPTION"));
 
         try {
-            FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
+            FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
             assertThat(false).isEqualTo(true);
         } catch (FoxHttpRequestException e) {
             assertThat(e.getMessage()).isEqualTo("Request type 'GET' does not allow a request body!");
@@ -201,13 +223,13 @@ public class FoxHttpRequestTest {
 
         FoxHttpRequestBody requestBody = new RequestStringBody("test string body 1234 - ?");
 
-        FoxHttpRequest<PostResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(endpoint + "post"));
         foxHttpRequest.setRequestType(RequestType.POST);
         foxHttpRequest.setFollowRedirect(true);
         foxHttpRequest.setRequestBody(requestBody);
 
-        FoxHttpResponse<PostResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
@@ -245,13 +267,13 @@ public class FoxHttpRequestTest {
 
         FoxHttpRequestBody requestBody = new RequestStringBody("test string body 1234 - ?");
 
-        FoxHttpRequest<PostResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(endpoint + "post"));
         foxHttpRequest.setRequestType(RequestType.POST);
         foxHttpRequest.setFollowRedirect(true);
         foxHttpRequest.setRequestBody(requestBody);
 
-        FoxHttpResponse<PostResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
@@ -271,12 +293,12 @@ public class FoxHttpRequestTest {
                 new BasicAuthAuthorization("FoxHttp", "GroundWork123")
         );
 
-        FoxHttpRequest<BasicAuthResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(endpoint + "basic-auth/FoxHttp/GroundWork123"));
         foxHttpRequest.setRequestType(RequestType.GET);
         foxHttpRequest.setFollowRedirect(true);
 
-        FoxHttpResponse<BasicAuthResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
@@ -296,12 +318,12 @@ public class FoxHttpRequestTest {
                 new BearerTokenAuthorization("FoxHttp-GroundWork-Token-1234567890")
         );
 
-        FoxHttpRequest<GetResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(endpoint + "get"));
         foxHttpRequest.setRequestType(RequestType.GET);
         foxHttpRequest.setFollowRedirect(true);
 
-        FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
@@ -333,12 +355,12 @@ public class FoxHttpRequestTest {
 
         foxHttpClient.getFoxHttpAuthorizationStrategy().removeAuthorization(FoxHttpAuthorizationScope.ANY, new RemoveMeAuthorization());
 
-        FoxHttpRequest<GetResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(endpoint + "get"));
         foxHttpRequest.setRequestType(RequestType.GET);
         foxHttpRequest.setFollowRedirect(true);
 
-        FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
@@ -358,12 +380,12 @@ public class FoxHttpRequestTest {
         foxHttpQuery.addQueryEntry("k1", "v1");
         foxHttpQuery.addQueryEntry("k2", "v2");
 
-        FoxHttpClient foxHttpClient = new FoxHttpClientBuilder(new GsonParser(),new GsonParser()).build();
+        FoxHttpClient foxHttpClient = new FoxHttpClientBuilder(new GsonParser(), new GsonParser()).build();
 
-        FoxHttpRequest foxHttpRequest = new FoxHttpRequestBuilder("http://httpbin.org/cookies/set",RequestType.GET,foxHttpClient)
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequestBuilder("http://httpbin.org/cookies/set", RequestType.GET, foxHttpClient)
                 .setRequestQuery(foxHttpQuery).build();
 
-        FoxHttpResponse<CookieResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         CookieResponse cookieResponse = foxHttpResponse.getParsedBody(CookieResponse.class);
 
@@ -382,12 +404,12 @@ public class FoxHttpRequestTest {
         FoxHttpClient foxHttpClient = new FoxHttpClient();
         foxHttpClient.setFoxHttpResponseParser(new GsonParser());
 
-        FoxHttpRequest<GetResponse> foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
+        FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);
         foxHttpRequest.setUrl(new URL(sslEndpoint + "get"));
         foxHttpRequest.setRequestType(RequestType.GET);
         foxHttpRequest.setFollowRedirect(true);
 
-        FoxHttpResponse<GetResponse> foxHttpResponse = foxHttpRequest.execute();
+        FoxHttpResponse foxHttpResponse = foxHttpRequest.execute();
 
         assertThat(foxHttpResponse.getResponseCode()).isEqualTo(200);
         assertThat(foxHttpResponse.getByteArrayOutputStreamBody().size()).isGreaterThan(0);
@@ -400,7 +422,7 @@ public class FoxHttpRequestTest {
     }
 
     @Test
-    public void systemOutLoggerTest(){
+    public void systemOutLoggerTest() {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
@@ -411,7 +433,7 @@ public class FoxHttpRequestTest {
 
         SystemOutFoxHttpLogger logger = new SystemOutFoxHttpLogger(true, "TEST-CASE");
         logger.log("Test 1");
-        logger.log("Test 2","TEST-CASE-Override");
+        logger.log("Test 2", "TEST-CASE-Override");
         logger.log("Test3");
 
         System.out.flush();
@@ -422,4 +444,15 @@ public class FoxHttpRequestTest {
         assertThat(baos.toString()).contains("TEST-CASE: Test3");
     }
 
+
+    @Test
+    public void placeholderTest() throws Exception {
+
+        FoxHttpRequestBuilder builder = new FoxHttpRequestBuilder("{endpoint}get", RequestType.GET);
+        builder.addFoxHttpPlaceholderEntry("endpoint", endpoint);
+
+        FoxHttpRequest request = builder.build();
+
+        assertThat(request.getUrl().toString()).isEqualTo(endpoint + "get");
+    }
 }

@@ -6,6 +6,7 @@ import ch.viascom.groundwork.foxhttp.FoxHttpResponse;
 import ch.viascom.groundwork.foxhttp.body.response.FoxHttpResponseBody;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpResponseException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
+import ch.viascom.groundwork.foxhttp.response.FoxHttpResponseParser;
 import ch.viascom.groundwork.serviceresult.ServiceResult;
 import ch.viascom.groundwork.serviceresult.ServiceResultStatus;
 import ch.viascom.groundwork.serviceresult.exception.ServiceFault;
@@ -19,20 +20,21 @@ import lombok.Getter;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author patrick.boesch@viascom.ch
  */
 @Data
-public class FoxHttpServiceResultResponse<T extends Serializable> {
+public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
 
     private ServiceResultStatus status;
     private String type;
     @Getter(AccessLevel.PRIVATE)
-    private T content;
+    private Serializable content;
     private String hash;
     private String destination;
-    private HashMap<String, Metadata> metadata = new HashMap<>();
+    private Map<String, Metadata> metadata = new HashMap<>();
 
     private FoxHttpResponseBody responseBody = new FoxHttpResponseBody();
     private int responseCode = -1;
@@ -80,6 +82,26 @@ public class FoxHttpServiceResultResponse<T extends Serializable> {
         }
 
         foxHttpClient.getFoxHttpLogger().log("FoxHttpServiceResultParser(" + foxHttpResponse + "," + objectHasher + ")");
+    }
+
+    /**
+     * Constructor for annotation use
+     *
+     * @param objectHasher object hasher to check the result
+     */
+    public FoxHttpServiceResultResponse(FoxHttpServiceResultHasher objectHasher) {
+        this.objectHasher = objectHasher;
+    }
+
+    /**
+     * Parser for annotation use
+     *
+     * @param foxHttpResponse response with a serialized service result
+     * @return new FoxHttpResponseParser
+     * @throws FoxHttpResponseException
+     */
+    public FoxHttpResponseParser parseResult(FoxHttpResponse foxHttpResponse) throws FoxHttpResponseException {
+        return new FoxHttpServiceResultResponse(foxHttpResponse, objectHasher);
     }
 
     /**
@@ -131,7 +153,7 @@ public class FoxHttpServiceResultResponse<T extends Serializable> {
      * @return deserialized content of the service result
      * @throws FoxHttpResponseException Exception during the deserialization
      */
-    public T getContent(Class<T> contentClass) throws FoxHttpResponseException {
+    public <T extends Serializable> T getContent(Class<T> contentClass) throws FoxHttpResponseException {
         return getContent(contentClass, false);
     }
 
@@ -143,7 +165,8 @@ public class FoxHttpServiceResultResponse<T extends Serializable> {
      * @return deserialized content of the service result
      * @throws FoxHttpResponseException Exception during the deserialization
      */
-    public T getContent(Class<T> contentClass, boolean checkHash) throws FoxHttpResponseException {
+    @SuppressWarnings("unchecked")
+    public <T extends Serializable> T getContent(Class<T> contentClass, boolean checkHash) throws FoxHttpResponseException {
         try {
 
             Type parameterizedType = new ServiceResultParameterizedType(contentClass);
@@ -156,7 +179,7 @@ public class FoxHttpServiceResultResponse<T extends Serializable> {
 
             checkHash(checkHash, body, result);
 
-            return this.content;
+            return (T) this.content;
         } catch (IOException e) {
             throw new FoxHttpResponseException(e);
         }

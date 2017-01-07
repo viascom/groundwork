@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 @ToString
-public class HeaderField {
+public class HeaderEntry {
     private String name;
     private String value;
 }

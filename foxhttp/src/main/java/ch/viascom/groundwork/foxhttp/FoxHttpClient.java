@@ -10,6 +10,8 @@ import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptorType;
 import ch.viascom.groundwork.foxhttp.log.DefaultFoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.log.FoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.parser.FoxHttpParser;
+import ch.viascom.groundwork.foxhttp.placeholder.DefaultPlaceholderStrategy;
+import ch.viascom.groundwork.foxhttp.placeholder.FoxHttpPlaceholderStrategy;
 import ch.viascom.groundwork.foxhttp.proxy.FoxHttpProxyStrategy;
 import ch.viascom.groundwork.foxhttp.ssl.DefaultHostTrustStrategy;
 import ch.viascom.groundwork.foxhttp.ssl.DefaultSSLTrustStrategy;
@@ -81,13 +83,18 @@ public class FoxHttpClient {
 
     @Getter
     @Setter
+    //Placeholder
+    private FoxHttpPlaceholderStrategy foxHttpPlaceholderStrategy = new DefaultPlaceholderStrategy();
+
+    @Getter
+    @Setter
     //Logger
     private FoxHttpLogger foxHttpLogger = new DefaultFoxHttpLogger(false);
 
     @Getter
     @Setter
     //UserAgent
-    private String foxHttpUserAgent = "FoxHTTP v1.0";
+    private String foxHttpUserAgent = "FoxHTTP v1.2";
 
 
     /**
