@@ -48,7 +48,7 @@ public class ServiceResultTest {
         assertThat(result.getStatus()).isEqualTo(ServiceResultStatus.successful);
         assertThat(result.getType()).isEqualTo(String.class.getCanonicalName());
         assertThat(result.getMetadata().get("ch.viascom.groundwork.test").getContent()).isEqualTo("Metadata");
-        assertThat(result.getMetadata().get("ch.viascom.groundwork.test").getType()).isEqualTo(String.class);
+        assertThat(result.getMetadata().get("ch.viascom.groundwork.test").getType()).isEqualTo(String.class.getCanonicalName());
 
         ServiceResult<String> result2 = new ServiceResult<>(String.class, "Content", ServiceResultStatus.successful);
 
@@ -60,6 +60,6 @@ public class ServiceResultTest {
         assertThat(result2.getStatus()).isEqualTo(ServiceResultStatus.successful);
         assertThat(result2.getType()).isEqualTo(String.class.getCanonicalName());
         assertThat(result2.getMetadata().get("ch.viascom.groundwork.test").getContent()).isEqualTo(12);
-        assertThat(result2.getMetadata().get("ch.viascom.groundwork.test").getType()).isEqualTo(Integer.class);
+        assertThat(result2.getMetadata().get("ch.viascom.groundwork.test").getType()).isEqualTo(Integer.class.getCanonicalName());
     }
 }
