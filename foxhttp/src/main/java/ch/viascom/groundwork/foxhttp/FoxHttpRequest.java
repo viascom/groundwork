@@ -106,8 +106,8 @@ public class FoxHttpRequest {
      * @throws FoxHttpException
      */
     public FoxHttpResponse execute(FoxHttpClient foxHttpClient) throws FoxHttpException {
-        foxHttpClient.getFoxHttpLogger().log("========= Request =========");
         verifyRequest();
+        foxHttpClient.getFoxHttpLogger().log("========= Request =========");
         foxHttpClient.getFoxHttpLogger().log("setFoxHttpClient(" + foxHttpClient + ")");
         this.foxHttpClient = foxHttpClient;
 
