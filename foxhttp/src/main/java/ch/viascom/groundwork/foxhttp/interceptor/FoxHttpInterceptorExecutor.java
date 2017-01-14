@@ -2,9 +2,11 @@ package ch.viascom.groundwork.foxhttp.interceptor;
 
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
 import ch.viascom.groundwork.foxhttp.interceptor.request.FoxHttpRequestBodyInterceptor;
+import ch.viascom.groundwork.foxhttp.interceptor.request.FoxHttpRequestConnectionInterceptor;
 import ch.viascom.groundwork.foxhttp.interceptor.request.FoxHttpRequestHeaderInterceptor;
 import ch.viascom.groundwork.foxhttp.interceptor.request.FoxHttpRequestInterceptor;
 import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestBodyInterceptorContext;
+import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestConnectionInterceptorContext;
 import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestHeaderInterceptorContext;
 import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestInterceptorContext;
 import ch.viascom.groundwork.foxhttp.interceptor.response.FoxHttpResponseBodyInterceptor;
@@ -34,6 +36,16 @@ public class FoxHttpInterceptorExecutor {
             for (FoxHttpInterceptor interceptor : context.getClient().getFoxHttpInterceptors().get(FoxHttpInterceptorType.REQUEST)) {
                 context.getClient().getFoxHttpLogger().log("-> [REQUEST] " + interceptor);
                 ((FoxHttpRequestInterceptor) interceptor).onIntercept(context);
+            }
+        }
+    }
+
+    public static void executeRequestConnectionInterceptor(FoxHttpRequestConnectionInterceptorContext context) throws FoxHttpException {
+        if (context.getClient().getFoxHttpInterceptors().containsKey(FoxHttpInterceptorType.REQUEST_CONNECTION)) {
+            Collections.sort(context.getClient().getFoxHttpInterceptors().get(FoxHttpInterceptorType.REQUEST_CONNECTION), new FoxHttpInterceptorComparator());
+            for (FoxHttpInterceptor interceptor : context.getClient().getFoxHttpInterceptors().get(FoxHttpInterceptorType.REQUEST_CONNECTION)) {
+                context.getClient().getFoxHttpLogger().log("-> [REQUEST_CONNECTION] " + interceptor);
+                ((FoxHttpRequestConnectionInterceptor) interceptor).onIntercept(context);
             }
         }
     }

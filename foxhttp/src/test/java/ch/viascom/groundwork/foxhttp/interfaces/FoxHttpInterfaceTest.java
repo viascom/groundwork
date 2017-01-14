@@ -38,7 +38,7 @@ public interface FoxHttpInterfaceTest {
 
     @POST("post")
     @FormUrlEncodedBody
-    PostResponse postFormMap(@FieldMap() HashMap<String, String> fromData);
+    PostResponse postFormMap(@FieldMap HashMap<String, String> fromData);
 
     @POST("post")
     @MultipartBody

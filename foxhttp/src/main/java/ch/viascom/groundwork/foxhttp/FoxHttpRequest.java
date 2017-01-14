@@ -7,9 +7,9 @@ import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
-import ch.viascom.groundwork.foxhttp.header.FoxHttpRequestHeader;
 import ch.viascom.groundwork.foxhttp.header.HeaderEntry;
 import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptorExecutor;
+import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestConnectionInterceptorContext;
 import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestHeaderInterceptorContext;
 import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestInterceptorContext;
 import ch.viascom.groundwork.foxhttp.interceptor.response.context.FoxHttpResponseCodeInterceptorContext;
@@ -47,7 +47,7 @@ public class FoxHttpRequest {
 
     @Getter
     @Setter
-    private FoxHttpRequestHeader requestHeader = new FoxHttpRequestHeader();
+    private FoxHttpHeader requestHeader = new FoxHttpHeader();
 
     @Getter
     @Setter
@@ -106,9 +106,8 @@ public class FoxHttpRequest {
      * @throws FoxHttpException
      */
     public FoxHttpResponse execute(FoxHttpClient foxHttpClient) throws FoxHttpException {
-        verifyRequest();
         foxHttpClient.getFoxHttpLogger().log("========= Request =========");
-
+        verifyRequest();
         foxHttpClient.getFoxHttpLogger().log("setFoxHttpClient(" + foxHttpClient + ")");
         this.foxHttpClient = foxHttpClient;
 
@@ -132,6 +131,10 @@ public class FoxHttpRequest {
             processPlaceholders(url.toString());
 
             checkPlaceholders();
+
+            //Execute interceptor
+            foxHttpClient.getFoxHttpLogger().log("executeRequestConnectionInterceptor()");
+            FoxHttpInterceptorExecutor.executeRequestConnectionInterceptor(new FoxHttpRequestConnectionInterceptorContext(url, this, foxHttpClient));
 
             //Create connection
             foxHttpClient.getFoxHttpLogger().log("createConnection(" + url + ")");

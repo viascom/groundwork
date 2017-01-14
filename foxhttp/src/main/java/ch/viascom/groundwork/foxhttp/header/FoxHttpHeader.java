@@ -16,11 +16,11 @@ import java.util.Map;
 @Data
 public class FoxHttpHeader implements Iterable<HeaderEntry> {
 
-    private List<HeaderEntry> headerFields = new ArrayList<>();
+    private List<HeaderEntry> headerEntries = new ArrayList<>();
 
     @Override
     public Iterator<HeaderEntry> iterator() {
-        return headerFields.iterator();
+        return headerEntries.iterator();
     }
 
     /**
@@ -30,7 +30,7 @@ public class FoxHttpHeader implements Iterable<HeaderEntry> {
      * @param value value of the header entry
      */
     public void addHeader(String name, String value) {
-        headerFields.add(new HeaderEntry(name, value));
+        headerEntries.add(new HeaderEntry(name, value));
     }
 
     /**
@@ -40,7 +40,7 @@ public class FoxHttpHeader implements Iterable<HeaderEntry> {
      * @param value value of the header entry
      */
     public void addHeader(HeaderTypes name, String value) {
-        headerFields.add(new HeaderEntry(name.toString(), value));
+        headerEntries.add(new HeaderEntry(name.toString(), value));
     }
 
     /**
@@ -50,7 +50,7 @@ public class FoxHttpHeader implements Iterable<HeaderEntry> {
      */
     public void addHeader(Map<String, String> entries) {
         for (Map.Entry<String, String> entry : entries.entrySet()) {
-            headerFields.add(new HeaderEntry(entry.getKey(), entry.getValue()));
+            headerEntries.add(new HeaderEntry(entry.getKey(), entry.getValue()));
         }
     }
 
@@ -60,7 +60,7 @@ public class FoxHttpHeader implements Iterable<HeaderEntry> {
      * @param entries array of header entries
      */
     public void addHeader(List<HeaderEntry> entries) {
-        headerFields.addAll(entries);
+        headerEntries.addAll(entries);
     }
 
     /**
@@ -70,7 +70,7 @@ public class FoxHttpHeader implements Iterable<HeaderEntry> {
      * @return a specific header
      */
     public HeaderEntry getHeader(String name) {
-        for (HeaderEntry headerField : getHeaderFields()) {
+        for (HeaderEntry headerField : getHeaderEntries()) {
             if (headerField.getName().equals(name)) {
                 return headerField;
             }

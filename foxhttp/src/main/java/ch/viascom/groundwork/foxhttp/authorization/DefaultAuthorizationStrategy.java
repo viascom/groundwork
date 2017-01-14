@@ -37,7 +37,7 @@ public class DefaultAuthorizationStrategy implements FoxHttpAuthorizationStrateg
         ArrayList<FoxHttpAuthorization> foxHttpAuthorizationList = new ArrayList<>();
 
         for (Map.Entry<String, ArrayList<FoxHttpAuthorization>> entry : foxHttpAuthorizations.entrySet()) {
-            if (RegexUtil.doesURLMatch(foxHttpAuthorizationScope, entry.getKey())) {
+            if (RegexUtil.doesURLMatch(foxHttpAuthorizationScope.toString(), entry.getKey())) {
                 foxHttpAuthorizationList.addAll(entry.getValue());
             }
         }
