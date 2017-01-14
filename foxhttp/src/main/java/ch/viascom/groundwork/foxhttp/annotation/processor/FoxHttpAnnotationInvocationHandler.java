@@ -9,6 +9,8 @@ import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.response.FoxHttpResponseParser;
 import lombok.AllArgsConstructor;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -48,13 +50,19 @@ public class FoxHttpAnnotationInvocationHandler implements InvocationHandler {
                 request.setRequestBody(foxHttpRequestBody);
             }
 
+            //Prepare return value
             if (method.getReturnType().isAssignableFrom(FoxHttpResponse.class)) {
                 return request.execute();
             } else if (method.getReturnType().isAssignableFrom(FoxHttpRequest.class)) {
                 return request;
             } else if (method.getReturnType().isAssignableFrom(String.class)) {
                 return request.execute().getStringBody();
+            } else if (method.getReturnType().isAssignableFrom(ByteArrayOutputStream.class)) {
+                return request.execute().getByteArrayOutputStreamBody();
+            } else if (method.getReturnType().isAssignableFrom(InputStream.class)) {
+                return request.execute().getInputStreamBody();
             } else {
+                //Search for registered response parser
                 for (Map.Entry<Class<? extends Annotation>, FoxHttpResponseParser> entry : responseParsers.entrySet()) {
                     if (FoxHttpAnnotationUtil.hasMethodAnnotation(entry.getKey(), method)) {
                         if (method.getReturnType().isAssignableFrom(entry.getValue().getClass())) {
@@ -68,6 +76,7 @@ public class FoxHttpAnnotationInvocationHandler implements InvocationHandler {
                     }
                 }
 
+                //Return as parsed object if nothing else matches
                 Class<Serializable> serializableClass = (Class<Serializable>) method.getReturnType();
                 return request.execute().getParsedBody(serializableClass);
             }

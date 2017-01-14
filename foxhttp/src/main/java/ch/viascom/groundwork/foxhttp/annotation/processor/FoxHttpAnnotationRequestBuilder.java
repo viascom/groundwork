@@ -5,7 +5,7 @@ import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBody;
 import ch.viascom.groundwork.foxhttp.body.request.RequestMultipartBody;
 import ch.viascom.groundwork.foxhttp.body.request.RequestUrlEncodedFormBody;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
-import ch.viascom.groundwork.foxhttp.header.FoxHttpRequestHeader;
+import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
 import ch.viascom.groundwork.foxhttp.header.HeaderEntry;
 import ch.viascom.groundwork.foxhttp.query.FoxHttpRequestQuery;
 import ch.viascom.groundwork.foxhttp.util.NamedInputStream;
@@ -62,7 +62,7 @@ class FoxHttpAnnotationRequestBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    static FoxHttpRequestHeader setFoxHttpRequestHeader(FoxHttpRequestHeader foxHttpRequestHeader, Method method, Object[] args) throws FoxHttpRequestException {
+    static FoxHttpHeader setFoxHttpRequestHeader(FoxHttpHeader foxHttpRequestHeader, Method method, Object[] args) throws FoxHttpRequestException {
 
         int parameterPos = 0;
         for (Annotation[] annotations : method.getParameterAnnotations()) {

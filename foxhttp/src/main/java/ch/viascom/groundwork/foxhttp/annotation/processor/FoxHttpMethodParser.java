@@ -6,7 +6,7 @@ import ch.viascom.groundwork.foxhttp.FoxHttpResponse;
 import ch.viascom.groundwork.foxhttp.annotation.types.*;
 import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBody;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
-import ch.viascom.groundwork.foxhttp.header.FoxHttpRequestHeader;
+import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
 import lombok.Getter;
 
@@ -31,7 +31,7 @@ class FoxHttpMethodParser {
     private boolean hasBody;
     private Class<?> responseType;
     private FoxHttpClient foxHttpClient;
-    private FoxHttpRequestHeader headerFields = new FoxHttpRequestHeader();
+    private FoxHttpHeader headerFields = new FoxHttpHeader();
     private boolean skipResponseBody = false;
     private boolean followRedirect = true;
 

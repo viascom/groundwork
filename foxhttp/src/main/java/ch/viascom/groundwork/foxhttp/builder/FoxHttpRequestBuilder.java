@@ -4,7 +4,7 @@ import ch.viascom.groundwork.foxhttp.FoxHttpClient;
 import ch.viascom.groundwork.foxhttp.FoxHttpRequest;
 import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBody;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
-import ch.viascom.groundwork.foxhttp.header.FoxHttpRequestHeader;
+import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
 import ch.viascom.groundwork.foxhttp.header.HeaderEntry;
 import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptor;
 import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptorType;
@@ -165,7 +165,7 @@ public class FoxHttpRequestBuilder {
      * @param foxHttpRequestHeader a header
      * @return FoxHttpRequestBuilder (this)
      */
-    public FoxHttpRequestBuilder setRequestHeader(FoxHttpRequestHeader foxHttpRequestHeader) {
+    public FoxHttpRequestBuilder setRequestHeader(FoxHttpHeader foxHttpRequestHeader) {
         foxHttpRequest.setRequestHeader(foxHttpRequestHeader);
         return this;
     }

@@ -9,7 +9,7 @@ import ch.viascom.groundwork.foxhttp.builder.FoxHttpClientBuilder;
 import ch.viascom.groundwork.foxhttp.builder.FoxHttpRequestBuilder;
 import ch.viascom.groundwork.foxhttp.cookie.DefaultCookieStore;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
-import ch.viascom.groundwork.foxhttp.header.FoxHttpRequestHeader;
+import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
 import ch.viascom.groundwork.foxhttp.log.SystemOutFoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.models.*;
 import ch.viascom.groundwork.foxhttp.objects.RemoveMeAuthorization;
@@ -174,7 +174,7 @@ public class FoxHttpRequestTest {
         FoxHttpClient foxHttpClient = new FoxHttpClient();
         foxHttpClient.setFoxHttpResponseParser(new GsonParser());
 
-        FoxHttpRequestHeader foxHttpHeader = new FoxHttpRequestHeader();
+        FoxHttpHeader foxHttpHeader = new FoxHttpHeader();
         foxHttpHeader.addHeader("Name", "FoxHttp");
 
         FoxHttpRequest foxHttpRequest = new FoxHttpRequest(foxHttpClient);

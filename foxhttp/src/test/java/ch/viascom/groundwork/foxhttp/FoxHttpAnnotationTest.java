@@ -7,6 +7,7 @@ import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.header.HeaderEntry;
 import ch.viascom.groundwork.foxhttp.interfaces.FoxHttpExceptionInterfaceTest;
 import ch.viascom.groundwork.foxhttp.interfaces.FoxHttpInterfaceTest;
+import ch.viascom.groundwork.foxhttp.log.SystemOutFoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.models.GetResponse;
 import ch.viascom.groundwork.foxhttp.models.PostResponse;
 import ch.viascom.groundwork.foxhttp.parser.GsonParser;
@@ -33,7 +34,8 @@ public class FoxHttpAnnotationTest {
         //Set Gson parser, register placeholder
         FoxHttpClientBuilder foxHttpClientBuilder = new FoxHttpClientBuilder()
                 .setFoxHttpResponseParser(new GsonParser())
-                .addFoxHttpPlaceholderEntry("host", endpoint);
+                .addFoxHttpPlaceholderEntry("host", endpoint)
+                .setFoxHttpLogger(new SystemOutFoxHttpLogger(true,"TEST"));
 
         //Request
         FoxHttpInterfaceTest foxHttpInterfaceTest = new FoxHttpAnnotationParser().parseInterface(FoxHttpInterfaceTest.class, foxHttpClientBuilder.build());
