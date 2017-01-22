@@ -6,7 +6,7 @@ import java.lang.annotation.*;
  * @author patrick.boesch@viascom.ch
  */
 @Documented
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FoxAuth {
 }
