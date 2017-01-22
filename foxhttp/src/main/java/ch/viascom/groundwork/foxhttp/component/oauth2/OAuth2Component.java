@@ -31,6 +31,11 @@ public class OAuth2Component implements FoxHttpComponent {
     private Map<GrantType, OAuth2RequestGenerator> oAuth2RequestGenerators = new HashMap<>();
     private OAuth2RequestExecutor oAuth2RequestExecutor;
 
+    /**
+     * Get a new OAuth2 component for foxhttp
+     *
+     * @param oAuth2Store instance of a oAuthStore
+     */
     public OAuth2Component(OAuth2Store oAuth2Store) {
         this.oAuth2Store = oAuth2Store;
 
