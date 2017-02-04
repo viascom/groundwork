@@ -32,7 +32,7 @@ public class DefaultOAuth2ClientCredentialRequestGenerator extends OAuth2Request
 
         foxHttpRequestBuilder.addRequestHeader(
                 HeaderTypes.AUTHORIZATION,
-                "Basic " + BasicAuthUtil.getBasicAuthenticationEncoding(oAuth2Store.getUsername(), oAuth2Store.getPassword())
+                "Basic " + BasicAuthUtil.getBasicAuthenticationEncoding(oAuth2Store.getClientId(), oAuth2Store.getClientSecret())
         );
 
         return foxHttpRequestBuilder.build();
