@@ -63,6 +63,21 @@ public class OAuth2StoreBuilder {
         return this;
     }
 
+    public OAuth2StoreBuilder setClientId(String clientId){
+        oAuth2Store.setClientId(clientId);
+        return this;
+    }
+
+    public OAuth2StoreBuilder setClientSecret(String clientSecret){
+        oAuth2Store.setClientSecret(clientSecret);
+        return this;
+    }
+
+    public OAuth2StoreBuilder activateClientCredentialsUse(){
+        oAuth2Store.setUseClientCredentials(true);
+        return this;
+    }
+
     public OAuth2StoreBuilder setAuthorizationCode(String authorizationCode){
         oAuth2Store.setAuthorizationCode(authorizationCode);
         return this;

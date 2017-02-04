@@ -21,10 +21,15 @@ public class OAuth2Store {
     private String requestScopes = "";
     private FoxHttpAuthorizationScope authScope;
     private Map<String, String> additionalParameters = new HashMap<>();
+    private boolean useClientCredentials = false;
 
-    //ClientCredentials / Password
+    //Password
     private String username;
     private String password;
+
+    //ClientCredentials
+    private String clientId;
+    private String clientSecret;
 
     //AuthorizationCode
     private String authorizationCode;

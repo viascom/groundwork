@@ -35,11 +35,11 @@ public class OAuth2RequestInterceptor implements FoxHttpRequestConnectionInterce
                 context.getClient().getFoxHttpLogger().log("   -> OAuth2 is needed for this request");
                 if (!isAccessTokenValid()) {
                     context.getClient().getFoxHttpLogger().log("   -> New OAuth2 token is needed");
-                    if(oAuth2Component.getOAuth2Store().getRefreshToken().isEmpty()) {
-                        FoxHttpRequest request = oAuth2Component.generateRequestForGrantType(oAuth2Component.getOAuth2Store().getGrantType());
+                    if(oAuth2Component.getOAuth2Store().getRefreshToken() != null && !oAuth2Component.getOAuth2Store().getRefreshToken().isEmpty()) {
+                        FoxHttpRequest request = oAuth2Component.generateRequestForGrantType(GrantType.REFRESH_TOKEN);
                         oAuth2Component.getOAuth2RequestExecutor().executeOAuth2Request(request, oAuth2Component);
                     }else{
-                        FoxHttpRequest request = oAuth2Component.generateRequestForGrantType(GrantType.REFRESH_TOKEN);
+                        FoxHttpRequest request = oAuth2Component.generateRequestForGrantType(oAuth2Component.getOAuth2Store().getGrantType());
                         oAuth2Component.getOAuth2RequestExecutor().executeOAuth2Request(request, oAuth2Component);
                     }
                 }
