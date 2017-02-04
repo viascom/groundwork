@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>service-result</artifactId>
-    <version>1.3</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <name>GroundWork - ServiceResult</name>
@@ -56,7 +56,6 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-
 
     <dependencies>
         <!-- Lombock -->
