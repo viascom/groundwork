@@ -14,6 +14,7 @@ import ch.viascom.groundwork.foxhttp.log.SystemOutFoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.models.*;
 import ch.viascom.groundwork.foxhttp.objects.RemoveMeAuthorization;
 import ch.viascom.groundwork.foxhttp.parser.GsonParser;
+import ch.viascom.groundwork.foxhttp.placeholder.DefaultPlaceholderStrategy;
 import ch.viascom.groundwork.foxhttp.proxy.FoxHttpProxyStrategy;
 import ch.viascom.groundwork.foxhttp.query.FoxHttpRequestQuery;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
@@ -27,6 +28,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -454,5 +456,27 @@ public class FoxHttpRequestTest {
         FoxHttpRequest request = builder.build();
 
         assertThat(request.getUrl().toString()).isEqualTo(endpoint + "get");
+    }
+
+    @Test
+    public void defaultPlaceholderStrategyTest() throws Exception {
+
+        DefaultPlaceholderStrategy dps = new DefaultPlaceholderStrategy();
+
+        String escapeCharStart = "@";
+        String escapeCharEnd = "#";
+        String regex = "[@][ -z|]*[#]";
+        HashMap<String, String> placeholderMap = new HashMap<>();
+        placeholderMap.put("%","=");
+
+        dps.setPlaceholderEscapeCharStart(escapeCharStart);
+        dps.setPlaceholderEscapeCharEnd(escapeCharEnd);
+        dps.setPlaceholderMap(placeholderMap);
+        dps.setPlaceholderMatchRegex(regex);
+
+        assertThat(dps.getPlaceholderEscapeCharStart()).isEqualTo(escapeCharStart);
+        assertThat(dps.getPlaceholderEscapeCharEnd()).isEqualTo(escapeCharEnd);
+        assertThat(dps.getPlaceholderMap()).isEqualTo(placeholderMap);
+        assertThat(dps.getPlaceholderMatchRegex()).isEqualTo(regex);
     }
 }
