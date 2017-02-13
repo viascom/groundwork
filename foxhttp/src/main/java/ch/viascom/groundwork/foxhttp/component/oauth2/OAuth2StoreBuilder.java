@@ -18,16 +18,6 @@ public class OAuth2StoreBuilder {
         oAuth2Store.setAuthUrl(authUrl);
     }
 
-    public OAuth2StoreBuilder setGrantType(GrantType grantType) {
-        oAuth2Store.setGrantType(grantType);
-        return this;
-    }
-
-    public OAuth2StoreBuilder setAuthUrl(String authUrl) {
-        oAuth2Store.setAuthUrl(authUrl);
-        return this;
-    }
-
     public OAuth2StoreBuilder setAuthRequestType(RequestType authRequestType) {
         oAuth2Store.setAuthRequestType(authRequestType);
         return this;

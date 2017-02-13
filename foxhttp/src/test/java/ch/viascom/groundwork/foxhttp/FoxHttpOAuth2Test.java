@@ -95,7 +95,6 @@ public class FoxHttpOAuth2Test {
         httpClient.activateComponent(oAuth2Component);
     }
 
-
     @Test
     public void tokenFlowTest() throws Exception {
         FoxHttpResponse response = new FoxHttpRequestBuilder("{solara}/account", RequestType.GET, httpClient).build().execute();

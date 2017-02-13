@@ -18,10 +18,7 @@ import ch.viascom.groundwork.foxhttp.parser.FoxHttpParser;
 import ch.viascom.groundwork.foxhttp.parser.GsonParser;
 import ch.viascom.groundwork.foxhttp.placeholder.FoxHttpPlaceholderStrategy;
 import ch.viascom.groundwork.foxhttp.proxy.FoxHttpProxyStrategy;
-import ch.viascom.groundwork.foxhttp.ssl.DefaultHostTrustStrategy;
-import ch.viascom.groundwork.foxhttp.ssl.DefaultSSLTrustStrategy;
-import ch.viascom.groundwork.foxhttp.ssl.FoxHttpHostTrustStrategy;
-import ch.viascom.groundwork.foxhttp.ssl.FoxHttpSSLTrustStrategy;
+import ch.viascom.groundwork.foxhttp.ssl.*;
 import ch.viascom.groundwork.foxhttp.timeout.DefaultTimeoutStrategy;
 import ch.viascom.groundwork.foxhttp.timeout.FoxHttpTimeoutStrategy;
 import ch.viascom.groundwork.foxhttp.type.ContentType;
@@ -208,6 +205,8 @@ public class FoxHttpBuilderTest {
     @Test
     public void requestBuilderTest() throws Exception {
 
+        FoxHttpClient foxHttpClient = new FoxHttpClient();
+
         FoxHttpInterceptor foxHttpInterceptor = new FoxHttpRequestBodyInterceptor() {
             @Override
             public void onIntercept(FoxHttpRequestBodyInterceptorContext context) throws FoxHttpException {
@@ -225,6 +224,7 @@ public class FoxHttpBuilderTest {
         FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder("http://httpbin.org/{method}");
         requestBuilder.setRequestType(RequestType.POST);
         requestBuilder.setFollowRedirect(true);
+        requestBuilder.setFoxHttpClient(foxHttpClient);
         requestBuilder.addRequestHeader("Fox-Header", "true");
         requestBuilder.addRequestHeader(HeaderTypes.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());
         requestBuilder.addRequestHeader(headerField);
@@ -239,7 +239,7 @@ public class FoxHttpBuilderTest {
         assertThat(foxHttpRequest.getRequestType()).isEqualTo(RequestType.POST);
         assertThat(foxHttpRequest.getUrl().toString()).isEqualTo("http://httpbin.org/post");
         assertThat(foxHttpRequest.getFoxHttpClient().getFoxHttpPlaceholderStrategy().getPlaceholderMap().get("method")).isEqualTo("post");
-
+        assertThat(foxHttpRequest.getFoxHttpClient()).isEqualTo(foxHttpClient);
     }
 
     @Test
@@ -262,6 +262,31 @@ public class FoxHttpBuilderTest {
         assertThat(foxHttpRequest3.getRequestType()).isEqualTo(RequestType.PUT);
         assertThat(foxHttpRequest3.getUrl().toString()).isEqualTo("http://httpbin.org/put");
         assertThat(foxHttpRequest3.getFoxHttpClient()).isEqualTo(foxHttpClient);
+
+        FoxHttpRequestBuilder requestBuilder4 = new FoxHttpRequestBuilder(new URL("http://httpbin.org/post"));
+        FoxHttpRequest foxHttpRequest4 = requestBuilder4.build();
+        assertThat(foxHttpRequest4.getFoxHttpClient()).isNotNull();
+        assertThat(foxHttpRequest4.getRequestType()).isEqualTo(RequestType.GET);
+        assertThat(foxHttpRequest4.getUrl().toString()).isEqualTo("http://httpbin.org/post");
+
+        FoxHttpRequestBuilder requestBuilder5 = new FoxHttpRequestBuilder(new URL("http://httpbin.org/post"), RequestType.DELETE);
+        FoxHttpRequest foxHttpRequest5 = requestBuilder5.build();
+        assertThat(foxHttpRequest5.getFoxHttpClient()).isNotNull();
+        assertThat(foxHttpRequest5.getRequestType()).isEqualTo(RequestType.DELETE);
+        assertThat(foxHttpRequest5.getUrl().toString()).isEqualTo("http://httpbin.org/post");
+
+
+        FoxHttpAuthorizationStrategy authorizationStrategy = new DefaultAuthorizationStrategy();
+        FoxHttpClientBuilder foxHttpClientBuilder = new FoxHttpClientBuilder(authorizationStrategy);
+        FoxHttpClient foxHttpClient2 = foxHttpClientBuilder.build();
+        assertThat(foxHttpClient2.getFoxHttpAuthorizationStrategy()).isEqualTo(authorizationStrategy);
+
+        FoxHttpSSLTrustStrategy sslTrustStrategy = new AllowAllSSLCertificateTrustStrategy();
+        FoxHttpHostTrustStrategy hostTrustStrategy = new AllHostTrustStrategy();
+        FoxHttpClientBuilder foxHttpClientBuilder3 = new FoxHttpClientBuilder(hostTrustStrategy, sslTrustStrategy);
+        FoxHttpClient foxHttpClient3 = foxHttpClientBuilder3.build();
+        assertThat(foxHttpClient3.getFoxHttpHostTrustStrategy()).isEqualTo(hostTrustStrategy);
+        assertThat(foxHttpClient3.getFoxHttpSSLTrustStrategy()).isEqualTo(sslTrustStrategy);
     }
 
 }
