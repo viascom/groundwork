@@ -7,13 +7,6 @@ import ch.viascom.groundwork.foxhttp.authorization.BearerTokenAuthorization;
  */
 public class OAuth2BearerTokenAuthorization extends BearerTokenAuthorization implements OAuth2Authorization {
 
-    public OAuth2BearerTokenAuthorization(String token, String headerPrefix) {
-        super(token, headerPrefix);
-    }
-
-    public OAuth2BearerTokenAuthorization() {
-    }
-
     public OAuth2BearerTokenAuthorization(String token) {
         super(token);
     }

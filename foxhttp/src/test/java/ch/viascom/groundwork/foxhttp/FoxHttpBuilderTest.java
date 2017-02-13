@@ -105,6 +105,11 @@ public class FoxHttpBuilderTest {
             public Map<String, String> getPlaceholderMap() {
                 return null;
             }
+
+            @Override
+            public String processPlaceholders(String processedURL, FoxHttpClient foxHttpClient) {
+                return processedURL;
+            }
         };
 
         foxHttpClientBuilder.setFoxHttpHostTrustStrategy(foxHttpHostTrustStrategy);
@@ -146,7 +151,7 @@ public class FoxHttpBuilderTest {
         assertThat(foxHttpClient.getFoxHttpUserAgent()).isEqualTo("FoxHttp v1.0");
         assertThat(foxHttpClient.getFoxHttpTimeoutStrategy().getConnectionTimeout()).isEqualTo(0);
         assertThat(foxHttpClient.getFoxHttpTimeoutStrategy().getReadTimeout()).isEqualTo(0);
-        assertThat(foxHttpClient.getFoxHttpAuthorizationStrategy().getAuthorization(null, FoxHttpAuthorizationScope.ANY).get(0)).isEqualTo(authorization);
+        assertThat(foxHttpClient.getFoxHttpAuthorizationStrategy().getAuthorization(null, FoxHttpAuthorizationScope.ANY, foxHttpClient).get(0)).isEqualTo(authorization);
         assertThat(foxHttpClient.getFoxHttpInterceptors().get(FoxHttpInterceptorType.RESPONSE)).isNotEmpty();
         assertThat(foxHttpClient.getFoxHttpInterceptors().get(FoxHttpInterceptorType.RESPONSE).get(0).getWeight()).isEqualTo(100);
         assertThat(foxHttpClient.getFoxHttpPlaceholderStrategy().getPlaceholderEscapeCharStart()).isEqualTo("[");
@@ -227,7 +232,7 @@ public class FoxHttpBuilderTest {
         requestBuilder.setSkipResponseBody(false);
         requestBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.REQUEST_BODY, foxHttpInterceptor);
         requestBuilder.setRequestBody(new RequestStringBody("Hi!"));
-        requestBuilder.addFoxHttpPlaceholderEntry("method","post");
+        requestBuilder.addFoxHttpPlaceholderEntry("method", "post");
 
         FoxHttpRequest foxHttpRequest = requestBuilder.build();
 
