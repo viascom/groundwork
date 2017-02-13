@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>foxhttp</artifactId>
-    <version>1.2</version>
+    <version>1.2-RC</version>
 
 
     <name>GroundWork - FoxHttp</name>
