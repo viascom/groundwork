@@ -5,7 +5,6 @@ import ch.viascom.groundwork.foxhttp.builder.FoxHttpClientBuilder;
 import ch.viascom.groundwork.foxhttp.builder.FoxHttpRequestBuilder;
 import ch.viascom.groundwork.foxhttp.component.oauth2.GrantType;
 import ch.viascom.groundwork.foxhttp.component.oauth2.OAuth2Component;
-import ch.viascom.groundwork.foxhttp.component.oauth2.OAuth2Store;
 import ch.viascom.groundwork.foxhttp.component.oauth2.OAuth2StoreBuilder;
 import ch.viascom.groundwork.foxhttp.log.SystemOutFoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.parser.GsonParser;
@@ -15,7 +14,13 @@ import org.junit.Test;
 /**
  * @author patrick.boesch@viascom.ch
  */
+//@Ignore
 public class FoxHttpOAuth2Test {
+
+    // ==========================================================================
+    // !! This test case is only testable if a OAuth2-Environment is available !!
+    // !!  The following tests uses the non-public Viascom Solara Auth-Server  !!
+    // ==========================================================================
 
     @Test
     public void test() throws Exception {
@@ -24,22 +29,20 @@ public class FoxHttpOAuth2Test {
                 .build();
 
 
-        OAuth2StoreBuilder oAuth2StoreBuilder = new OAuth2StoreBuilder(GrantType.PASSWORD,"http://solara.viascom.ch/auth/token")
+        OAuth2StoreBuilder oAuth2StoreBuilder = new OAuth2StoreBuilder(GrantType.PASSWORD,"http://localhost:8080/solara-1.0-SNAPSHOT/auth/token")
                 .setAuthRequestType(RequestType.POST)
-                .setFoxHttpAuthorizationScope(FoxHttpAuthorizationScope.create("http://solara.viascom.ch/account/*"))
+                .setFoxHttpAuthorizationScope(FoxHttpAuthorizationScope.create("http://localhost:8080/solara-1.0-SNAPSHOT/account/*"))
+                .activateClientCredentialsUse()
                 .setUsername("fox")
                 .setPassword("password1234")
-                .activateClientCredentialsUse()
                 .setClientId("AluxApp/1.0-SNAPSHOT")
-                .setClientSecret("7OVm8OeTPf6EZq3C");
+                .setClientSecret("7OVm8OeTPf6EZq3C")
+                .setRequestScopes("solara-read");
 
-        OAuth2Store oAuth2Store =oAuth2StoreBuilder.build();
-        oAuth2Store.setAccessToken("5d6e38b7-a3b3-3206-9319-228cf2e7576f");
-
-        OAuth2Component oAuth2Component = new OAuth2Component(oAuth2Store);
+        OAuth2Component oAuth2Component = new OAuth2Component(oAuth2StoreBuilder.build());
         httpClient.activateComponent(oAuth2Component);
 
-        FoxHttpResponse response = new FoxHttpRequestBuilder("http://solara.viascom.ch/account/get", RequestType.GET, httpClient).build().execute();
+        FoxHttpResponse response = new FoxHttpRequestBuilder("http://localhost:8080/solara-1.0-SNAPSHOT/account/get", RequestType.GET, httpClient).build().execute();
         System.out.println(response.toString(true));
 
     }
