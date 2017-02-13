@@ -1,5 +1,6 @@
 package ch.viascom.groundwork.foxhttp.authorization;
 
+import ch.viascom.groundwork.foxhttp.FoxHttpClient;
 import ch.viascom.groundwork.foxhttp.util.RegexUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,11 +34,11 @@ public class DefaultAuthorizationStrategy implements FoxHttpAuthorizationStrateg
      * @return
      */
     @Override
-    public List<FoxHttpAuthorization> getAuthorization(URLConnection connection, FoxHttpAuthorizationScope foxHttpAuthorizationScope) {
+    public List<FoxHttpAuthorization> getAuthorization(URLConnection connection, FoxHttpAuthorizationScope foxHttpAuthorizationScope, FoxHttpClient foxHttpClient) {
         ArrayList<FoxHttpAuthorization> foxHttpAuthorizationList = new ArrayList<>();
 
         for (Map.Entry<String, ArrayList<FoxHttpAuthorization>> entry : foxHttpAuthorizations.entrySet()) {
-            if (RegexUtil.doesURLMatch(foxHttpAuthorizationScope.toString(), entry.getKey())) {
+            if (RegexUtil.doesURLMatch(foxHttpAuthorizationScope.toString(), foxHttpClient.getFoxHttpPlaceholderStrategy().processPlaceholders(entry.getKey(), foxHttpClient))) {
                 foxHttpAuthorizationList.addAll(entry.getValue());
             }
         }

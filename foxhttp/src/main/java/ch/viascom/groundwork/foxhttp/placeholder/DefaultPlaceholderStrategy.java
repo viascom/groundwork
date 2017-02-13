@@ -1,5 +1,6 @@
 package ch.viascom.groundwork.foxhttp.placeholder;
 
+import ch.viascom.groundwork.foxhttp.FoxHttpClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,4 +48,12 @@ public class DefaultPlaceholderStrategy implements FoxHttpPlaceholderStrategy {
         placeholderMap.put(placeholder, value);
     }
 
+
+    public String processPlaceholders(String processedURL, FoxHttpClient foxHttpClient) {
+        for (Map.Entry<String, String> entry : this.getPlaceholderMap().entrySet()) {
+            foxHttpClient.getFoxHttpLogger().log("-> " + this.getPlaceholderEscapeCharStart() + entry.getKey() + this.getPlaceholderEscapeCharEnd() + " -> " + entry.getValue());
+            processedURL = processedURL.replace(this.getPlaceholderEscapeCharStart() + entry.getKey() + this.getPlaceholderEscapeCharEnd(), entry.getValue());
+        }
+        return processedURL;
+    }
 }

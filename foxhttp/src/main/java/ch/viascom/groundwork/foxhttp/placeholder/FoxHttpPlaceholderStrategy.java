@@ -1,5 +1,7 @@
 package ch.viascom.groundwork.foxhttp.placeholder;
 
+import ch.viascom.groundwork.foxhttp.FoxHttpClient;
+
 import java.util.Map;
 
 /**
@@ -19,4 +21,6 @@ public interface FoxHttpPlaceholderStrategy {
     void addPlaceholder(String placeholder, String value);
 
     Map<String, String> getPlaceholderMap();
+
+    String processPlaceholders(String processedURL, FoxHttpClient foxHttpClient);
 }

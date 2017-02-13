@@ -80,8 +80,12 @@ public class FoxHttpRequest {
         this.foxHttpClient = foxHttpClient;
     }
 
-    public void setUrl(String url) throws MalformedURLException {
-        processPlaceholders(url);
+    public void setUrl(String url) throws MalformedURLException, FoxHttpRequestException {
+        if (foxHttpClient == null) {
+            throw new FoxHttpRequestException("FoxHttpClient can not be null");
+        }
+        String parsedURL = foxHttpClient.getFoxHttpPlaceholderStrategy().processPlaceholders(url, foxHttpClient);
+        this.url = new URL(parsedURL);
     }
 
     public void setUrl(URL url) {
@@ -128,7 +132,8 @@ public class FoxHttpRequest {
             prepareQuery();
 
             foxHttpClient.getFoxHttpLogger().log("processPlaceholders()");
-            processPlaceholders(url.toString());
+            String parsedURL = foxHttpClient.getFoxHttpPlaceholderStrategy().processPlaceholders(url.toString(), foxHttpClient);
+            url = new URL(parsedURL);
 
             checkPlaceholders();
 
@@ -251,18 +256,6 @@ public class FoxHttpRequest {
         }
     }
 
-    private void processPlaceholders(String processedURL) throws MalformedURLException {
-        for (Map.Entry<String, String> entry : foxHttpClient.getFoxHttpPlaceholderStrategy().getPlaceholderMap().entrySet()) {
-            foxHttpClient.getFoxHttpLogger().log("-> " + foxHttpClient.getFoxHttpPlaceholderStrategy().getPlaceholderEscapeCharStart()
-                    + entry.getKey()
-                    + foxHttpClient.getFoxHttpPlaceholderStrategy().getPlaceholderEscapeCharEnd() + " -> " + entry.getValue());
-            processedURL = processedURL.replace(foxHttpClient.getFoxHttpPlaceholderStrategy().getPlaceholderEscapeCharStart()
-                    + entry.getKey()
-                    + foxHttpClient.getFoxHttpPlaceholderStrategy().getPlaceholderEscapeCharEnd(), entry.getValue());
-        }
-        url = new URL(processedURL);
-    }
-
     private void checkPlaceholders() throws FoxHttpRequestException {
         Pattern pattern = Pattern.compile(foxHttpClient.getFoxHttpPlaceholderStrategy().getPlaceholderMatchRegex());
         Matcher matcher = pattern.matcher(url.toString());
@@ -297,7 +290,7 @@ public class FoxHttpRequest {
 
     private void processAuthorizationStrategy(URLConnection connection) throws FoxHttpRequestException {
         List<FoxHttpAuthorization> foxHttpAuthorizations = foxHttpClient.getFoxHttpAuthorizationStrategy().getAuthorization(connection, FoxHttpAuthorizationScope.create(
-                url.toString(), RequestType.valueOf(((HttpURLConnection) connection).getRequestMethod()))
+                url.toString(), RequestType.valueOf(((HttpURLConnection) connection).getRequestMethod())), foxHttpClient
         );
         for (FoxHttpAuthorization foxHttpAuthorization : foxHttpAuthorizations) {
             foxHttpClient.getFoxHttpLogger().log("-> doAuthorization(" + foxHttpAuthorization + ")");

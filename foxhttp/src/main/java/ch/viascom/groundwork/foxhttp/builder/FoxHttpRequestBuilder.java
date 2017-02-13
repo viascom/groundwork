@@ -4,6 +4,7 @@ import ch.viascom.groundwork.foxhttp.FoxHttpClient;
 import ch.viascom.groundwork.foxhttp.FoxHttpRequest;
 import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBody;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
+import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
 import ch.viascom.groundwork.foxhttp.header.HeaderEntry;
 import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptor;
@@ -257,7 +258,7 @@ public class FoxHttpRequestBuilder {
      *
      * @return FoxHttpRequest
      */
-    public FoxHttpRequest build() throws MalformedURLException {
+    public FoxHttpRequest build() throws MalformedURLException, FoxHttpRequestException {
         if (this.url != null) {
             foxHttpRequest.setUrl(this.url);
         }
