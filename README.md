@@ -31,7 +31,7 @@ The ServiceResult module provides a standard result for your REST applications. 
 [![Bintray](https://img.shields.io/bintray/v/viascom/GroundWork/ch.viascom.groundwork%3Aservice-result.svg)]()
 
 ### REST-Client
-he RESTClient modules are located in the [restclient-develop](https://github.com/Viascom/groundwork/tree/restclient-develop) branch.
+The RESTClient modules are located in the [restclient-develop](https://github.com/Viascom/groundwork/tree/restclient-develop) branch.
 
 # License
 GroundWork is GPLv3 licensed. See the [LICENSE](/blob/master/LICENSE) file for details.
