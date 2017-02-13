@@ -9,12 +9,13 @@ import ch.viascom.groundwork.foxhttp.component.oauth2.OAuth2StoreBuilder;
 import ch.viascom.groundwork.foxhttp.log.SystemOutFoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.parser.GsonParser;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author patrick.boesch@viascom.ch
  */
-//@Ignore
+@Ignore
 public class FoxHttpOAuth2Test {
 
     // ==========================================================================
