@@ -4,8 +4,8 @@ GroundWork - POM
 The POM module provides a parent pom which is also use in the GroundWork Project. It is part of the GroundWork Project by Viascom.
 
 ### Version:
-[![release](https://img.shields.io/badge/release-v1.0-red.svg)](https://github.com/Viascom/groundwork/tree/master/pom)<br/>
-[![develop](https://img.shields.io/badge/develop-v1.0-red.svg)](https://github.com/Viascom/groundwork/tree/develop/pom)
+[![release](https://img.shields.io/badge/release-v1.3-brightgreen.svg)](https://github.com/Viascom/groundwork/tree/master/pom)<br/>
+[![develop](https://img.shields.io/badge/develop-v1.3-brightgreen.svg)](https://github.com/Viascom/groundwork/tree/develop/pom)
 
 ### Profiles:
 
