@@ -2,6 +2,7 @@ package ch.viascom.groundwork.serviceresult.util;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -9,7 +10,7 @@ import java.net.URLEncoder;
  * Name and value pair implementation to store input properties.
  */
 @Data
-public class NameValuePair {
+public class NameValuePair implements Serializable {
     private String name;
     private String value;
  
