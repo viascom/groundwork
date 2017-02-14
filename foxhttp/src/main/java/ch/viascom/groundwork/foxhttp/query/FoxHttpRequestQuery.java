@@ -32,6 +32,15 @@ public class FoxHttpRequestQuery {
     }
 
     /**
+     * Add a map of new query entries
+     *
+     * @param queryMap map of query entries
+     */
+    public void addQueryMap(HashMap<String, String> queryMap) {
+        this.queryMap.putAll(queryMap);
+    }
+
+    /**
      * Remove a query entry
      *
      * @param name name of the query entry
@@ -63,7 +72,7 @@ public class FoxHttpRequestQuery {
      * Parse an object as query map
      *
      * @param params list of attribute names which will be included
-     * @param o object with the attributes
+     * @param o      object with the attributes
      * @throws FoxHttpRequestException can throw an exception if a field does not exist
      */
     public void parseObjectAsQueryMap(List<String> params, Object o) throws FoxHttpRequestException {

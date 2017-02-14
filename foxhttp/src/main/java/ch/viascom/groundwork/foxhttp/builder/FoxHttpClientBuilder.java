@@ -12,6 +12,7 @@ import ch.viascom.groundwork.foxhttp.interceptor.response.DeflateResponseInterce
 import ch.viascom.groundwork.foxhttp.interceptor.response.GZipResponseInterceptor;
 import ch.viascom.groundwork.foxhttp.log.FoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.parser.FoxHttpParser;
+import ch.viascom.groundwork.foxhttp.placeholder.FoxHttpPlaceholderStrategy;
 import ch.viascom.groundwork.foxhttp.proxy.FoxHttpProxyStrategy;
 import ch.viascom.groundwork.foxhttp.ssl.FoxHttpHostTrustStrategy;
 import ch.viascom.groundwork.foxhttp.ssl.FoxHttpSSLTrustStrategy;
@@ -40,15 +41,26 @@ public class FoxHttpClientBuilder {
     }
 
     /**
-     * Create a new builder with a default FoxHttpClient except for the response and request parser
+     * Create a new builder with a default FoxHttpClient except for the request and response parser
      *
-     * @param foxHttpResponseParser a response parser
      * @param foxHttpRequestParser  a request parser
+     * @param foxHttpResponseParser a response parser
      */
-    public FoxHttpClientBuilder(FoxHttpParser foxHttpResponseParser, FoxHttpParser foxHttpRequestParser) {
+    public FoxHttpClientBuilder(FoxHttpParser foxHttpRequestParser, FoxHttpParser foxHttpResponseParser) {
         foxHttpClient = new FoxHttpClient();
         foxHttpClient.setFoxHttpRequestParser(foxHttpRequestParser);
         foxHttpClient.setFoxHttpResponseParser(foxHttpResponseParser);
+    }
+
+    /**
+     * Create a new builder with a default FoxHttpClient except for the request and response parser
+     *
+     * @param foxHttpParser  a request parser and response parser
+     */
+    public FoxHttpClientBuilder(FoxHttpParser foxHttpParser) {
+        foxHttpClient = new FoxHttpClient();
+        foxHttpClient.setFoxHttpRequestParser(foxHttpParser);
+        foxHttpClient.setFoxHttpResponseParser(foxHttpParser);
     }
 
     /**
@@ -256,6 +268,29 @@ public class FoxHttpClientBuilder {
      */
     public FoxHttpClientBuilder setFoxHttpProxyStrategy(FoxHttpProxyStrategy foxHttpProxyStrategy) {
         foxHttpClient.setFoxHttpProxyStrategy(foxHttpProxyStrategy);
+        return this;
+    }
+
+    /**
+     * Set a placeholder strategy
+     *
+     * @param foxHttpPlaceholderStrategy a placeholder strategy
+     * @return FoxHttpClientBuilder (this)
+     */
+    public FoxHttpClientBuilder setFoxHttpPlaceholderStrategy(FoxHttpPlaceholderStrategy foxHttpPlaceholderStrategy) {
+        foxHttpClient.setFoxHttpPlaceholderStrategy(foxHttpPlaceholderStrategy);
+        return this;
+    }
+
+    /**
+     * Add a FoxHttpPlaceholderEntry to the FoxHttpPlaceholderStrategy
+     *
+     * @param placeholder name of the placeholder (without escape char)
+     * @param value       value of the placeholder
+     * @return FoxHttpClientBuilder (this)
+     */
+    public FoxHttpClientBuilder addFoxHttpPlaceholderEntry(String placeholder, String value) {
+        foxHttpClient.getFoxHttpPlaceholderStrategy().addPlaceholder(placeholder, value);
         return this;
     }
 

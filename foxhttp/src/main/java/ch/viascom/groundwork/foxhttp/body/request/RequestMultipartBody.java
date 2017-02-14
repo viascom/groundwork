@@ -4,6 +4,7 @@ import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.type.ContentType;
 import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
 import ch.viascom.groundwork.foxhttp.util.NamedInputStream;
+import lombok.Getter;
 import lombok.ToString;
 
 import java.io.*;
@@ -26,7 +27,9 @@ public class RequestMultipartBody extends FoxHttpRequestBody {
     private final Charset charset;
     private final String lineFeed;
 
+    @Getter
     private HashMap<String, String> forms = new HashMap<>();
+    @Getter
     private HashMap<String, NamedInputStream> stream = new HashMap<>();
 
     private PrintWriter writer;

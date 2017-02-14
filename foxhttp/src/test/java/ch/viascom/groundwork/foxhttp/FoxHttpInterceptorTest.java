@@ -28,8 +28,8 @@ public class FoxHttpInterceptorTest {
         clientBuilder.activteGZipResponseInterceptor();
         clientBuilder.setFoxHttpResponseParser(new GsonParser());
 
-        FoxHttpRequestBuilder<GetResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "gzip", RequestType.GET, clientBuilder.build());
-        FoxHttpRequest<GetResponse> request = requestBuilder.build();
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "gzip", RequestType.GET, clientBuilder.build());
+        FoxHttpRequest request = requestBuilder.build();
 
         GetResponse response = request.execute().getParsedBody(GetResponse.class);
 
@@ -42,8 +42,8 @@ public class FoxHttpInterceptorTest {
         clientBuilder.activteDeflateResponseInterceptor(false);
         clientBuilder.setFoxHttpResponseParser(new GsonParser());
 
-        FoxHttpRequestBuilder<GetResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "deflate", RequestType.GET, clientBuilder.build());
-        FoxHttpRequest<GetResponse> request = requestBuilder.build();
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "deflate", RequestType.GET, clientBuilder.build());
+        FoxHttpRequest request = requestBuilder.build();
 
         GetResponse response = request.execute().getParsedBody(GetResponse.class);
 
@@ -58,8 +58,8 @@ public class FoxHttpInterceptorTest {
         //Add query entry
         clientBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.REQUEST, new RequestInterceptor());
 
-        FoxHttpRequestBuilder<GetResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "get", RequestType.GET, clientBuilder.build());
-        FoxHttpRequest<GetResponse> request = requestBuilder.build();
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "get", RequestType.GET, clientBuilder.build());
+        FoxHttpRequest request = requestBuilder.build();
 
         GetResponse response = request.execute().getParsedBody(GetResponse.class);
 
@@ -74,8 +74,8 @@ public class FoxHttpInterceptorTest {
         //Add header entry
         clientBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.REQUEST_HEADER, new RequestHeaderInterceptor());
 
-        FoxHttpRequestBuilder<GetResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "get", RequestType.GET, clientBuilder.build());
-        FoxHttpRequest<GetResponse> request = requestBuilder.build();
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "get", RequestType.GET, clientBuilder.build());
+        FoxHttpRequest request = requestBuilder.build();
 
         GetResponse response = request.execute().getParsedBody(GetResponse.class);
 
@@ -90,9 +90,9 @@ public class FoxHttpInterceptorTest {
         //Add new string body
         clientBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.REQUEST_BODY, new RequestBodyInterceptor());
 
-        FoxHttpRequestBuilder<PostResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "post", RequestType.POST, clientBuilder.build());
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "post", RequestType.POST, clientBuilder.build());
         requestBuilder.setRequestBody(new RequestStringBody("Dont send this!", ContentType.DEFAULT_TEXT));
-        FoxHttpRequest<PostResponse> request = requestBuilder.build();
+        FoxHttpRequest request = requestBuilder.build();
 
         PostResponse response = request.execute().getParsedBody(PostResponse.class);
 
@@ -107,8 +107,8 @@ public class FoxHttpInterceptorTest {
         //Throw exception on 404
         clientBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.RESPONSE_CODE, new ResponseCodeInterceptor());
 
-        FoxHttpRequestBuilder<GetResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "status/404", RequestType.GET, clientBuilder.build());
-        FoxHttpRequest<GetResponse> request = requestBuilder.build();
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "status/404", RequestType.GET, clientBuilder.build());
+        FoxHttpRequest request = requestBuilder.build();
 
         try {
             request.execute().getParsedBody(GetResponse.class);
@@ -126,10 +126,10 @@ public class FoxHttpInterceptorTest {
         //Set response code to 500
         clientBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.RESPONSE, new ResponseInterceptor());
 
-        FoxHttpRequestBuilder<GetResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "status/404", RequestType.GET, clientBuilder.build());
-        FoxHttpRequest<GetResponse> request = requestBuilder.build();
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "status/404", RequestType.GET, clientBuilder.build());
+        FoxHttpRequest request = requestBuilder.build();
 
-        FoxHttpResponse<GetResponse> response = request.execute();
+        FoxHttpResponse response = request.execute();
 
         assertThat(response.getResponseCode()).isEqualTo(500);
     }
@@ -142,10 +142,10 @@ public class FoxHttpInterceptorTest {
         //Set new response body
         clientBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.RESPONSE_BODY, new ResponseBodyInterceptor());
 
-        FoxHttpRequestBuilder<GetResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "status/404", RequestType.GET, clientBuilder.build());
-        FoxHttpRequest<GetResponse> request = requestBuilder.build();
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "status/404", RequestType.GET, clientBuilder.build());
+        FoxHttpRequest request = requestBuilder.build();
 
-        FoxHttpResponse<GetResponse> response = request.execute();
+        FoxHttpResponse response = request.execute();
 
         assertThat(response.getStringBody()).isEqualTo("Hi!");
     }
@@ -163,8 +163,8 @@ public class FoxHttpInterceptorTest {
         clientBuilder.registerFoxHttpInterceptor(FoxHttpInterceptorType.REQUEST_HEADER, headerInterceptor);
 
 
-        FoxHttpRequestBuilder<GetResponse> requestBuilder = new FoxHttpRequestBuilder<>(endpoint + "get", RequestType.GET, clientBuilder.build());
-        FoxHttpRequest<GetResponse> request = requestBuilder.build();
+        FoxHttpRequestBuilder requestBuilder = new FoxHttpRequestBuilder(endpoint + "get", RequestType.GET, clientBuilder.build());
+        FoxHttpRequest request = requestBuilder.build();
 
         GetResponse response = request.execute().getParsedBody(GetResponse.class);
 
