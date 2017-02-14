@@ -41,12 +41,12 @@ public class FoxHttpClientBuilder {
     }
 
     /**
-     * Create a new builder with a default FoxHttpClient except for the response and request parser
+     * Create a new builder with a default FoxHttpClient except for the request and response parser
      *
-     * @param foxHttpResponseParser a response parser
      * @param foxHttpRequestParser  a request parser
+     * @param foxHttpResponseParser a response parser
      */
-    public FoxHttpClientBuilder(FoxHttpParser foxHttpResponseParser, FoxHttpParser foxHttpRequestParser) {
+    public FoxHttpClientBuilder(FoxHttpParser foxHttpRequestParser, FoxHttpParser foxHttpResponseParser) {
         foxHttpClient = new FoxHttpClient();
         foxHttpClient.setFoxHttpRequestParser(foxHttpRequestParser);
         foxHttpClient.setFoxHttpResponseParser(foxHttpResponseParser);
