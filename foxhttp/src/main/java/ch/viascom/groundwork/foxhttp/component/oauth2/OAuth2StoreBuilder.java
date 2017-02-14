@@ -106,6 +106,7 @@ public class OAuth2StoreBuilder {
 
     /**
      * Set client id for Client Credentials grant type or if client credentials are used for requests (useClientCredentials)
+     *
      * @param clientId Client id for Client Credentials
      * @return OAuth2StoreBuilder (this)
      */
@@ -126,7 +127,10 @@ public class OAuth2StoreBuilder {
     }
 
     /**
-     * Set true if Client Credentials should be used for all token requests?
+     * Set true if Client Credentials should be used for all token requests
+     *
+     * IMPORTANT: If you set activateClientCredentialsUse to true you have to use the {@link #setClientId(String) setClientId}
+     * and {@link #setClientSecret(String) setClientSecret} methods as well.
      *
      * @return OAuth2StoreBuilder (this)
      */
