@@ -15,6 +15,7 @@ import ch.viascom.groundwork.foxhttp.response.serviceresult.FoxHttpServiceResult
 import ch.viascom.groundwork.foxhttp.type.RequestType;
 import org.joda.time.DateTime;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -22,7 +23,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /**
  * @author patrick.boesch@viascom.ch
  */
-//@Ignore
+@Ignore
 public class FoxHttpOAuth2Test {
 
     // ==========================================================================
