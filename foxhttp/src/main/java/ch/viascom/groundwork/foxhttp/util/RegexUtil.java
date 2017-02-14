@@ -1,7 +1,5 @@
 package ch.viascom.groundwork.foxhttp.util;
 
-import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
-
 /**
  * @author patrick.boesch@viascom.ch
  */
@@ -14,11 +12,11 @@ public class RegexUtil {
         throw new IllegalAccessError("Utility class");
     }
 
-    public static boolean doesURLMatch(FoxHttpAuthorizationScope inputScope, String compareScope) {
-        if (inputScope.getUrl().equals(compareScope)) {
+    public static boolean doesURLMatch(String url, String compareUrl) {
+        if (url.equals(compareUrl)) {
             return true;
         }
-        String matchRegex = compareScope.replaceAll("\\*", "[ -~]*").replaceAll("\\.", "\\\\.").replaceAll("\\/", "\\\\/");
-        return inputScope.toString().matches(matchRegex);
+        String matchRegex = compareUrl.replaceAll("\\*", "[ -~]*").replaceAll("\\.", "\\\\.").replaceAll("\\/", "\\\\/");
+        return url.matches(matchRegex);
     }
 }

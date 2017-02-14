@@ -4,15 +4,15 @@ import ch.viascom.groundwork.foxhttp.FoxHttpClient;
 import ch.viascom.groundwork.foxhttp.FoxHttpRequest;
 import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBody;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
-import ch.viascom.groundwork.foxhttp.header.FoxHttpRequestHeader;
-import ch.viascom.groundwork.foxhttp.header.HeaderField;
+import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
+import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
+import ch.viascom.groundwork.foxhttp.header.HeaderEntry;
 import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptor;
 import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptorType;
 import ch.viascom.groundwork.foxhttp.query.FoxHttpRequestQuery;
 import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
 
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -21,10 +21,10 @@ import java.net.URL;
  *
  * @author patrick.boesch@viascom.ch
  */
-public class FoxHttpRequestBuilder<T extends Serializable> {
+public class FoxHttpRequestBuilder {
 
-    private FoxHttpRequest<T> foxHttpRequest;
-
+    private FoxHttpRequest foxHttpRequest;
+    private String url;
 
     // -- Constructors
 
@@ -32,7 +32,16 @@ public class FoxHttpRequestBuilder<T extends Serializable> {
      * Create a new builder with a default request
      */
     public FoxHttpRequestBuilder() {
-        foxHttpRequest = new FoxHttpRequest<>();
+        foxHttpRequest = new FoxHttpRequest();
+    }
+
+    /**
+     * Create a new builder with a default request and set the url
+     *
+     * @param url url of the request
+     */
+    public FoxHttpRequestBuilder(URL url) throws MalformedURLException {
+        this(url.toString());
     }
 
     /**
@@ -42,16 +51,17 @@ public class FoxHttpRequestBuilder<T extends Serializable> {
      * @throws MalformedURLException If the url is not well formed
      */
     public FoxHttpRequestBuilder(String url) throws MalformedURLException {
-        this(new URL(url));
+        this(url, RequestType.GET);
     }
 
     /**
-     * Create a new builder with a default request and set the url
+     * Create a new builder with a default request and set the url and request type
      *
-     * @param url url of the request
+     * @param url         url of the request
+     * @param requestType request type
      */
-    public FoxHttpRequestBuilder(URL url) {
-        this(url, RequestType.GET);
+    public FoxHttpRequestBuilder(URL url, RequestType requestType) throws MalformedURLException {
+        this(url.toString(), requestType);
     }
 
     /**
@@ -62,17 +72,18 @@ public class FoxHttpRequestBuilder<T extends Serializable> {
      * @throws MalformedURLException If the url is not well formed
      */
     public FoxHttpRequestBuilder(String url, RequestType requestType) throws MalformedURLException {
-        this(new URL(url), requestType);
+        this(url, requestType, new FoxHttpClient());
     }
 
     /**
-     * Create a new builder with a default request and set the url and request type
+     * Create a new builder with a default request and set the url, request type and FoxHttpClient
      *
-     * @param url         url of the request
-     * @param requestType request type
+     * @param url           url of the request
+     * @param requestType   request type
+     * @param foxHttpClient FoxHttpClient in which the request gets executed
      */
-    public FoxHttpRequestBuilder(URL url, RequestType requestType) {
-        this(url, requestType, new FoxHttpClient());
+    public FoxHttpRequestBuilder(URL url, RequestType requestType, FoxHttpClient foxHttpClient) throws MalformedURLException {
+        this(url.toString(), requestType, foxHttpClient);
     }
 
     /**
@@ -84,19 +95,8 @@ public class FoxHttpRequestBuilder<T extends Serializable> {
      * @throws MalformedURLException If the url is not well formed
      */
     public FoxHttpRequestBuilder(String url, RequestType requestType, FoxHttpClient foxHttpClient) throws MalformedURLException {
-        this(new URL(url), requestType, foxHttpClient);
-    }
-
-    /**
-     * Create a new builder with a default request and set the url, request type and FoxHttpClient
-     *
-     * @param url           url of the request
-     * @param requestType   request type
-     * @param foxHttpClient FoxHttpClient in which the request gets executed
-     */
-    public FoxHttpRequestBuilder(URL url, RequestType requestType, FoxHttpClient foxHttpClient) {
-        foxHttpRequest = new FoxHttpRequest<>(foxHttpClient);
-        foxHttpRequest.setUrl(url);
+        foxHttpRequest = new FoxHttpRequest(foxHttpClient);
+        this.url = url;
         foxHttpRequest.setRequestType(requestType);
     }
 
@@ -166,7 +166,7 @@ public class FoxHttpRequestBuilder<T extends Serializable> {
      * @param foxHttpRequestHeader a header
      * @return FoxHttpRequestBuilder (this)
      */
-    public FoxHttpRequestBuilder setRequestHeader(FoxHttpRequestHeader foxHttpRequestHeader) {
+    public FoxHttpRequestBuilder setRequestHeader(FoxHttpHeader foxHttpRequestHeader) {
         foxHttpRequest.setRequestHeader(foxHttpRequestHeader);
         return this;
     }
@@ -177,7 +177,7 @@ public class FoxHttpRequestBuilder<T extends Serializable> {
      * @param headerField a header field
      * @return FoxHttpRequestBuilder (this)
      */
-    public FoxHttpRequestBuilder addRequestHeader(HeaderField headerField) {
+    public FoxHttpRequestBuilder addRequestHeader(HeaderEntry headerField) {
         foxHttpRequest.getRequestHeader().addHeader(headerField.getName(), headerField.getValue());
         return this;
     }
@@ -242,11 +242,26 @@ public class FoxHttpRequestBuilder<T extends Serializable> {
     }
 
     /**
+     * Add a FoxHttpPlaceholderEntry to the FoxHttpPlaceholderStrategy
+     *
+     * @param placeholder name of the placeholder (without escape char)
+     * @param value       value of the placeholder
+     * @return FoxHttpClientBuilder (this)
+     */
+    public FoxHttpRequestBuilder addFoxHttpPlaceholderEntry(String placeholder, String value) {
+        foxHttpRequest.getFoxHttpClient().getFoxHttpPlaceholderStrategy().addPlaceholder(placeholder, value);
+        return this;
+    }
+
+    /**
      * Get the FoxHttpRequest of this builder
      *
      * @return FoxHttpRequest
      */
-    public FoxHttpRequest<T> build() {
+    public FoxHttpRequest build() throws MalformedURLException, FoxHttpRequestException {
+        if (this.url != null) {
+            foxHttpRequest.setUrl(this.url);
+        }
         return foxHttpRequest;
     }
 

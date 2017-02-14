@@ -7,9 +7,9 @@ import ch.viascom.groundwork.foxhttp.body.request.FoxHttpRequestBodyContext;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
-import ch.viascom.groundwork.foxhttp.header.FoxHttpRequestHeader;
-import ch.viascom.groundwork.foxhttp.header.HeaderField;
+import ch.viascom.groundwork.foxhttp.header.HeaderEntry;
 import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptorExecutor;
+import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestConnectionInterceptorContext;
 import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestHeaderInterceptorContext;
 import ch.viascom.groundwork.foxhttp.interceptor.request.context.FoxHttpRequestInterceptorContext;
 import ch.viascom.groundwork.foxhttp.interceptor.response.context.FoxHttpResponseCodeInterceptorContext;
@@ -23,18 +23,18 @@ import lombok.Setter;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.*;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author patrick.boesch@viascom.ch
  */
-public class FoxHttpRequest<T extends Serializable> {
+public class FoxHttpRequest {
 
     @Getter
-    @Setter
     private URL url;
 
     @Getter
@@ -47,7 +47,7 @@ public class FoxHttpRequest<T extends Serializable> {
 
     @Getter
     @Setter
-    private FoxHttpRequestHeader requestHeader = new FoxHttpRequestHeader();
+    private FoxHttpHeader requestHeader = new FoxHttpHeader();
 
     @Getter
     @Setter
@@ -62,7 +62,7 @@ public class FoxHttpRequest<T extends Serializable> {
     private boolean followRedirect = true;
 
     @Getter
-    private FoxHttpResponse<T> foxHttpResponse;
+    private FoxHttpResponse foxHttpResponse;
 
     @Getter
     @Setter
@@ -80,13 +80,25 @@ public class FoxHttpRequest<T extends Serializable> {
         this.foxHttpClient = foxHttpClient;
     }
 
+    public void setUrl(String url) throws MalformedURLException, FoxHttpRequestException {
+        if (foxHttpClient == null) {
+            throw new FoxHttpRequestException("FoxHttpClient can not be null");
+        }
+        String parsedURL = foxHttpClient.getFoxHttpPlaceholderStrategy().processPlaceholders(url, foxHttpClient);
+        this.url = new URL(parsedURL);
+    }
+
+    public void setUrl(URL url) {
+        this.url = url;
+    }
+
     /**
      * Execute a this request
      *
      * @return Response if this request
      * @throws FoxHttpException
      */
-    public FoxHttpResponse<T> execute() throws FoxHttpException {
+    public FoxHttpResponse execute() throws FoxHttpException {
         return execute(foxHttpClient);
     }
 
@@ -97,17 +109,17 @@ public class FoxHttpRequest<T extends Serializable> {
      * @return Response if this request
      * @throws FoxHttpException
      */
-    public FoxHttpResponse<T> execute(FoxHttpClient foxHttpClient) throws FoxHttpException {
+    public FoxHttpResponse execute(FoxHttpClient foxHttpClient) throws FoxHttpException {
         verifyRequest();
         foxHttpClient.getFoxHttpLogger().log("========= Request =========");
-
         foxHttpClient.getFoxHttpLogger().log("setFoxHttpClient(" + foxHttpClient + ")");
         this.foxHttpClient = foxHttpClient;
 
         return executeHttp("https".equals(url.getProtocol()));
     }
 
-    private FoxHttpResponse<T> executeHttp(boolean isHttps) throws FoxHttpException {
+
+    private FoxHttpResponse executeHttp(boolean isHttps) throws FoxHttpException {
         try {
             //Execute interceptor
             foxHttpClient.getFoxHttpLogger().log("executeRequestInterceptor()");
@@ -118,6 +130,16 @@ public class FoxHttpRequest<T extends Serializable> {
 
             foxHttpClient.getFoxHttpLogger().log("prepareQuery(" + getRequestQuery() + ")");
             prepareQuery();
+
+            foxHttpClient.getFoxHttpLogger().log("processPlaceholders()");
+            String parsedURL = foxHttpClient.getFoxHttpPlaceholderStrategy().processPlaceholders(url.toString(), foxHttpClient);
+            url = new URL(parsedURL);
+
+            checkPlaceholders();
+
+            //Execute interceptor
+            foxHttpClient.getFoxHttpLogger().log("executeRequestConnectionInterceptor()");
+            FoxHttpInterceptorExecutor.executeRequestConnectionInterceptor(new FoxHttpRequestConnectionInterceptorContext(url, this, foxHttpClient));
 
             //Create connection
             foxHttpClient.getFoxHttpLogger().log("createConnection(" + url + ")");
@@ -206,7 +228,7 @@ public class FoxHttpRequest<T extends Serializable> {
                 );
 
                 foxHttpClient.getFoxHttpLogger().log("createFoxHttpResponse()");
-                foxHttpResponse = new FoxHttpResponse<>(is, this, responseCode, foxHttpClient);
+                foxHttpResponse = new FoxHttpResponse(is, this, responseCode, foxHttpClient);
                 //Process response headers
                 foxHttpClient.getFoxHttpLogger().log("processResponseHeader()");
                 processResponseHeader(foxHttpResponse, connection);
@@ -219,6 +241,7 @@ public class FoxHttpRequest<T extends Serializable> {
 
                 return foxHttpResponse;
             } else {
+                foxHttpClient.getFoxHttpLogger().log("No response return because skipResponseBody is active!");
                 return null;
             }
         } catch (FoxHttpException e) {
@@ -233,8 +256,17 @@ public class FoxHttpRequest<T extends Serializable> {
         }
     }
 
+    private void checkPlaceholders() throws FoxHttpRequestException {
+        Pattern pattern = Pattern.compile(foxHttpClient.getFoxHttpPlaceholderStrategy().getPlaceholderMatchRegex());
+        Matcher matcher = pattern.matcher(url.toString());
+        if (matcher.find()) {
+            throw new FoxHttpRequestException("The url dose still contain placeholders after finishing processing all defined placeholders.\n-> " + url.toString());
+        }
+
+    }
+
     private void prepareHeader(URLConnection connection) {
-        for (HeaderField headerField : getRequestHeader()) {
+        for (HeaderEntry headerField : getRequestHeader()) {
             connection.addRequestProperty(headerField.getName(), headerField.getValue());
         }
     }
@@ -258,7 +290,7 @@ public class FoxHttpRequest<T extends Serializable> {
 
     private void processAuthorizationStrategy(URLConnection connection) throws FoxHttpRequestException {
         List<FoxHttpAuthorization> foxHttpAuthorizations = foxHttpClient.getFoxHttpAuthorizationStrategy().getAuthorization(connection, FoxHttpAuthorizationScope.create(
-                url.toString(), RequestType.valueOf(((HttpURLConnection) connection).getRequestMethod()))
+                url.toString(), RequestType.valueOf(((HttpURLConnection) connection).getRequestMethod())), foxHttpClient
         );
         for (FoxHttpAuthorization foxHttpAuthorization : foxHttpAuthorizations) {
             foxHttpClient.getFoxHttpLogger().log("-> doAuthorization(" + foxHttpAuthorization + ")");
@@ -268,7 +300,7 @@ public class FoxHttpRequest<T extends Serializable> {
         }
     }
 
-    private void processResponseHeader(FoxHttpResponse<T> foxHttpResponse, URLConnection connection) {
+    private void processResponseHeader(FoxHttpResponse foxHttpResponse, URLConnection connection) {
         FoxHttpHeader responseHeaders = new FoxHttpHeader();
         Map<String, List<String>> map = connection.getHeaderFields();
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {

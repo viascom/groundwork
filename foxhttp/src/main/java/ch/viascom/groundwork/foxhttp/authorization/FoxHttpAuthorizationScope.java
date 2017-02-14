@@ -17,7 +17,7 @@ public class FoxHttpAuthorizationScope {
     @Getter
     private final String url;
     @Getter
-    private final RequestType requestType;
+    private final String requestType;
 
 
     /**
@@ -26,7 +26,7 @@ public class FoxHttpAuthorizationScope {
      * @param url         The url to use for the FoxHttpAuthorizationScope.
      * @param requestType The requestType to use for the FoxHttpAuthorizationScope.
      */
-    FoxHttpAuthorizationScope(final String url, final RequestType requestType) {
+    FoxHttpAuthorizationScope(final String url, final String requestType) {
         this.url = url;
         this.requestType = requestType;
     }
@@ -48,7 +48,23 @@ public class FoxHttpAuthorizationScope {
         if (url.length() == 0) {
             throw new IllegalArgumentException("url can not be empty");
         }
-        return new FoxHttpAuthorizationScope(url, requestType);
+        return new FoxHttpAuthorizationScope(url, requestType.toString());
+    }
+
+    /**
+     * Creates a new instance of {@link FoxHttpAuthorizationScope} with requestType ANY.
+     *
+     * @param url         The url to use for the FoxHttpAuthorizationScope.
+     * @return FoxHttpAuthorizationScope
+     */
+    public static FoxHttpAuthorizationScope create(final String url) {
+        if (url == null) {
+            throw new IllegalArgumentException("url can not be null");
+        }
+        if (url.length() == 0) {
+            throw new IllegalArgumentException("url can not be empty");
+        }
+        return new FoxHttpAuthorizationScope(url, "*");
     }
 
     /**
