@@ -112,7 +112,7 @@ public class FoxHttpRequestBodyTest {
 
     @Test
     public void postServiceResultRequest() throws Exception {
-        FoxHttpClientBuilder clientBuilder = new FoxHttpClientBuilder(new GsonParser(), new GsonParser());
+        FoxHttpClientBuilder clientBuilder = new FoxHttpClientBuilder(new GsonParser());
 
         RequestServiceResultBody requestBody = new RequestServiceResultBody(new User());
         requestBody.setHash("FAKE-HASH");

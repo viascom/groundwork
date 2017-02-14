@@ -53,6 +53,17 @@ public class FoxHttpClientBuilder {
     }
 
     /**
+     * Create a new builder with a default FoxHttpClient except for the request and response parser
+     *
+     * @param foxHttpParser  a request parser and response parser
+     */
+    public FoxHttpClientBuilder(FoxHttpParser foxHttpParser) {
+        foxHttpClient = new FoxHttpClient();
+        foxHttpClient.setFoxHttpRequestParser(foxHttpParser);
+        foxHttpClient.setFoxHttpResponseParser(foxHttpParser);
+    }
+
+    /**
      * Create a new builder with a default FoxHttpClient except for the authorization strategy
      *
      * @param foxHttpAuthorizationStrategy an authorization strategy
