@@ -51,6 +51,15 @@ public class RequestUrlEncodedFormBody extends FoxHttpRequestBody {
     }
 
     /**
+     * Add a new map of form data entries
+     *
+     * @param formData map of form data entries
+     */
+    public void addFormMap(Map<String, String> formData) {
+        this.formData.putAll(formData);
+    }
+
+    /**
      * Set the body of the request
      *
      * @param context context of the request

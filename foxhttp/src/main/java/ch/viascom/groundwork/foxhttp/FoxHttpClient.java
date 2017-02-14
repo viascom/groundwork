@@ -2,6 +2,7 @@ package ch.viascom.groundwork.foxhttp;
 
 import ch.viascom.groundwork.foxhttp.authorization.DefaultAuthorizationStrategy;
 import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationStrategy;
+import ch.viascom.groundwork.foxhttp.component.FoxHttpComponent;
 import ch.viascom.groundwork.foxhttp.cookie.DefaultCookieStore;
 import ch.viascom.groundwork.foxhttp.cookie.FoxHttpCookieStore;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
@@ -10,6 +11,8 @@ import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptorType;
 import ch.viascom.groundwork.foxhttp.log.DefaultFoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.log.FoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.parser.FoxHttpParser;
+import ch.viascom.groundwork.foxhttp.placeholder.DefaultPlaceholderStrategy;
+import ch.viascom.groundwork.foxhttp.placeholder.FoxHttpPlaceholderStrategy;
 import ch.viascom.groundwork.foxhttp.proxy.FoxHttpProxyStrategy;
 import ch.viascom.groundwork.foxhttp.ssl.DefaultHostTrustStrategy;
 import ch.viascom.groundwork.foxhttp.ssl.DefaultSSLTrustStrategy;
@@ -20,10 +23,7 @@ import ch.viascom.groundwork.foxhttp.timeout.FoxHttpTimeoutStrategy;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author patrick.boesch@viascom.ch
@@ -81,13 +81,23 @@ public class FoxHttpClient {
 
     @Getter
     @Setter
+    //Placeholder
+    private FoxHttpPlaceholderStrategy foxHttpPlaceholderStrategy = new DefaultPlaceholderStrategy();
+
+    @Getter
+    @Setter
+    //Components
+    private List<FoxHttpComponent> foxHttpComponents = new ArrayList<>();
+
+    @Getter
+    @Setter
     //Logger
     private FoxHttpLogger foxHttpLogger = new DefaultFoxHttpLogger(false);
 
     @Getter
     @Setter
     //UserAgent
-    private String foxHttpUserAgent = "FoxHTTP v1.0";
+    private String foxHttpUserAgent = "FoxHTTP v1.2";
 
 
     /**
@@ -104,5 +114,10 @@ public class FoxHttpClient {
         } else {
             foxHttpInterceptors.put(interceptorType, new ArrayList<>(Arrays.asList(foxHttpInterceptor)));
         }
+    }
+
+    public void activateComponent(FoxHttpComponent foxHttpComponent) throws FoxHttpException {
+        foxHttpComponents.add(foxHttpComponent);
+        foxHttpComponent.initiation(this);
     }
 }

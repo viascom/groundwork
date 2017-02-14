@@ -6,6 +6,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * FoxHttpHeader stores headers
@@ -13,13 +14,13 @@ import java.util.List;
  * @author patrick.boesch@viascom.ch
  */
 @Data
-public class FoxHttpHeader implements Iterable<HeaderField> {
+public class FoxHttpHeader implements Iterable<HeaderEntry> {
 
-    private List<HeaderField> headerFields = new ArrayList<>();
+    private List<HeaderEntry> headerEntries = new ArrayList<>();
 
     @Override
-    public Iterator<HeaderField> iterator() {
-        return headerFields.iterator();
+    public Iterator<HeaderEntry> iterator() {
+        return headerEntries.iterator();
     }
 
     /**
@@ -29,7 +30,7 @@ public class FoxHttpHeader implements Iterable<HeaderField> {
      * @param value value of the header entry
      */
     public void addHeader(String name, String value) {
-        headerFields.add(new HeaderField(name, value));
+        headerEntries.add(new HeaderEntry(name, value));
     }
 
     /**
@@ -39,7 +40,27 @@ public class FoxHttpHeader implements Iterable<HeaderField> {
      * @param value value of the header entry
      */
     public void addHeader(HeaderTypes name, String value) {
-        headerFields.add(new HeaderField(name.toString(), value));
+        headerEntries.add(new HeaderEntry(name.toString(), value));
+    }
+
+    /**
+     * Add a new map of header entries
+     *
+     * @param entries map of header entries
+     */
+    public void addHeader(Map<String, String> entries) {
+        for (Map.Entry<String, String> entry : entries.entrySet()) {
+            headerEntries.add(new HeaderEntry(entry.getKey(), entry.getValue()));
+        }
+    }
+
+    /**
+     * Add a new array of header entries
+     *
+     * @param entries array of header entries
+     */
+    public void addHeader(List<HeaderEntry> entries) {
+        headerEntries.addAll(entries);
     }
 
     /**
@@ -48,8 +69,8 @@ public class FoxHttpHeader implements Iterable<HeaderField> {
      * @param name name of the header
      * @return a specific header
      */
-    public HeaderField getHeader(String name) {
-        for (HeaderField headerField : getHeaderFields()) {
+    public HeaderEntry getHeader(String name) {
+        for (HeaderEntry headerField : getHeaderEntries()) {
             if (headerField.getName().equals(name)) {
                 return headerField;
             }
