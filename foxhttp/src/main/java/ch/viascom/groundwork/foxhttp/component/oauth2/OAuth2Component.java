@@ -2,6 +2,7 @@ package ch.viascom.groundwork.foxhttp.component.oauth2;
 
 import ch.viascom.groundwork.foxhttp.FoxHttpClient;
 import ch.viascom.groundwork.foxhttp.FoxHttpRequest;
+import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
 import ch.viascom.groundwork.foxhttp.component.FoxHttpComponent;
 import ch.viascom.groundwork.foxhttp.component.oauth2.authorization.OAuth2Authorization;
 import ch.viascom.groundwork.foxhttp.component.oauth2.authorization.OAuth2BearerTokenAuthorization;
@@ -52,10 +53,12 @@ public class OAuth2Component implements FoxHttpComponent {
     public void initiation(FoxHttpClient foxHttpClient) throws FoxHttpException {
         this.foxHttpClient = foxHttpClient;
         foxHttpClient.getFoxHttpLogger().log("========= Initiate  OAuth2Component =========");
-        foxHttpClient.getFoxHttpLogger().log("-> Register authorization");
+        foxHttpClient.getFoxHttpLogger().log("-> Register authorizations");
         //Register authorization
         oAuth2Authorization = new OAuth2BearerTokenAuthorization(oAuth2Store.getAccessToken());
-        foxHttpClient.getFoxHttpAuthorizationStrategy().addAuthorization(oAuth2Store.getAuthScope(), oAuth2Authorization);
+        for (FoxHttpAuthorizationScope scope : oAuth2Store.getAuthScopes()) {
+            foxHttpClient.getFoxHttpAuthorizationStrategy().addAuthorization(scope, oAuth2Authorization);
+        }
         foxHttpClient.getFoxHttpLogger().log("-> Register interceptor");
         //Register interceptor
         foxHttpClient.register(FoxHttpInterceptorType.REQUEST_CONNECTION, new OAuth2RequestInterceptor(this, 100));

@@ -3,6 +3,7 @@ package ch.viascom.groundwork.foxhttp.component.oauth2;
 import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,13 +50,24 @@ public class OAuth2StoreBuilder {
     }
 
     /**
-     * Set authorization scope which needs a token
+     * Set authorization scopes which needs a token
+     *
+     * @param authScopes authorization scopes which needs a token
+     * @return OAuth2StoreBuilder (this)
+     */
+    public OAuth2StoreBuilder setFoxHttpAuthorizationScopes(List<FoxHttpAuthorizationScope> authScopes) {
+        oAuth2Store.setAuthScopes(authScopes);
+        return this;
+    }
+
+    /**
+     * Add authorization scope which needs a token
      *
      * @param authScope authorization scope which needs a token
      * @return OAuth2StoreBuilder (this)
      */
-    public OAuth2StoreBuilder setFoxHttpAuthorizationScope(FoxHttpAuthorizationScope authScope) {
-        oAuth2Store.setAuthScope(authScope);
+    public OAuth2StoreBuilder addFoxHttpAuthorizationScope(FoxHttpAuthorizationScope authScope) {
+        oAuth2Store.getAuthScopes().add(authScope);
         return this;
     }
 
