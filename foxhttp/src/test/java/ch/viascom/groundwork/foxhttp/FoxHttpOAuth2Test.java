@@ -55,7 +55,8 @@ public class FoxHttpOAuth2Test {
 
         OAuth2StoreBuilder oAuth2StoreBuilder = new OAuth2StoreBuilder(GrantType.PASSWORD, "{solara}/auth/token")
                 .setAuthRequestType(RequestType.POST)
-                .setFoxHttpAuthorizationScope(FoxHttpAuthorizationScope.create("{solara}/account"))
+                .addFoxHttpAuthorizationScope(FoxHttpAuthorizationScope.create("{solara}/account"))
+                .addFoxHttpAuthorizationScope(FoxHttpAuthorizationScope.create("{solara}/application"))
                 .activateClientCredentialsUse()
                 .setUsername(solaraTestUser)
                 .setPassword(solaraTestPassword)
@@ -80,13 +81,11 @@ public class FoxHttpOAuth2Test {
                         oAuth2Component1.getOAuth2Store().getAccessTokenTime().plusSeconds(oAuth2Component1.getOAuth2Store().getExpirationTimeSeconds().intValue())
                 );
 
-                oAuth2Component1.getFoxHttpClient().getFoxHttpAuthorizationStrategy().removeAuthorization(
-                        oAuth2Component1.getOAuth2Store().getAuthScope(), oAuth2Component1.getOAuth2Authorization()
-                );
-                oAuth2Component1.getOAuth2Authorization().setValue(oAuth2Component1.getOAuth2Store().getAccessToken());
-                oAuth2Component1.getFoxHttpClient().getFoxHttpAuthorizationStrategy().addAuthorization(
-                        oAuth2Component1.getOAuth2Store().getAuthScope(), oAuth2Component1.getOAuth2Authorization()
-                );
+                for (FoxHttpAuthorizationScope scope : oAuth2Component1.getOAuth2Store().getAuthScopes()) {
+                    oAuth2Component1.getFoxHttpClient().getFoxHttpAuthorizationStrategy().removeAuthorization(scope, oAuth2Component1.getOAuth2Authorization());
+                    oAuth2Component1.getOAuth2Authorization().setValue(oAuth2Component1.getOAuth2Store().getAccessToken());
+                    oAuth2Component1.getFoxHttpClient().getFoxHttpAuthorizationStrategy().addAuthorization(scope, oAuth2Component1.getOAuth2Authorization());
+                }
 
             } else {
                 OAuthTokenErrorResponse tokenErrorResponse = response.getParsedBody(OAuthTokenErrorResponse.class);
