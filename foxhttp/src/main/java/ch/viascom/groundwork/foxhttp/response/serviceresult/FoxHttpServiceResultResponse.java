@@ -7,6 +7,8 @@ import ch.viascom.groundwork.foxhttp.body.response.FoxHttpResponseBody;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpResponseException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
 import ch.viascom.groundwork.foxhttp.response.FoxHttpResponseParser;
+import ch.viascom.groundwork.foxhttp.response.serviceresult.adapters.DateTimeTypeAdapter;
+import ch.viascom.groundwork.foxhttp.response.serviceresult.adapters.MetaDataDeserializer;
 import ch.viascom.groundwork.serviceresult.ServiceResult;
 import ch.viascom.groundwork.serviceresult.ServiceResultStatus;
 import ch.viascom.groundwork.serviceresult.exception.ServiceFault;
@@ -17,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import org.joda.time.DateTime;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -93,6 +96,7 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
         if (customParser == null) {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Metadata.class, new MetaDataDeserializer());
+            gsonBuilder.registerTypeAdapter(DateTime.class, new DateTimeTypeAdapter());
             this.parser = gsonBuilder.create();
         } else {
             this.parser = customParser;
