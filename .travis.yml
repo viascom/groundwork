@@ -9,4 +9,4 @@ env:
   - TEST_DIR=service-result
   - TEST_DIR=foxhttp
 
-script: d $TEST_DIR && mvn clean install -P release,full-build
+script: cd $TEST_DIR && mvn clean install -P release,full-build
