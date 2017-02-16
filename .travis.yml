@@ -4,4 +4,9 @@ sudo: false
 
 jdk: oraclejdk8
 
-script: cd foxhttp && mvn clean verify
+env:
+  - TEST_DIR=pom
+  - TEST_DIR=service-result
+  - TEST_DIR=foxhttp
+
+script: d $TEST_DIR && mvn clean install -P release,full-build
