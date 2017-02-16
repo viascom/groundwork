@@ -56,7 +56,7 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
      * @param customParserBuilder    a custom gson parser builder
      */
     public FoxHttpServiceResultResponse(FoxHttpResponse foxHttpResponse, GsonBuilder customParserBuilder) throws FoxHttpResponseException {
-        this(foxHttpResponse, null, customParser);
+        this(foxHttpResponse, null, customParserBuilder);
     }
 
     /**
