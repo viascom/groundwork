@@ -53,9 +53,9 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
      * Create a new FoxHttpServiceResultParser
      *
      * @param foxHttpResponse response with a serialized service result
-     * @param customParser    a custom gson parser
+     * @param customParserBuilder    a custom gson parser builder
      */
-    public FoxHttpServiceResultResponse(FoxHttpResponse foxHttpResponse, Gson customParser) throws FoxHttpResponseException {
+    public FoxHttpServiceResultResponse(FoxHttpResponse foxHttpResponse, GsonBuilder customParserBuilder) throws FoxHttpResponseException {
         this(foxHttpResponse, null, customParser);
     }
 
@@ -83,9 +83,9 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
      *
      * @param foxHttpResponse response with a serialized service result
      * @param objectHasher    object hasher to check the result
-     * @param customParser    a custom gson parser
+     * @param customParserBuilder    a custom gson parser builder
      */
-    public FoxHttpServiceResultResponse(FoxHttpResponse foxHttpResponse, FoxHttpServiceResultHasher objectHasher, Gson customParser) throws FoxHttpResponseException {
+    public FoxHttpServiceResultResponse(FoxHttpResponse foxHttpResponse, FoxHttpServiceResultHasher objectHasher, GsonBuilder customParserBuilder) throws FoxHttpResponseException {
         this.responseBody = foxHttpResponse.getResponseBody();
         this.foxHttpClient = foxHttpResponse.getFoxHttpClient();
         this.responseCode = foxHttpResponse.getResponseCode();
@@ -93,14 +93,13 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
         this.responseHeaders = foxHttpResponse.getResponseHeaders();
         this.objectHasher = objectHasher;
 
-        if (customParser == null) {
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(Metadata.class, new MetaDataDeserializer());
-            gsonBuilder.registerTypeAdapter(DateTime.class, new DateTimeTypeAdapter());
-            this.parser = gsonBuilder.create();
-        } else {
-            this.parser = customParser;
+        if (customParserBuilder == null) {
+            customParserBuilder = new GsonBuilder();
         }
+
+        customParserBuilder.registerTypeAdapter(Metadata.class, new MetaDataDeserializer());
+        customParserBuilder.registerTypeAdapter(DateTime.class, new DateTimeTypeAdapter());
+        this.parser = customParserBuilder.create();
 
         try {
             String body = getStringBody();
