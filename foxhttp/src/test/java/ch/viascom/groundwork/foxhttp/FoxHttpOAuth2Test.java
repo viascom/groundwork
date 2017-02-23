@@ -6,11 +6,11 @@ import ch.viascom.groundwork.foxhttp.builder.FoxHttpRequestBuilder;
 import ch.viascom.groundwork.foxhttp.component.oauth2.GrantType;
 import ch.viascom.groundwork.foxhttp.component.oauth2.OAuth2Component;
 import ch.viascom.groundwork.foxhttp.component.oauth2.OAuth2StoreBuilder;
-import ch.viascom.groundwork.foxhttp.component.oauth2.response.OAuthTokenErrorResponse;
-import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
+import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptorType;
 import ch.viascom.groundwork.foxhttp.log.SystemOutFoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.models.OAuth2Response;
 import ch.viascom.groundwork.foxhttp.parser.GsonParser;
+import ch.viascom.groundwork.foxhttp.response.serviceresult.DefaultServiceResultFaultInterceptor;
 import ch.viascom.groundwork.foxhttp.response.serviceresult.FoxHttpServiceResultResponse;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
 import org.joda.time.DateTime;
@@ -36,7 +36,7 @@ public class FoxHttpOAuth2Test {
     static OAuth2Component oAuth2Component;
     private static String solaraURL = "http://localhost:8080/solara-webservice-1.0-SNAPSHOT";
     private static String solaraTestUser = "fox@viascom.ch";
-    private static String solaraTestPassword = "password1234";
+    private static String solaraTestPassword = "password1234-";
     private static String solaraClient = "AluxApp/1.0-SNAPSHOT";
     private static String solaraClientSecret = "7OVm8OeTPf6EZq3C";
 
@@ -45,6 +45,7 @@ public class FoxHttpOAuth2Test {
         httpClient = new FoxHttpClientBuilder(new GsonParser(), new GsonParser())
                 .setFoxHttpLogger(new SystemOutFoxHttpLogger(true, "OAuth2"))
                 .addFoxHttpPlaceholderEntry("solara", solaraURL)
+                .registerFoxHttpInterceptor(FoxHttpInterceptorType.RESPONSE,new DefaultServiceResultFaultInterceptor())
                 .build();
 
 
@@ -87,9 +88,6 @@ public class FoxHttpOAuth2Test {
                     oAuth2Component1.getFoxHttpClient().getFoxHttpAuthorizationStrategy().addAuthorization(scope, oAuth2Component1.getOAuth2Authorization());
                 }
 
-            } else {
-                OAuthTokenErrorResponse tokenErrorResponse = response.getParsedBody(OAuthTokenErrorResponse.class);
-                throw new FoxHttpRequestException(tokenErrorResponse.getError() + " : " + tokenErrorResponse.getErrorDescription());
             }
         });
         httpClient.activateComponent(oAuth2Component);
