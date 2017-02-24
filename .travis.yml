@@ -1,0 +1,12 @@
+language: java
+
+sudo: false
+
+jdk: oraclejdk8
+
+env:
+  - TEST_DIR=pom
+  - TEST_DIR=service-result
+  - TEST_DIR=foxhttp
+
+script: cd $TEST_DIR && mvn clean install -P full-build
