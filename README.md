@@ -5,7 +5,7 @@ GroundWork Project
 Collection of useful libraries for Java and Android.
 
 ## Build-Status
-[![Snap CI branch](https://img.shields.io/snap-ci/Viascom/groundwork/master.svg)]()
+[![Build Status](https://travis-ci.org/Viascom/groundwork.svg?branch=develop)](https://travis-ci.org/Viascom/groundwork)
 
 ## Projects:
 
