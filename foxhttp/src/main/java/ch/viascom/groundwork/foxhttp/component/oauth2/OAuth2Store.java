@@ -5,7 +5,9 @@ import ch.viascom.groundwork.foxhttp.type.RequestType;
 import lombok.Data;
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +36,7 @@ public class OAuth2Store {
     /**
      * AuthorizationScope which needs a token
      */
-    private FoxHttpAuthorizationScope authScope;
+    private List<FoxHttpAuthorizationScope> authScopes = new ArrayList<>();
     /**
      * Additional parameters which will be included in the token request
      */

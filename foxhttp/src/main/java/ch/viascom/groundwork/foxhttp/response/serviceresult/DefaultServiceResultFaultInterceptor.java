@@ -11,13 +11,18 @@ import ch.viascom.groundwork.serviceresult.exception.ServiceFault;
 public class DefaultServiceResultFaultInterceptor implements FoxHttpResponseInterceptor {
 
     /**
-     * Set as last interceptors of all
+     * Sets the weight to 1'000 of the DefaultServiceResultFaultInterceptor
+     * <p>
+     * Interceptors with a smaller weight number will be executed before this one
+     * and interceptors with a higher weight number will be executed after this interceptor.
+     * <p>
+     * Override the weight if you wanna change the execution order of this interceptor.
      *
-     * @return Integer.MAX_VALUE
+     * @return 1000
      */
     @Override
     public int getWeight() {
-        return Integer.MAX_VALUE;
+        return 1_000;
     }
 
     @Override
