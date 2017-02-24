@@ -5,8 +5,8 @@ GroundWork Project
 Collection of useful libraries for Java and Android.
 
 ## Build-Status
-[![Build Status](https://travis-ci.org/Viascom/groundwork.svg?branch=master)](https://travis-ci.org/Viascom/groundwork)
-[![Build Status](https://travis-ci.org/Viascom/groundwork.svg?branch=develop)](https://travis-ci.org/Viascom/groundwork)
+Master: [![Build Status](https://travis-ci.org/Viascom/groundwork.svg?branch=master)](https://travis-ci.org/Viascom/groundwork)
+Develop: [![Build Status](https://travis-ci.org/Viascom/groundwork.svg?branch=develop)](https://travis-ci.org/Viascom/groundwork)
 
 ## Projects:
 
