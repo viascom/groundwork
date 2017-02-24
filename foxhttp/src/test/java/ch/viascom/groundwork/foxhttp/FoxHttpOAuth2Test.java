@@ -36,7 +36,7 @@ public class FoxHttpOAuth2Test {
     static OAuth2Component oAuth2Component;
     private static String solaraURL = "http://localhost:8080/solara-webservice-1.0-SNAPSHOT";
     private static String solaraTestUser = "fox@viascom.ch";
-    private static String solaraTestPassword = "password1234-";
+    private static String solaraTestPassword = "password1234";
     private static String solaraClient = "AluxApp/1.0-SNAPSHOT";
     private static String solaraClientSecret = "7OVm8OeTPf6EZq3C";
 
@@ -114,6 +114,21 @@ public class FoxHttpOAuth2Test {
 
         assertThat(oAuth2Component.getOAuth2Store().getAccessToken()).isNotEqualTo(oldAccessToken);
         assertThat(oAuth2Component.getOAuth2Store().getRefreshToken()).isNotEqualTo(oldRefreshToken);
+    }
+
+    @Test
+    public void getNewTokenTest() throws Exception {
+        String oldToken = oAuth2Component.getOAuth2Store().getAccessToken();
+        String newToken = oAuth2Component.getNewToken();
+
+        assertThat(newToken).isNotEmpty();
+        assertThat(newToken).isNotEqualTo(oldToken);
+
+        String newAccessToken = oAuth2Component.getNewToken(GrantType.REFRESH_TOKEN);
+
+        assertThat(newAccessToken).isNotEmpty();
+        assertThat(newAccessToken).isNotEqualTo(newToken);
+
     }
 
 
