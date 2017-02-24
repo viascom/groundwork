@@ -37,6 +37,8 @@ public class FoxHttpRequest {
     @Getter
     private URL url;
 
+    private FoxHttpAuthorizationScope authScope;
+
     @Getter
     @Setter
     private FoxHttpRequestQuery requestQuery = new FoxHttpRequestQuery();
@@ -128,6 +130,9 @@ public class FoxHttpRequest {
             foxHttpClient.getFoxHttpLogger().log("setCookieStore(" + foxHttpClient.getFoxHttpCookieStore() + ")");
             CookieHandler.setDefault((CookieManager) foxHttpClient.getFoxHttpCookieStore());
 
+            // Create Scope
+            authScope = FoxHttpAuthorizationScope.create(url.toString(), requestType);
+
             foxHttpClient.getFoxHttpLogger().log("prepareQuery(" + getRequestQuery() + ")");
             prepareQuery();
 
@@ -158,7 +163,7 @@ public class FoxHttpRequest {
 
             //Set headers
             foxHttpClient.getFoxHttpLogger().log("prepareHeader(" + getRequestHeader() + ")");
-            prepareHeader(connection);
+            prepareHeader();
 
             //Set User-Agent if not exist
             foxHttpClient.getFoxHttpLogger().log("setUserAgentIfNotExist(" + foxHttpClient.getFoxHttpUserAgent() + ")");
@@ -185,7 +190,7 @@ public class FoxHttpRequest {
 
             //Process authorization strategy
             foxHttpClient.getFoxHttpLogger().log("processAuthorizationStrategy(" + foxHttpClient.getFoxHttpAuthorizationStrategy() + ")");
-            processAuthorizationStrategy(connection);
+            processAuthorizationStrategy();
 
             //Execute interceptor
             foxHttpClient.getFoxHttpLogger().log("executeRequestHeaderInterceptor()");
@@ -198,7 +203,7 @@ public class FoxHttpRequest {
                 setHeaderIfNotExist(HeaderTypes.CONTENT_TYPE, requestBody.getOutputContentType().toString(), connection);
                 //Set request body
                 foxHttpClient.getFoxHttpLogger().log("setRequestBodyStream(" + getRequestBody() + ")");
-                setRequestBodyStream(connection);
+                setRequestBodyStream();
             }
 
             foxHttpClient.getFoxHttpLogger().log("sendRequest()");
@@ -231,7 +236,7 @@ public class FoxHttpRequest {
                 foxHttpResponse = new FoxHttpResponse(is, this, responseCode, foxHttpClient);
                 //Process response headers
                 foxHttpClient.getFoxHttpLogger().log("processResponseHeader()");
-                processResponseHeader(foxHttpResponse, connection);
+                processResponseHeader();
 
                 //Execute interceptor
                 foxHttpClient.getFoxHttpLogger().log("executeResponseInterceptor()");
@@ -265,14 +270,14 @@ public class FoxHttpRequest {
 
     }
 
-    private void prepareHeader(URLConnection connection) {
+    private void prepareHeader() {
         for (HeaderEntry headerField : getRequestHeader()) {
             connection.addRequestProperty(headerField.getName(), headerField.getValue());
         }
     }
 
-    private void setRequestBodyStream(URLConnection urlConnection) throws FoxHttpRequestException {
-        requestBody.setBody(new FoxHttpRequestBodyContext(urlConnection, this, foxHttpClient));
+    private void setRequestBodyStream() throws FoxHttpRequestException {
+        requestBody.setBody(new FoxHttpRequestBodyContext(connection, this, foxHttpClient));
     }
 
     private void prepareQuery() throws FoxHttpRequestException, MalformedURLException {
@@ -288,9 +293,8 @@ public class FoxHttpRequest {
         }
     }
 
-    private void processAuthorizationStrategy(URLConnection connection) throws FoxHttpRequestException {
-        List<FoxHttpAuthorization> foxHttpAuthorizations = foxHttpClient.getFoxHttpAuthorizationStrategy().getAuthorization(connection, FoxHttpAuthorizationScope.create(
-                url.toString(), RequestType.valueOf(((HttpURLConnection) connection).getRequestMethod())), foxHttpClient
+    private void processAuthorizationStrategy() throws FoxHttpRequestException {
+        List<FoxHttpAuthorization> foxHttpAuthorizations = foxHttpClient.getFoxHttpAuthorizationStrategy().getAuthorization(connection, authScope, foxHttpClient
         );
         for (FoxHttpAuthorization foxHttpAuthorization : foxHttpAuthorizations) {
             foxHttpClient.getFoxHttpLogger().log("-> doAuthorization(" + foxHttpAuthorization + ")");
@@ -300,7 +304,7 @@ public class FoxHttpRequest {
         }
     }
 
-    private void processResponseHeader(FoxHttpResponse foxHttpResponse, URLConnection connection) {
+    private void processResponseHeader() {
         FoxHttpHeader responseHeaders = new FoxHttpHeader();
         Map<String, List<String>> map = connection.getHeaderFields();
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
