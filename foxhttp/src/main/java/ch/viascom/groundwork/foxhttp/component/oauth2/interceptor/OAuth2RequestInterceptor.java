@@ -1,6 +1,7 @@
 package ch.viascom.groundwork.foxhttp.component.oauth2.interceptor;
 
 import ch.viascom.groundwork.foxhttp.FoxHttpRequest;
+import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
 import ch.viascom.groundwork.foxhttp.component.oauth2.GrantType;
 import ch.viascom.groundwork.foxhttp.component.oauth2.OAuth2Component;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpException;
@@ -30,9 +31,7 @@ public class OAuth2RequestInterceptor implements FoxHttpRequestConnectionInterce
     @Override
     public void onIntercept(FoxHttpRequestConnectionInterceptorContext context) throws FoxHttpException {
         try {
-            if (RegexUtil.doesURLMatch(context.getRequest().getRequestType() + " " +
-                            context.getClient().getFoxHttpPlaceholderStrategy().processPlaceholders(context.getUrl().toString(), context.getClient()),
-                    context.getClient().getFoxHttpPlaceholderStrategy().processPlaceholders(oAuth2Component.getOAuth2Store().getAuthScope().toString(), context.getClient()))) {
+            if (isScopePresent(context)) {
                 context.getClient().getFoxHttpLogger().log("   -> OAuth2 is needed for this request");
                 if (!isAccessTokenValid()) {
                     context.getClient().getFoxHttpLogger().log("   -> New OAuth2 token is needed");
@@ -48,6 +47,18 @@ public class OAuth2RequestInterceptor implements FoxHttpRequestConnectionInterce
         } catch (Exception e) {
             throw new FoxHttpRequestException(e);
         }
+    }
+
+    private boolean isScopePresent(FoxHttpRequestConnectionInterceptorContext context) {
+        boolean isPresent = false;
+        for (FoxHttpAuthorizationScope scope : oAuth2Component.getOAuth2Store().getAuthScopes()) {
+            isPresent = RegexUtil.doesURLMatch(context.getRequest().getRequestType() + " " + context.getClient().getFoxHttpPlaceholderStrategy().processPlaceholders(context.getUrl().toString(), context.getClient()),
+                    context.getClient().getFoxHttpPlaceholderStrategy().processPlaceholders(scope.toString(), context.getClient()));
+            if (isPresent) {
+                break;
+            }
+        }
+        return isPresent;
     }
 
     private boolean isAccessTokenValid() {

@@ -7,6 +7,8 @@ import ch.viascom.groundwork.foxhttp.body.response.FoxHttpResponseBody;
 import ch.viascom.groundwork.foxhttp.exception.FoxHttpResponseException;
 import ch.viascom.groundwork.foxhttp.header.FoxHttpHeader;
 import ch.viascom.groundwork.foxhttp.response.FoxHttpResponseParser;
+import ch.viascom.groundwork.foxhttp.response.serviceresult.adapters.DateTimeTypeAdapter;
+import ch.viascom.groundwork.foxhttp.response.serviceresult.adapters.MetaDataDeserializer;
 import ch.viascom.groundwork.serviceresult.ServiceResult;
 import ch.viascom.groundwork.serviceresult.ServiceResultStatus;
 import ch.viascom.groundwork.serviceresult.exception.ServiceFault;
@@ -17,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import org.joda.time.DateTime;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -50,9 +53,19 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
      * Create a new FoxHttpServiceResultParser
      *
      * @param foxHttpResponse response with a serialized service result
+     * @param customParserBuilder    a custom gson parser builder
+     */
+    public FoxHttpServiceResultResponse(FoxHttpResponse foxHttpResponse, GsonBuilder customParserBuilder) throws FoxHttpResponseException {
+        this(foxHttpResponse, null, customParserBuilder);
+    }
+
+    /**
+     * Create a new FoxHttpServiceResultParser
+     *
+     * @param foxHttpResponse response with a serialized service result
      */
     public FoxHttpServiceResultResponse(FoxHttpResponse foxHttpResponse) throws FoxHttpResponseException {
-        this(foxHttpResponse, null);
+        this(foxHttpResponse, null, null);
     }
 
     /**
@@ -62,6 +75,17 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
      * @param objectHasher    object hasher to check the result
      */
     public FoxHttpServiceResultResponse(FoxHttpResponse foxHttpResponse, FoxHttpServiceResultHasher objectHasher) throws FoxHttpResponseException {
+        this(foxHttpResponse, objectHasher, null);
+    }
+
+    /**
+     * Create a new FoxHttpServiceResultParser
+     *
+     * @param foxHttpResponse response with a serialized service result
+     * @param objectHasher    object hasher to check the result
+     * @param customParserBuilder    a custom gson parser builder
+     */
+    public FoxHttpServiceResultResponse(FoxHttpResponse foxHttpResponse, FoxHttpServiceResultHasher objectHasher, GsonBuilder customParserBuilder) throws FoxHttpResponseException {
         this.responseBody = foxHttpResponse.getResponseBody();
         this.foxHttpClient = foxHttpResponse.getFoxHttpClient();
         this.responseCode = foxHttpResponse.getResponseCode();
@@ -69,9 +93,13 @@ public class FoxHttpServiceResultResponse implements FoxHttpResponseParser {
         this.responseHeaders = foxHttpResponse.getResponseHeaders();
         this.objectHasher = objectHasher;
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Metadata.class, new MetaDataDeserializer());
-        this.parser = gsonBuilder.create();
+        if (customParserBuilder == null) {
+            customParserBuilder = new GsonBuilder();
+        }
+
+        customParserBuilder.registerTypeAdapter(Metadata.class, new MetaDataDeserializer());
+        customParserBuilder.registerTypeAdapter(DateTime.class, new DateTimeTypeAdapter());
+        this.parser = customParserBuilder.create();
 
         try {
             String body = getStringBody();
