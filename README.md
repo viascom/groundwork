@@ -6,6 +6,7 @@ Collection of useful libraries for Java and Android.
 
 ## Build-Status
 Master: [![Build Status](https://travis-ci.org/Viascom/groundwork.svg?branch=master)](https://travis-ci.org/Viascom/groundwork)
+
 Develop: [![Build Status](https://travis-ci.org/Viascom/groundwork.svg?branch=develop)](https://travis-ci.org/Viascom/groundwork)
 
 ## Projects:
