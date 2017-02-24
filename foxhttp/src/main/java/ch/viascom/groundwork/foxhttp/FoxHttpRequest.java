@@ -298,9 +298,7 @@ public class FoxHttpRequest {
         );
         for (FoxHttpAuthorization foxHttpAuthorization : foxHttpAuthorizations) {
             foxHttpClient.getFoxHttpLogger().log("-> doAuthorization(" + foxHttpAuthorization + ")");
-            foxHttpAuthorization.doAuthorization(connection, FoxHttpAuthorizationScope.create(
-                    url.toString(), RequestType.valueOf(((HttpURLConnection) connection).getRequestMethod()))
-            );
+            foxHttpAuthorization.doAuthorization(connection, authScope);
         }
     }
 
