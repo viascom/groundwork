@@ -17,6 +17,7 @@ import ch.viascom.groundwork.foxhttp.parser.GsonParser;
 import ch.viascom.groundwork.foxhttp.placeholder.DefaultPlaceholderStrategy;
 import ch.viascom.groundwork.foxhttp.proxy.FoxHttpProxyStrategy;
 import ch.viascom.groundwork.foxhttp.query.FoxHttpRequestQuery;
+import ch.viascom.groundwork.foxhttp.type.HeaderTypes;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
 import org.junit.Test;
 
@@ -459,6 +460,25 @@ public class FoxHttpRequestTest {
     }
 
     @Test
+    public void placeholderQueryAuthScopeTest() throws Exception {
+
+        FoxHttpClient client = new FoxHttpClientBuilder(new GsonParser())
+                .addFoxHttpAuthorization(FoxHttpAuthorizationScope.create("{endpoint}get"), (connection, foxHttpAuthorizationScope) -> connection.setRequestProperty(HeaderTypes.USER_AGENT.toString(), "FOX-TEST-AGENT"))
+                .build();
+        
+        FoxHttpRequestBuilder builder = new FoxHttpRequestBuilder("{endpoint}get", RequestType.GET, client);
+        builder.addFoxHttpPlaceholderEntry("endpoint", endpoint);
+        builder.addRequestQueryEntry("id","12345");
+        FoxHttpRequest request = builder.build();
+
+        FoxHttpResponse foxHttpResponse = request.execute();
+
+        GetResponse getResponse = foxHttpResponse.getParsedBody(GetResponse.class);
+
+        assertThat(getResponse.getHeaders().get(HeaderTypes.USER_AGENT.toString())).isEqualTo("FOX-TEST-AGENT");
+    }
+
+    @Test
     public void defaultPlaceholderStrategyTest() throws Exception {
 
         DefaultPlaceholderStrategy dps = new DefaultPlaceholderStrategy();
@@ -467,7 +487,7 @@ public class FoxHttpRequestTest {
         String escapeCharEnd = "#";
         String regex = "[@][ -z|]*[#]";
         HashMap<String, String> placeholderMap = new HashMap<>();
-        placeholderMap.put("%","=");
+        placeholderMap.put("%", "=");
 
         dps.setPlaceholderEscapeCharStart(escapeCharStart);
         dps.setPlaceholderEscapeCharEnd(escapeCharEnd);
