@@ -2,6 +2,7 @@ package ch.viascom.groundwork.foxhttp.component.oauth2.request;
 
 import ch.viascom.groundwork.foxhttp.FoxHttpRequest;
 import ch.viascom.groundwork.foxhttp.FoxHttpResponse;
+import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
 import ch.viascom.groundwork.foxhttp.component.oauth2.OAuth2Component;
 import ch.viascom.groundwork.foxhttp.component.oauth2.response.OAuthTokenErrorResponse;
 import ch.viascom.groundwork.foxhttp.component.oauth2.response.OAuthTokenResponse;
@@ -26,13 +27,11 @@ public class DefaultOAuth2RequestExecutor implements OAuth2RequestExecutor {
             );
             oAuth2Component.getOAuth2Store().setScopes(tokenResponse.getScope());
 
-            oAuth2Component.getFoxHttpClient().getFoxHttpAuthorizationStrategy().removeAuthorization(
-                    oAuth2Component.getOAuth2Store().getAuthScope(), oAuth2Component.getOAuth2Authorization()
-            );
-            oAuth2Component.getOAuth2Authorization().setValue(oAuth2Component.getOAuth2Store().getAccessToken());
-            oAuth2Component.getFoxHttpClient().getFoxHttpAuthorizationStrategy().addAuthorization(
-                    oAuth2Component.getOAuth2Store().getAuthScope(), oAuth2Component.getOAuth2Authorization()
-            );
+            for (FoxHttpAuthorizationScope scope : oAuth2Component.getOAuth2Store().getAuthScopes()) {
+                oAuth2Component.getFoxHttpClient().getFoxHttpAuthorizationStrategy().removeAuthorization(scope, oAuth2Component.getOAuth2Authorization());
+                oAuth2Component.getOAuth2Authorization().setValue(oAuth2Component.getOAuth2Store().getAccessToken());
+                oAuth2Component.getFoxHttpClient().getFoxHttpAuthorizationStrategy().addAuthorization(scope, oAuth2Component.getOAuth2Authorization());
+            }
 
         } else {
             OAuthTokenErrorResponse tokenErrorResponse = response.getParsedBody(OAuthTokenErrorResponse.class);

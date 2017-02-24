@@ -11,8 +11,8 @@ Collection of useful libraries for Java and Android.
 
 ### FoxHttp
 The FoxHttp provides a fast and easy http client for java and android. It is part of the GroundWork Project by Viascom.<br/>
-[![master](https://img.shields.io/badge/master-v1.2-brightgreen.svg)](https://github.com/Viascom/groundwork/tree/master)
-[![develop](https://img.shields.io/badge/develop-v1.2-brightgreen.svg)](https://github.com/Viascom/groundwork/tree/foxhttp-develop)
+[![master](https://img.shields.io/badge/master-v1.2.1-brightgreen.svg)](https://github.com/Viascom/groundwork/tree/master)
+[![develop](https://img.shields.io/badge/develop-v1.2.1-brightgreen.svg)](https://github.com/Viascom/groundwork/tree/foxhttp-develop)
 [![Maven Central](https://img.shields.io/maven-central/v/ch.viascom.groundwork/foxhttp.svg)]()
 [![Bintray](https://img.shields.io/bintray/v/viascom/GroundWork/ch.viascom.groundwork%3Afoxhttp.svg)]()
 
@@ -25,8 +25,8 @@ The POM module provides a parent pom which is also use in the GroundWork Project
 
 ### Service-Result
 The ServiceResult module provides a standard result for your REST applications. It is part of the GroundWork Project by Viascom.<br/>
-[![master](https://img.shields.io/badge/master-v1.2-brightgreen.svg)]()
-[![develop](https://img.shields.io/badge/develop-v1.2-brightgreen.svg)]()
+[![master](https://img.shields.io/badge/master-v1.2.1-brightgreen.svg)]()
+[![develop](https://img.shields.io/badge/develop-v1.2.1-brightgreen.svg)]()
 [![Maven Central](https://img.shields.io/maven-central/v/ch.viascom.groundwork/service-result.svg)]()
 [![Bintray](https://img.shields.io/bintray/v/viascom/GroundWork/ch.viascom.groundwork%3Aservice-result.svg)]()
 
