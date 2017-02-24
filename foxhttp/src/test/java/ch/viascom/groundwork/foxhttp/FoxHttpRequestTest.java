@@ -465,7 +465,7 @@ public class FoxHttpRequestTest {
         FoxHttpClient client = new FoxHttpClientBuilder(new GsonParser())
                 .addFoxHttpAuthorization(FoxHttpAuthorizationScope.create("{endpoint}get"), (connection, foxHttpAuthorizationScope) -> connection.setRequestProperty(HeaderTypes.USER_AGENT.toString(), "FOX-TEST-AGENT"))
                 .build();
-        
+
         FoxHttpRequestBuilder builder = new FoxHttpRequestBuilder("{endpoint}get", RequestType.GET, client);
         builder.addFoxHttpPlaceholderEntry("endpoint", endpoint);
         builder.addRequestQueryEntry("id","12345");
