@@ -1,4 +1,4 @@
-package ch.viascom.groundwork.foxhttp.response.serviceresult;
+package ch.viascom.groundwork.foxhttp.response.serviceresult.adapters;
 
 import ch.viascom.groundwork.serviceresult.util.Metadata;
 import com.google.gson.JsonDeserializationContext;
