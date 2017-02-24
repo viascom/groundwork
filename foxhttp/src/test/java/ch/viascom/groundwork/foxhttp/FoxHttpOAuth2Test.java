@@ -6,11 +6,11 @@ import ch.viascom.groundwork.foxhttp.builder.FoxHttpRequestBuilder;
 import ch.viascom.groundwork.foxhttp.component.oauth2.GrantType;
 import ch.viascom.groundwork.foxhttp.component.oauth2.OAuth2Component;
 import ch.viascom.groundwork.foxhttp.component.oauth2.OAuth2StoreBuilder;
-import ch.viascom.groundwork.foxhttp.component.oauth2.response.OAuthTokenErrorResponse;
-import ch.viascom.groundwork.foxhttp.exception.FoxHttpRequestException;
+import ch.viascom.groundwork.foxhttp.interceptor.FoxHttpInterceptorType;
 import ch.viascom.groundwork.foxhttp.log.SystemOutFoxHttpLogger;
 import ch.viascom.groundwork.foxhttp.models.OAuth2Response;
 import ch.viascom.groundwork.foxhttp.parser.GsonParser;
+import ch.viascom.groundwork.foxhttp.response.serviceresult.DefaultServiceResultFaultInterceptor;
 import ch.viascom.groundwork.foxhttp.response.serviceresult.FoxHttpServiceResultResponse;
 import ch.viascom.groundwork.foxhttp.type.RequestType;
 import org.joda.time.DateTime;
@@ -45,6 +45,7 @@ public class FoxHttpOAuth2Test {
         httpClient = new FoxHttpClientBuilder(new GsonParser(), new GsonParser())
                 .setFoxHttpLogger(new SystemOutFoxHttpLogger(true, "OAuth2"))
                 .addFoxHttpPlaceholderEntry("solara", solaraURL)
+                .registerFoxHttpInterceptor(FoxHttpInterceptorType.RESPONSE,new DefaultServiceResultFaultInterceptor())
                 .build();
 
 
@@ -55,7 +56,8 @@ public class FoxHttpOAuth2Test {
 
         OAuth2StoreBuilder oAuth2StoreBuilder = new OAuth2StoreBuilder(GrantType.PASSWORD, "{solara}/auth/token")
                 .setAuthRequestType(RequestType.POST)
-                .setFoxHttpAuthorizationScope(FoxHttpAuthorizationScope.create("{solara}/account"))
+                .addFoxHttpAuthorizationScope(FoxHttpAuthorizationScope.create("{solara}/account"))
+                .addFoxHttpAuthorizationScope(FoxHttpAuthorizationScope.create("{solara}/application"))
                 .activateClientCredentialsUse()
                 .setUsername(solaraTestUser)
                 .setPassword(solaraTestPassword)
@@ -80,17 +82,12 @@ public class FoxHttpOAuth2Test {
                         oAuth2Component1.getOAuth2Store().getAccessTokenTime().plusSeconds(oAuth2Component1.getOAuth2Store().getExpirationTimeSeconds().intValue())
                 );
 
-                oAuth2Component1.getFoxHttpClient().getFoxHttpAuthorizationStrategy().removeAuthorization(
-                        oAuth2Component1.getOAuth2Store().getAuthScope(), oAuth2Component1.getOAuth2Authorization()
-                );
-                oAuth2Component1.getOAuth2Authorization().setValue(oAuth2Component1.getOAuth2Store().getAccessToken());
-                oAuth2Component1.getFoxHttpClient().getFoxHttpAuthorizationStrategy().addAuthorization(
-                        oAuth2Component1.getOAuth2Store().getAuthScope(), oAuth2Component1.getOAuth2Authorization()
-                );
+                for (FoxHttpAuthorizationScope scope : oAuth2Component1.getOAuth2Store().getAuthScopes()) {
+                    oAuth2Component1.getFoxHttpClient().getFoxHttpAuthorizationStrategy().removeAuthorization(scope, oAuth2Component1.getOAuth2Authorization());
+                    oAuth2Component1.getOAuth2Authorization().setValue(oAuth2Component1.getOAuth2Store().getAccessToken());
+                    oAuth2Component1.getFoxHttpClient().getFoxHttpAuthorizationStrategy().addAuthorization(scope, oAuth2Component1.getOAuth2Authorization());
+                }
 
-            } else {
-                OAuthTokenErrorResponse tokenErrorResponse = response.getParsedBody(OAuthTokenErrorResponse.class);
-                throw new FoxHttpRequestException(tokenErrorResponse.getError() + " : " + tokenErrorResponse.getErrorDescription());
             }
         });
         httpClient.activateComponent(oAuth2Component);
@@ -117,6 +114,21 @@ public class FoxHttpOAuth2Test {
 
         assertThat(oAuth2Component.getOAuth2Store().getAccessToken()).isNotEqualTo(oldAccessToken);
         assertThat(oAuth2Component.getOAuth2Store().getRefreshToken()).isNotEqualTo(oldRefreshToken);
+    }
+
+    @Test
+    public void getNewTokenTest() throws Exception {
+        String oldToken = oAuth2Component.getOAuth2Store().getAccessToken();
+        String newToken = oAuth2Component.getNewToken();
+
+        assertThat(newToken).isNotEmpty();
+        assertThat(newToken).isNotEqualTo(oldToken);
+
+        String newAccessToken = oAuth2Component.getNewToken(GrantType.REFRESH_TOKEN);
+
+        assertThat(newAccessToken).isNotEmpty();
+        assertThat(newAccessToken).isNotEqualTo(newToken);
+
     }
 
 

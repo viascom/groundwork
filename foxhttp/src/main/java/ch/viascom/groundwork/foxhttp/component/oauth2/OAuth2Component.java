@@ -2,6 +2,7 @@ package ch.viascom.groundwork.foxhttp.component.oauth2;
 
 import ch.viascom.groundwork.foxhttp.FoxHttpClient;
 import ch.viascom.groundwork.foxhttp.FoxHttpRequest;
+import ch.viascom.groundwork.foxhttp.authorization.FoxHttpAuthorizationScope;
 import ch.viascom.groundwork.foxhttp.component.FoxHttpComponent;
 import ch.viascom.groundwork.foxhttp.component.oauth2.authorization.OAuth2Authorization;
 import ch.viascom.groundwork.foxhttp.component.oauth2.authorization.OAuth2BearerTokenAuthorization;
@@ -52,10 +53,12 @@ public class OAuth2Component implements FoxHttpComponent {
     public void initiation(FoxHttpClient foxHttpClient) throws FoxHttpException {
         this.foxHttpClient = foxHttpClient;
         foxHttpClient.getFoxHttpLogger().log("========= Initiate  OAuth2Component =========");
-        foxHttpClient.getFoxHttpLogger().log("-> Register authorization");
+        foxHttpClient.getFoxHttpLogger().log("-> Register authorizations");
         //Register authorization
         oAuth2Authorization = new OAuth2BearerTokenAuthorization(oAuth2Store.getAccessToken());
-        foxHttpClient.getFoxHttpAuthorizationStrategy().addAuthorization(oAuth2Store.getAuthScope(), oAuth2Authorization);
+        for (FoxHttpAuthorizationScope scope : oAuth2Store.getAuthScopes()) {
+            foxHttpClient.getFoxHttpAuthorizationStrategy().addAuthorization(scope, oAuth2Authorization);
+        }
         foxHttpClient.getFoxHttpLogger().log("-> Register interceptor");
         //Register interceptor
         foxHttpClient.register(FoxHttpInterceptorType.REQUEST_CONNECTION, new OAuth2RequestInterceptor(this, 100));
@@ -66,5 +69,32 @@ public class OAuth2Component implements FoxHttpComponent {
     public FoxHttpRequest generateRequestForGrantType(GrantType grantType) throws MalformedURLException, FoxHttpRequestException {
         OAuth2RequestGenerator oAuth2RequestGenerator = oAuth2RequestGenerators.get(grantType);
         return oAuth2RequestGenerator.getRequest(this);
+    }
+
+    /**
+     * Request a new token based on the configuration
+     *
+     * @param grantType grant type to use
+     * @return access token from the response
+     * @throws FoxHttpException
+     * @throws MalformedURLException
+     */
+    public String getNewToken(GrantType grantType) throws FoxHttpException, MalformedURLException {
+        FoxHttpRequest request = this.generateRequestForGrantType(grantType);
+        this.getOAuth2RequestExecutor().executeOAuth2Request(request, this);
+        return getOAuth2Store().getAccessToken();
+    }
+
+    /**
+     * Request a new token based on the configuration
+     *
+     * @return access token from the response
+     * @throws FoxHttpException
+     * @throws MalformedURLException
+     */
+    public String getNewToken() throws FoxHttpException, MalformedURLException {
+        FoxHttpRequest request = this.generateRequestForGrantType(this.getOAuth2Store().getGrantType());
+        this.getOAuth2RequestExecutor().executeOAuth2Request(request, this);
+        return getOAuth2Store().getAccessToken();
     }
 }
